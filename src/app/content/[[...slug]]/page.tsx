@@ -14,13 +14,19 @@ export default async function Page({
     notFound();
   }
 
+  const lastModified = page.data.exports.lastModified;
+  let date = 'unknown date';
+  if (lastModified !== undefined) {
+    date = new Date(lastModified).toLocaleDateString();
+  }
+
   const MDX = page.data.exports.default;
 
   return (
     <DocsPage toc={page.data.exports.toc}>
       <DocsBody>
+        <h4 className='text-right'>{date}</h4>
         <h1>{page.data.title}</h1>
-        <h4>{page.data.exports.lastModified}</h4>
         <MDX />
       </DocsBody>
     </DocsPage>
