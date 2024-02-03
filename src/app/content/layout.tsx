@@ -6,7 +6,7 @@ export default function RootDocsLayout({ children }: { children: ReactNode }) {
   return (
     <DocsLayout
       tree={pageTree}
-      nav={{ title: 'RUNFUNRUN Blog', githubUrl: 'https://github.com/RUNFUNRUN/blog' }}
+      nav={{ title: 'RUNFUNRUN.tech', githubUrl: 'https://github.com/RUNFUNRUN/blog' }}
     >
       {children}
     </DocsLayout>
