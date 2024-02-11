@@ -1,6 +1,7 @@
 import './global.css';
 import { RootProvider } from 'fumadocs-ui/provider';
 import { Inter } from 'next/font/google';
+import { GoogleAnalytics } from '@next/third-parties/google';
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 
@@ -23,6 +24,9 @@ export const metadata: Metadata = {
 export default function Layout({ children }: { children: ReactNode }) {
   return (
     <html lang="ja" className={inter.className}>
+      {process.env.NODE_ENV === 'production' && (
+        <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID ?? ''} />
+      )}
       <body>
         <RootProvider>{children}</RootProvider>
       </body>
