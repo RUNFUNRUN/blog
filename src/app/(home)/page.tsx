@@ -12,7 +12,10 @@ export default function HomePage() {
         <div className="my-8 text-2xl font-bold">
           <p>
             RUNFUNRUNのブログです。プロフィールは
-            <Link href="https://www.runfunrun.info" className="text-blue-500 mx-1 underline">
+            <Link
+              href="https://www.runfunrun.info"
+              className="text-blue-500 hover:underline hover:text-blue-400 mx-1"
+            >
               こちら
             </Link>
             。
