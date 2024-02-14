@@ -2,35 +2,14 @@ import Link from 'next/link';
 import { getPages } from '@/app/source';
 
 export default function HomePage() {
-  const pages = getPages()
-    .sort((a, b) => (b.data.exports.lastModified ?? 0) - (a.data.exports.lastModified ?? 0))
-    .slice(0, 5);
+  const pages = getPages().sort(
+    (a, b) => (b.data.exports.lastModified ?? 0) - (a.data.exports.lastModified ?? 0),
+  );
 
   return (
     <main>
       <div className="mx-4 my-8 lg:mx-auto lg:w-[992px]">
-        <div className="my-8 text-2xl font-bold">
-          <p>
-            RUNFUNRUNのブログです。プロフィールは
-            <Link
-              href="https://www.runfunrun.info"
-              className="text-blue-500 hover:underline hover:text-blue-400 mx-1"
-            >
-              こちら
-            </Link>
-            。
-          </p>
-          <p>質問等はプロフィールのコンタクトかDiscordのDMからお願いします。</p>
-        </div>
-        <div>
-          <h2 className="text-3xl font-bold my-4">
-            最新の記事 (
-            <Link href="/all" className="text-blue-500 hover:underline hover:text-blue-400 mx-1">
-              全記事一覧
-            </Link>
-            )
-          </h2>
-        </div>
+        <h2 className="text-3xl font-bold my-4">全記事一覧</h2>
         <div className="flex flex-col gap-4 text-left">
           {pages.map((page, i) => {
             const lastModified = page.data.exports.lastModified;
