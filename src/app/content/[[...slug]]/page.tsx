@@ -12,8 +12,10 @@ export default async function Page({ params }: { params: { slug?: string[] } }) 
 
   const lastModified = page.data.exports.lastModified;
   let date = 'unknown date';
+  let lastUpdate: Date | undefined = undefined;
   if (lastModified !== undefined) {
     date = new Date(lastModified).toLocaleDateString();
+    lastUpdate = new Date(lastModified);
   }
 
   const MDX = page.data.exports.default;
