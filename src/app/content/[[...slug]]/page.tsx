@@ -6,7 +6,7 @@ import { notFound } from 'next/navigation';
 export default async function Page({ params }: { params: { slug?: string[] } }) {
   const page = getPage(params.slug);
 
-  if (page == null) {
+  if (page === undefined) {
     notFound();
   }
 
