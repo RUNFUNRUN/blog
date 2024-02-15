@@ -21,7 +21,7 @@ export default async function Page({ params }: { params: { slug?: string[] } }) 
   const MDX = page.data.exports.default;
 
   return (
-    <DocsPage toc={page.data.exports.toc} lastUpdate={date}>
+    <DocsPage toc={page.data.exports.toc} lastUpdate={lastUpdate}>
       <DocsBody>
         <h4 className="text-right">{date}</h4>
         <h1>{page.data.title}</h1>
