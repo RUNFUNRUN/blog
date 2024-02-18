@@ -31,19 +31,19 @@ export default async function Page({ params }: { params: { slug?: string[] } }) 
   );
 }
 
-export async function generateStaticParams() {
+export const generateStaticParams = async () => {
   return getPages().map((page) => ({
     slug: page.slugs,
   }));
-}
+};
 
-export function generateMetadata({ params }: { params: { slug?: string[] } }) {
+export const generateMetadata = ({ params }: { params: { slug?: string[] } }) => {
   const page = getPage(params.slug);
 
-  if (page == null) notFound();
+  if (page === undefined) notFound();
 
   return {
     title: page.data.title,
     description: page.data.description,
   } satisfies Metadata;
-}
+};
