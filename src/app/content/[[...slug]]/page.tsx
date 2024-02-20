@@ -45,5 +45,9 @@ export const generateMetadata = ({ params }: { params: { slug?: string[] } }) =>
   return {
     title: page.data.title,
     description: page.data.description,
+    openGraph: {
+      title: page.data.title,
+      description: page.data.description,
+    },
   } satisfies Metadata;
 };
