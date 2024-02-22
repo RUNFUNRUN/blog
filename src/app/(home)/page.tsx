@@ -39,14 +39,16 @@ export default function HomePage() {
               date = new Date(lastModified).toLocaleDateString();
             }
             return (
-              <Link href={page.url} legacyBehavior key={i}>
-                <a className="rounded-lg border bg-card p-4 text-card-foreground transition-colors hover:bg-accent hover:text-accent-foreground w-full">
-                  <h2 className="mt-2 text-xl font-medium">{page.data.title}</h2>
-                  <p className="overflow-hidden overflow-ellipsis whitespace-nowrap text-medium text-muted-foreground">
-                    {page.data.description}
-                  </p>
-                  <h3 className="text-right font-medium">{date}</h3>
-                </a>
+              <Link
+                href={page.url}
+                className="rounded-lg border bg-card p-4 text-card-foreground transition-colors hover:bg-accent hover:text-accent-foreground w-full"
+                key={i}
+              >
+                <h2 className="mt-2 text-xl font-medium">{page.data.title}</h2>
+                <p className="overflow-hidden overflow-ellipsis whitespace-nowrap text-medium text-muted-foreground">
+                  {page.data.description}
+                </p>
+                <h3 className="text-right font-medium">{date}</h3>
               </Link>
             );
           })}
