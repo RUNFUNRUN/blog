@@ -23,7 +23,7 @@ export default async function Page({ params }: { params: { slug?: string[] } }) 
   return (
     <DocsPage toc={page.data.exports.toc} lastUpdate={lastUpdate}>
       <DocsBody>
-        <h4 className="text-right">{date}</h4>
+        <h4 className='text-right'>{date}</h4>
         <h1>{page.data.title}</h1>
         <MDX />
       </DocsBody>
