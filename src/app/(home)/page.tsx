@@ -36,7 +36,7 @@ export default function HomePage() {
             const lastModified = page.data.exports.lastModified;
             let date = 'unknown date';
             if (lastModified !== undefined) {
-              date = new Date(lastModified).toLocaleDateString();
+              date = new Date(lastModified).toLocaleDateString('ja-JP', { timeZone: 'Asia/Tokyo' });
             }
             return (
               <Link

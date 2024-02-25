@@ -15,7 +15,7 @@ export default async function Page({ params }: { params: { slug?: string[] } }) 
   let date = 'unknown date';
   let lastUpdate: Date | undefined = undefined;
   if (lastModified !== undefined) {
-    date = new Date(lastModified).toLocaleDateString();
+    date = new Date(lastModified).toLocaleDateString('ja-JP', { timeZone: 'Asia/Tokyo' });
     lastUpdate = new Date(lastModified);
   }
 
