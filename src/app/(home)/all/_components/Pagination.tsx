@@ -47,7 +47,7 @@ export const Pagination = ({
           <ChevronLeft />
         </h2>
       </Card>
-      <div className='my-auto text-2xl'>
+      <div className='my-auto text-2xl mx-2'>
         {current} / {end}
       </div>
       <Card num={current + 1} path={path} disable={current === end}>
