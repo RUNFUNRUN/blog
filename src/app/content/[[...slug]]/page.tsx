@@ -24,7 +24,8 @@ export default async function Page({ params }: { params: { slug?: string[] } }) 
     <DocsPage toc={page.data.exports.toc} lastUpdate={lastUpdate}>
       <DocsBody>
         <h4 className='text-right'>{date}</h4>
-        <h1>{page.data.title}</h1>
+        <h1 className='mb-auto'>{page.data.title}</h1>
+        <p className='mt-4 mb-10'>{page.data.description}</p>
         <MDX />
       </DocsBody>
     </DocsPage>
