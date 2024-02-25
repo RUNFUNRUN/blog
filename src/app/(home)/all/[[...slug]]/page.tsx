@@ -21,7 +21,7 @@ export default function HomePage({ params }: { params: { slug?: string[] } }) {
     <main>
       <div className='mx-4 my-6 lg:mx-auto lg:w-[992px]'>
         <h2 className='text-3xl font-bold my-4'>
-          全{totalPosts}記事一覧({startIndex + 1}~{endIndex < totalPosts ? endIndex : totalPosts})
+          全{totalPosts}記事 ({startIndex + 1}~{endIndex < totalPosts ? endIndex : totalPosts})
         </h2>
         <div className='flex flex-col gap-4 text-left'>
           {pages.map((page, i) => {

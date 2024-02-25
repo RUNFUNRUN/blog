@@ -26,7 +26,7 @@ export default function HomePage() {
           <h2 className='text-3xl font-bold my-4'>
             最新の記事 (
             <Link href='/all' className='text-blue-500 hover:underline hover:text-blue-400 mx-1'>
-              全記事一覧
+              全記事はこちら
             </Link>
             )
           </h2>
