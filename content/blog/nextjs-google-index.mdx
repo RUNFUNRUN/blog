@@ -1,0 +1,72 @@
+---
+title: Next.jsのサイトがGoogle検索に表示されない。
+description: Next.jsのブログ等の各記事がGoogle検索に表示されない時の対処法を紹介します。
+---
+
+# はじめに
+
+本ブログを開設した際、Googleで検索しても記事ページが表示されず、
+ホームのみが表示されるという問題に遭遇しました。
+
+# 原因
+
+Google検索に表示されない原因は、クロールされていないためです。
+クロールとは、検索エンジンがWebサイトを巡回して情報を収集することです。
+この作業を行うことで、Google検索に表示されるようになります。
+巡回するBotのことをクローラーといい、Googleの場合はGoogle botという名前らしいです。
+
+このクロールを行うためには、[robots.txt](https://developers.google.com/search/docs/crawling-indexing/robots/intro?hl=ja)
+や[sitemap.xml](https://developers.google.com/search/docs/crawling-indexing/sitemaps/overview?hl=ja)を設定する必要があります。
+
+# 解決方法
+
+robots.txtやsitemap.xmlをNext.jsで設定するには、[next-sitemap](https://www.npmjs.com/package/next-sitemap)
+というパッケージを使用します。
+これを使用することで、自動でファイルを生成してくれます。
+使用方法はいたって簡単です。
+
+まず、パッケージをインストールします。パッケージマネージャーは各自の環境に合わせてください。
+
+```bash
+bun i next-sitemap
+```
+
+次に、ルートディレクトリに以下のファイルを作成します。
+urlは自分のサイトのURLに置き換えてください。
+
+```js title="next-sitemap.config.js"
+/** @type {import('next-sitemap').IConfig} */
+module.exports = {
+  siteUrl: process.env.NEXT_PUBLIC_SITE_URL || 'https://www.runfunrun.tech',
+  generateRobotsTxt: true,
+};
+```
+
+`package.json`に以下のスクリプトを追加します。
+`postbuild`はビルド後に自動で実行されるスクリプトです。
+
+```json title="package.json"
+{
+  "scripts": {
+    ...
+    "postbuild": "next-sitemap",
+    ...
+  }
+}
+```
+
+デフォルトでは、`/public`ディレクトリに生成されるので、`.gitignore`に追記します。
+
+```txt title=".gitignore"
+# next-sitemap
+/public/robots.txt
+/public/sitemap*.xml
+```
+
+以上で設定は完了です。
+
+# さいごに
+
+これで、検索インデックスに表示されるようになります。
+確認したい場合は、Google Search Consoleに登録して確認してみてください。
+Google Search Consoleのサイトマップに登録することで、クロールの状況を確認できます。
