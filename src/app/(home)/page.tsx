@@ -23,7 +23,7 @@ export default function HomePage() {
           <p>質問等はプロフィールのコンタクトかDiscordのDMからお願いします。</p>
         </div>
         <div>
-          <h2 className='text-3xl font-bold my-4'>
+          <h2 className='text-2xl sm:text-3xl font-bold my-4'>
             最新の記事 (
             <Link href='/all' className='text-blue-500 hover:underline hover:text-blue-400 mx-1'>
               全記事はこちら

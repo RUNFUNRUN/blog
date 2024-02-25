@@ -4,7 +4,7 @@ import { notFound } from 'next/navigation';
 import { Pagination } from '../_components/Pagination';
 
 const totalPosts = getPages().length;
-const postsPerPage = 2;
+const postsPerPage = 5;
 const pageCount = Math.ceil(totalPosts / postsPerPage);
 
 export default function HomePage({ params }: { params: { slug?: string[] } }) {
