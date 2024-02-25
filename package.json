@@ -16,10 +16,13 @@
     "fumadocs-core": "8.1.1",
     "fumadocs-mdx": "8.0.2",
     "fumadocs-ui": "8.1.1",
+    "katex": "^0.16.9",
     "next": "14.0.4",
     "next-sitemap": "^4.2.3",
     "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "react-dom": "18.2.0",
+    "rehype-katex": "^7.0.0",
+    "remark-math": "^6.0.0"
   },
   "devDependencies": {
     "@types/mdx": "2.0.10",
