@@ -4,7 +4,7 @@ import { notFound } from 'next/navigation';
 import { Pagination } from '../_components/Pagination';
 
 const totalPosts = getPages().length;
-const postsPerPage = 5;
+const postsPerPage = 2;
 const pageCount = Math.ceil(totalPosts / postsPerPage);
 
 export default function HomePage({ params }: { params: { slug?: string[] } }) {
@@ -15,7 +15,7 @@ export default function HomePage({ params }: { params: { slug?: string[] } }) {
     .sort((a, b) => (b.data.exports.lastModified ?? 0) - (a.data.exports.lastModified ?? 0))
     .slice(startIndex, endIndex);
 
-  if (startIndex >= totalPosts) notFound();
+  if (pageIndex < 0 || pageIndex >= pageCount) notFound();
 
   return (
     <main>
