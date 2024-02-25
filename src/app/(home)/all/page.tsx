@@ -8,7 +8,7 @@ export default function HomePage() {
 
   return (
     <main>
-      <div className='mx-4 my-8 lg:mx-auto lg:w-[992px]'>
+      <div className='mx-4 my-6 lg:mx-auto lg:w-[992px]'>
         <h2 className='text-3xl font-bold my-4'>全記事一覧({pages.length})</h2>
         <div className='flex flex-col gap-4 text-left'>
           {pages.map((page, i) => {

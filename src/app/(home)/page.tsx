@@ -8,8 +8,8 @@ export default function HomePage() {
 
   return (
     <main>
-      <div className='mx-4 my-8 lg:mx-auto lg:w-[992px]'>
-        <div className='my-8 text-2xl font-bold'>
+      <div className='mx-4 my-6 lg:mx-auto lg:w-[992px]'>
+        <div className='my-6 text-2xl font-bold'>
           <p>
             RUNFUNRUNのブログです。プロフィールは
             <Link
