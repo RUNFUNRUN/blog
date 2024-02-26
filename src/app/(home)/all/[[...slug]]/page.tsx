@@ -58,5 +58,5 @@ export const generateStaticParams = async () => {
     slug: [(index + 1).toString()],
   }));
 
-  return slugs;
+  return [{ slug: [] }, ...slugs];
 };
