@@ -9,13 +9,13 @@ const pageCount = Math.ceil(totalPosts / postsPerPage);
 
 export default function HomePage({ params }: { params: { slug?: string[] } }) {
   const pageIndex = params.slug ? parseInt(params.slug[0], 10) - 1 : 0;
+  if (pageIndex < 0 || pageIndex >= pageCount) notFound();
+
   const startIndex = pageIndex * postsPerPage;
   const endIndex = startIndex + postsPerPage;
   const pages = getPages()
     .sort((a, b) => (b.data.exports.lastModified ?? 0) - (a.data.exports.lastModified ?? 0))
     .slice(startIndex, endIndex);
-
-  if (pageIndex < 0 || pageIndex >= pageCount) notFound();
 
   return (
     <main>
@@ -55,7 +55,7 @@ export default function HomePage({ params }: { params: { slug?: string[] } }) {
 
 export const generateStaticParams = async () => {
   const slugs = Array.from({ length: pageCount }, (_, index) => ({
-    params: { slug: [(index + 1).toString()] },
+    slug: [(index + 1).toString()],
   }));
 
   return slugs;
