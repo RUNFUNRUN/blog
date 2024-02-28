@@ -1,0 +1,342 @@
+---
+title: Next.js App Routerで動的にOpenGraphの画像を生成する
+description: 本ブログで、動的に画像を生成するための方法を共有します。
+---
+
+# はじめに
+
+OpenGraphは、TwitterやDiscord、SlackなどのSNSでリンクを共有した際に、
+リンク先のサイトの情報を表示するためのプロトコルです。
+QiitaやZennなどはページのタイトルが画像に入っていると思いますが、
+今回はそれと同じような画像をNext.jsで動的に生成する方法を紹介します。
+
+# やり方
+
+やり方としては、普通のルートで生成する方法と、apiルートを使う方法があります。
+
+今回はapiルートを使う方法を紹介します。
+普通のルートで生成する方法は、
+[Next.js公式ドキュメントのこちら](https://nextjs.org/docs/app/api-reference/file-conventions/metadata/opengraph-image)
+を参照してください。
+
+apiルートを使う場合はNext.js公式ドキュメントにはなく、Vercelの公式ドキュメントに書いてありました。
+今回は[こちら](https://vercel.com/docs/functions/og-image-generation)をもとに進めていきます。
+
+## api側の実装
+
+まずは、画像生成するapiルートを作成します。
+`src`ディレクトリを使っていない方は、読み替えてください。
+
+```bash
+mkdir -p src/app/api/og
+touch src/app/api/og/route.tsx
+```
+
+公式にはこのように書いてあります。
+
+```tsx
+import { ImageResponse } from 'next/og';
+// App router includes @vercel/og.
+// No need to install it.
+
+export const runtime = 'edge';
+
+export async function GET() {
+  return new ImageResponse(
+    (
+      <div
+        style={{
+          fontSize: 40,
+          color: 'black',
+          background: 'white',
+          width: '100%',
+          height: '100%',
+          padding: '50px 200px',
+          textAlign: 'center',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      >
+        👋 Hello
+      </div>
+    ),
+    {
+      width: 1200,
+      height: 630,
+    },
+  );
+}
+```
+
+めっちゃ簡単ですね。
+
+ただ、edge runtimeなので、ここではNodeのAPIは使えないことに注意が必要です。
+これはapiルートを使わなくても同じです。
+
+自分の場合はsearchParamsに文字の情報を渡して実装しました。
+
+また、画像についてはVercelがプレイグラウンドを提供しているので、
+自分はそれを使ってスタイリングしました。
+
+https://og-playground.vercel.app/
+
+ただ、フォントは異なるので、注意が必要です。
+あとサイズもデフォルトだと800x400なので、各自変更してください。
+自分は1200x630にしました。
+
+自分の実装はこんな感じです。
+
+```tsx title="src/app/api/og/route.tsx"
+import { ImageResponse } from 'next/og';
+import { NextRequest } from 'next/server';
+
+export const runtime = 'edge';
+
+const notoSansJP = fetch(
+  new URL('./NotoSansJP-Bold.ttf', process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'),
+).then((res) => res.arrayBuffer());
+
+export async function GET(req: NextRequest) {
+  const title = req.nextUrl.searchParams.get('title');
+  const description = req.nextUrl.searchParams.get('description');
+  if (title === null && description === null) {
+    return new ImageResponse(
+      (
+        <div
+          style={{
+            display: 'flex',
+            height: '100%',
+            width: '100%',
+            backgroundColor: '#ffffff',
+            background: 'linear-gradient(to bottom, blue, cyan)',
+          }}
+        >
+          <div
+            style={{
+              backgroundColor: '#000000',
+              color: '#ffffff',
+              fontWeight: 600,
+              display: 'flex',
+              flexDirection: 'column',
+              marginTop: '2rem',
+              marginBottom: '2rem',
+              marginLeft: '2rem',
+              marginRight: '2rem',
+              flexGrow: '1',
+            }}
+          >
+            <p
+              style={{
+                fontSize: 100,
+                marginTop: 'auto',
+                marginBottom: 'auto',
+                marginLeft: 'auto',
+                marginRight: 'auto',
+              }}
+            >
+              RUNFUNRUN.tech
+            </p>
+          </div>
+        </div>
+      ),
+      {
+        width: 1200,
+        height: 630,
+        fonts: [{ name: 'Inter', data: await notoSansJP }],
+      },
+    );
+  }
+
+  return new ImageResponse(
+    (
+      <div
+        style={{
+          display: 'flex',
+          height: '100%',
+          width: '100%',
+          backgroundColor: '#ffffff',
+          background: 'linear-gradient(to bottom, blue, cyan)',
+        }}
+      >
+        <div
+          style={{
+            backgroundColor: '#000000',
+            color: '#ffffff',
+            fontWeight: 600,
+            display: 'flex',
+            flexDirection: 'column',
+            marginTop: '2rem',
+            marginBottom: '2rem',
+            marginLeft: '2rem',
+            marginRight: '2rem',
+            flexGrow: '1',
+          }}
+        >
+          <p
+            style={{
+              fontSize: 50,
+              marginTop: '2rem',
+              marginBottom: 'auto',
+              marginLeft: '4rem',
+              marginRight: '4rem',
+            }}
+          >
+            RUNFUNRUN.tech
+          </p>
+          <div
+            style={{
+              fontSize: 70,
+              marginLeft: '4rem',
+              marginRight: '4rem',
+            }}
+          >
+            {title}
+          </div>
+          <div
+            style={{
+              fontSize: 30,
+              marginTop: 'auto',
+              marginBottom: '2rem',
+              marginLeft: '4rem',
+              marginRight: '4rem',
+            }}
+          >
+            {description}
+          </div>
+        </div>
+      </div>
+    ),
+    {
+      width: 1200,
+      height: 630,
+      fonts: [{ name: 'Inter', data: await notoSansJP }],
+    },
+  );
+}
+```
+
+`public`ディレクトリにフォントファイルを置いて、それをfetchしています。
+
+apiルートの中にフォントを置くことも可能ですが、
+Vercelにデプロイする際にエラーになってしまいました。
+
+```
+Error: The Edge Function "api/og" size is 3.93 MB and your plan size limit is 1 MB.
+       Learn More: https://vercel.link/edge-function-size
+```
+
+サイズが大きすぎたみたいです。
+`public`ディレクトリに置くことで解決できました。
+
+フォントは日本語対応してたらなんでもいいです。
+自分はGoogle FontsからNoto Sans JPをダウンロードして、
+その中の`NotoSansJP-Bold.ttf`を使っています。
+
+[こちら](https://fonts.google.com/noto/specimen/Noto+Sans+JP?subset=japanese&noto.script=Hira)
+からダウンロードできます。
+
+## 呼び出し側の実装
+
+今回はホームと各記事の2種類から呼び出そうと思います。
+
+## ホーム
+
+まずはホームです。
+
+```tsx title="src/app/layout.tsx"
+import type { Metadata } from 'next';
+...
+
+export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'),
+  title: 'RUNFUNRUN.tech',
+  description: 'This is my tech blog.',
+  openGraph: {
+    title: 'RUNFUNRUN.tech',
+    description: 'This is my tech blog.',
+    images: '/api/og',
+    url: '/',
+  },
+  twitter: {
+    title: 'RUNFUNRUN.tech',
+    description: 'This is my tech blog.',
+    images: '/api/og',
+  },
+};
+
+...
+```
+
+searchParamsを設定してないので、先ほど実装したようにタイトルが
+ドデカくなります。
+
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+
+<ImageZoom src='/api/og' width={1300} height={630} alt='home og image' />
+
+## 記事ページ
+
+記事の方は`page.tsx`の`generateMetadata`で設定します。
+
+`getPage`と`getPages`はFumadocsの機能で、
+mdxのデータを取ってきてくれる関数です。
+
+Next.jsの`Metadata`では`metadataBase`を設定することで、
+プロパティ内で相対パスを使うことができます。
+
+```tsx
+import { getPage, getPages } from '@/app/source';
+import type { Metadata } from 'next';
+import { notFound } from 'next/navigation';
+...
+
+export const generateMetadata = ({ params }: { params: { slug?: string[] } }) => {
+  const page = getPage(params.slug);
+
+  if (page === undefined) notFound();
+
+  const title = page.data.title;
+  const description = page.data.description;
+  const imageParams = new URLSearchParams();
+  imageParams.set('title', title);
+  imageParams.set('description', description ?? '');
+
+  return {
+    metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'),
+    title: title,
+    description: description,
+    openGraph: {
+      title: title,
+      description: description,
+      images: '/api/og?' + imageParams.toString(),
+      url: page.url,
+    },
+    twitter: {
+      title: title,
+      description: description,
+      images: '/api/og?' + imageParams.toString(),
+    },
+  } satisfies Metadata;
+};
+
+...
+```
+
+記事のページはこんな感じです。
+
+<ImageZoom
+  src='/api/og?title=Fumadocs%E3%81%A7%E3%83%96%E3%83%AD%E3%82%B0%E4%BD%9C%E3%81%A3%E3%81%A6%E3%81%BF%E3%81%9F%E3%80%82&description=Next.js%E3%81%AEApp+Router%E3%81%A7%E4%BD%9C%E3%82%89%E3%82%8C%E3%81%A6%E3%82%8B%E3%83%89%E3%82%AD%E3%83%A5%E3%83%A1%E3%83%B3%E3%83%88%E3%83%93%E3%83%AB%E3%83%89%E3%83%A9%E3%82%A4%E3%83%96%E3%83%A9%E3%83%AA%E3%82%92%E4%BD%BF%E3%81%A3%E3%81%A6%E3%81%BF%E3%81%9F%E3%80%82'
+  width={1300}
+  height={630}
+  alt='home og image'
+/>
+
+# さいごに
+
+結構簡単に実装できました。
+Next.jsは本当に便利です。
+
+ソースコードを全部見たい方は、本ブログ右上からGitHubリポジトリを
+見てみてください。
+
+ではまた。
