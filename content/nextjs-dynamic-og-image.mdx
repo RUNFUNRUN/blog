@@ -284,7 +284,7 @@ mdxのデータを取ってきてくれる関数です。
 Next.jsの`Metadata`では`metadataBase`を設定することで、
 プロパティ内で相対パスを使うことができます。
 
-```tsx
+```tsx title="src/app/posts/[[...slug]]/page.tsx"
 import { getPage, getPages } from '@/app/source';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
