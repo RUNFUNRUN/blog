@@ -3,9 +3,9 @@ import { NextRequest } from 'next/server';
 
 export const runtime = 'edge';
 
-const notoSansJP = fetch(new URL('./NotoSansJP-Bold.ttf', import.meta.url)).then((res) =>
-  res.arrayBuffer(),
-);
+const notoSansJP = fetch(
+  new URL('./NotoSansJP-Bold.ttf', process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'),
+).then((res) => res.arrayBuffer());
 
 export async function GET(req: NextRequest) {
   const title = req.nextUrl.searchParams.get('title');
