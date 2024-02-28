@@ -291,12 +291,12 @@ import { notFound } from 'next/navigation';
 ...
 
 export const generateMetadata = ({ params }: { params: { slug?: string[] } }) => {
-  const page = getPage(params.slug);
+  const post = getPage(params.slug);
 
-  if (page === undefined) notFound();
+  if (post === undefined) notFound();
 
-  const title = page.data.title;
-  const description = page.data.description;
+  const title = post.data.title;
+  const description = post.data.description;
   const imageParams = new URLSearchParams();
   imageParams.set('title', title);
   imageParams.set('description', description ?? '');
@@ -309,7 +309,7 @@ export const generateMetadata = ({ params }: { params: { slug?: string[] } }) =>
       title: title,
       description: description,
       images: '/api/og?' + imageParams.toString(),
-      url: page.url,
+      url: post.url,
     },
     twitter: {
       title: title,
