@@ -1,0 +1,132 @@
+---
+title: Gitでコミットに著名してみる
+description: GitHubでコミットにverifiedとついてたらかっこいいですよね。
+---
+
+ここではぱっと手順を書いていきます。
+
+# gpgのインストール
+
+各パッケージマネージャーでインストールしてください。
+
+- mac
+
+```bash
+brew install gpg
+# or
+# brew install gpg2
+```
+
+Linuxはもともと入ってると思いますが、なかったら
+
+```bash
+# arch
+sudo pacman -S gnupg
+# debian
+sudo apt install gnupg
+# rhel9
+sudo dnf install gnupg
+# rhel~8
+sudo yum install gnupg
+```
+
+みたいな感じでインストールしちゃってください。gnupg2でも大丈夫です。
+(というか、2のほうが良さそう。でも今回はどっちでも行けます。)
+もしgnupg2を使う場合はここから下のコマンドの`gpg`を`gpg2`に読み替えてください。
+`gpg`でも`gpg2`にパスが通ってる場合もあると思います。その場合は大丈夫です。
+
+# keyの作成
+
+まず、リストを見てみてください。
+
+```bash
+gpg --list-keys
+```
+
+これまでに作ってこなかったら何も出ないと思います。
+
+Macだと、信用データベースができました。みたくでるかもです。
+
+このコマンドで作成できます。
+
+```bash
+gpg --gen-key
+```
+名前とメアドはgitconfigと同じにしてください。名前はGitHubと同じでやってるけど、違くてもできるかは不明。
+
+次に鍵を取得をします。どこが鍵かめっちゃわかりづらいので、このコマンドで見れます。
+
+```bash
+gpg --list-keys --keyid-format LONG | grep pub | awk '{print $2}' | cut -d'/' -f2;
+```
+
+鍵がわかったらコピーしておいてください。ここからこの鍵を`<key>`と書きます。
+
+作成した鍵には有効期限が設定されてます。(作成画面で出てると思います。)
+
+変更したい場合は以下の通り。
+
+```bash
+gpg --expert --edit-key <key>
+
+gpg> expire
+# 0で無制限、他も書いてある通りにできます。
+gpg> save
+```
+
+# gitconfigの設定
+
+```bash
+git config --global user.signingkey <key>
+git config --global gpg.program gpg
+```
+
+このままだと、コミットするときに毎回`-S`オプションが必要になります。
+面倒な方は以下で毎回勝手に著名してくれます。
+
+```bash
+git config --global commit.gpgsign true
+```
+
+# path設定
+
+bashの方は`.bashrc`に、zshの方は`.zshrc`に以下を追加してください。
+
+```bash
+export GPG_TTY=$(tty)
+```
+
+# GitHubの設定
+
+公開鍵をGitHubに登録する必要があります。
+
+まずは公開鍵を出力します。
+
+```bash
+gpg --armor --export <key>
+```
+コピーしたらGitHubのSetting→SSH and GPG keysの下のほうのNew GPG keyで登録してください。
+
+これでコミットしたら著名できてると思います。
+
+# Mac限定オプション
+
+Macはパスフレーズの入力画面をTUIではなく、別ウィンドウで出来ます。
+
+以下を行う。
+
+```bash
+brew install pinentry-mac
+echo "pinentry-program /opt/homebrew/bin/pinentry-mac" > ~/.gnupg/gpg-agent.conf
+gpgconf --kill gpg-agent
+```
+
+パスの部分は各々変える。
+
+```bash
+which pinentry-mac
+```
+
+これで確認できる。
+
+以上、これでコミットに著名が付きましたとさ。
