@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { getPages } from '@/app/source';
-import { LinkCard } from './_components/LinkCard';
+import { PostCard } from './_components/PostCard';
 
 export default function HomePage() {
   const posts = getPages()
@@ -40,7 +40,7 @@ export default function HomePage() {
               date = new Date(lastModified).toLocaleDateString('ja-JP', { timeZone: 'Asia/Tokyo' });
             }
             return (
-              <LinkCard
+              <PostCard
                 title={post.data.title}
                 description={post.data.description ?? ''}
                 url={post.url}

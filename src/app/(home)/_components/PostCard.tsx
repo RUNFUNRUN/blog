@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-export const LinkCard = ({
+export const PostCard = ({
   title,
   description,
   url,

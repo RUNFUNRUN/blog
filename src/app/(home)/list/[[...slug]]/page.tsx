@@ -1,8 +1,7 @@
-import Link from 'next/link';
 import { getPages } from '@/app/source';
 import { notFound } from 'next/navigation';
 import { Pagination } from '../_components/Pagination';
-import { LinkCard } from '../../_components/LinkCard';
+import { PostCard } from '../../_components/PostCard';
 
 const totalPosts = getPages().length;
 const postsPerPage = 5;
@@ -49,7 +48,7 @@ export default function HomePage({ params }: { params: { slug?: string[] } }) {
               date = new Date(lastModified).toLocaleDateString('ja-JP', { timeZone: 'Asia/Tokyo' });
             }
             return (
-              <LinkCard
+              <PostCard
                 title={post.data.title}
                 description={post.data.description ?? ''}
                 url={post.url}
