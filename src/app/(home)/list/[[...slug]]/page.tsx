@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { getPages } from '@/app/source';
 import { notFound } from 'next/navigation';
 import { Pagination } from '../_components/Pagination';
+import { LinkCard } from '../../_components/LinkCard';
 
 const totalPosts = getPages().length;
 const postsPerPage = 5;
@@ -48,22 +49,18 @@ export default function HomePage({ params }: { params: { slug?: string[] } }) {
               date = new Date(lastModified).toLocaleDateString('ja-JP', { timeZone: 'Asia/Tokyo' });
             }
             return (
-              <Link
-                href={page.url}
-                className='rounded-lg border bg-card p-4 text-card-foreground transition-colors hover:bg-accent hover:text-accent-foreground w-full'
+              <LinkCard
+                title={page.data.title}
+                description={page.data.description ?? ''}
+                url={page.url}
+                date={date}
                 key={i}
-              >
-                <h2 className='mt-2 text-xl font-medium'>{page.data.title}</h2>
-                <p className='overflow-hidden overflow-ellipsis whitespace-nowrap text-medium text-muted-foreground'>
-                  {page.data.description}
-                </p>
-                <h3 className='text-right font-medium'>{date}</h3>
-              </Link>
+              />
             );
           })}
         </div>
         <div className='my-6'>
-          <Pagination current={pageIndex + 1} end={pageCount} path='/all' />
+          <Pagination current={pageIndex + 1} end={pageCount} path='/list' />
         </div>
       </div>
     </main>

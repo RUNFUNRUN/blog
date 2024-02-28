@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { getPages } from '@/app/source';
+import { LinkCard } from './_components/LinkCard';
 
 export default function HomePage() {
   const pages = getPages()
@@ -25,7 +26,7 @@ export default function HomePage() {
         <div>
           <h2 className='text-2xl sm:text-3xl font-bold my-4'>
             最新の記事 (
-            <Link href='/all' className='text-blue-500 hover:underline hover:text-blue-400 mx-1'>
+            <Link href='/list' className='text-blue-500 hover:underline hover:text-blue-400 mx-1'>
               全記事はこちら
             </Link>
             )
@@ -39,17 +40,13 @@ export default function HomePage() {
               date = new Date(lastModified).toLocaleDateString('ja-JP', { timeZone: 'Asia/Tokyo' });
             }
             return (
-              <Link
-                href={page.url}
-                className='rounded-lg border bg-card p-4 text-card-foreground transition-colors hover:bg-accent hover:text-accent-foreground w-full'
+              <LinkCard
+                title={page.data.title}
+                description={page.data.description ?? ''}
+                url={page.url}
+                date={date}
                 key={i}
-              >
-                <h2 className='mt-2 text-xl font-medium'>{page.data.title}</h2>
-                <p className='overflow-hidden overflow-ellipsis whitespace-nowrap text-medium text-muted-foreground'>
-                  {page.data.description}
-                </p>
-                <h3 className='text-right font-medium'>{date}</h3>
-              </Link>
+              />
             );
           })}
         </div>
