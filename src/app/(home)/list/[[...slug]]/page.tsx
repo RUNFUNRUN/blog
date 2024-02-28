@@ -67,7 +67,7 @@ export default function HomePage({ params }: { params: { slug?: string[] } }) {
   );
 }
 
-export const generateStaticParams = async () => {
+export const generateStaticParams = () => {
   const slugs = Array.from({ length: pageCount }, (_, index) => ({
     slug: [(index + 1).toString()],
   }));

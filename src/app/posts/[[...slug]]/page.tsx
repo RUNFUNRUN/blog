@@ -4,7 +4,7 @@ import { DocsPage, DocsBody } from 'fumadocs-ui/page';
 import { RollButton } from 'fumadocs-ui/components/roll-button';
 import { notFound } from 'next/navigation';
 
-export default async function Page({ params }: { params: { slug?: string[] } }) {
+export default function Page({ params }: { params: { slug?: string[] } }) {
   const post = getPage(params.slug);
 
   if (post === undefined) {
@@ -34,7 +34,7 @@ export default async function Page({ params }: { params: { slug?: string[] } }) 
   );
 }
 
-export const generateStaticParams = async () => {
+export const generateStaticParams = () => {
   return getPages().map((page) => ({
     slug: page.slugs,
   }));
