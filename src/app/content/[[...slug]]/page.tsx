@@ -59,6 +59,7 @@ export const generateMetadata = ({ params }: { params: { slug?: string[] } }) =>
       title: title,
       description: description,
       images: '/api/og?' + imageParams.toString(),
+      url: page.url,
     },
     twitter: {
       title: title,
