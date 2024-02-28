@@ -15,10 +15,10 @@ export const metadata: Metadata = {
   title: 'RUNFUNRUN.tech',
   description: 'This is my tech blog.',
   openGraph: {
-    images: '/miwa.jpeg',
+    images: '/api/og',
   },
   twitter: {
-    images: '/miwa.jpeg',
+    images: '/api/og',
   },
 };
 

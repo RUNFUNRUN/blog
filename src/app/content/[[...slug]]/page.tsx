@@ -45,12 +45,25 @@ export const generateMetadata = ({ params }: { params: { slug?: string[] } }) =>
 
   if (page === undefined) notFound();
 
+  const title = page.data.title;
+  const description = page.data.description;
+  const imageParams = new URLSearchParams();
+  imageParams.set('title', title);
+  imageParams.set('description', description ?? '');
+
   return {
-    title: page.data.title,
-    description: page.data.description,
+    metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'),
+    title: title,
+    description: description,
     openGraph: {
-      title: page.data.title,
-      description: page.data.description,
+      title: title,
+      description: description,
+      images: '/api/og?' + imageParams.toString(),
+    },
+    twitter: {
+      title: title,
+      description: description,
+      images: '/api/og?' + imageParams.toString(),
     },
   } satisfies Metadata;
 };
