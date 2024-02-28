@@ -5,13 +5,13 @@ import { RollButton } from 'fumadocs-ui/components/roll-button';
 import { notFound } from 'next/navigation';
 
 export default async function Page({ params }: { params: { slug?: string[] } }) {
-  const page = getPage(params.slug);
+  const post = getPage(params.slug);
 
-  if (page === undefined) {
+  if (post === undefined) {
     notFound();
   }
 
-  const lastModified = page.data.exports.lastModified;
+  const lastModified = post.data.exports.lastModified;
   let date = 'unknown date';
   let lastUpdate: Date | undefined = undefined;
   if (lastModified !== undefined) {
@@ -19,15 +19,15 @@ export default async function Page({ params }: { params: { slug?: string[] } }) 
     lastUpdate = new Date(lastModified);
   }
 
-  const MDX = page.data.exports.default;
+  const MDX = post.data.exports.default;
 
   return (
-    <DocsPage toc={page.data.exports.toc} lastUpdate={lastUpdate}>
+    <DocsPage toc={post.data.exports.toc} lastUpdate={lastUpdate}>
       <RollButton />
       <DocsBody>
         <h4 className='text-right'>{date}</h4>
-        <h1 className='mb-auto'>{page.data.title}</h1>
-        <p className='mt-4 mb-10'>{page.data.description}</p>
+        <h1 className='mb-auto'>{post.data.title}</h1>
+        <p className='mt-4 mb-10'>{post.data.description}</p>
         <MDX />
       </DocsBody>
     </DocsPage>
@@ -41,12 +41,12 @@ export const generateStaticParams = async () => {
 };
 
 export const generateMetadata = ({ params }: { params: { slug?: string[] } }) => {
-  const page = getPage(params.slug);
+  const post = getPage(params.slug);
 
-  if (page === undefined) notFound();
+  if (post === undefined) notFound();
 
-  const title = page.data.title;
-  const description = page.data.description;
+  const title = post.data.title;
+  const description = post.data.description;
   const imageParams = new URLSearchParams();
   imageParams.set('title', title);
   imageParams.set('description', description ?? '');
@@ -59,7 +59,7 @@ export const generateMetadata = ({ params }: { params: { slug?: string[] } }) =>
       title: title,
       description: description,
       images: '/api/og?' + imageParams.toString(),
-      url: page.url,
+      url: post.url,
     },
     twitter: {
       title: title,

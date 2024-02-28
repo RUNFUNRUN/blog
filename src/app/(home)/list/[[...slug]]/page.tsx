@@ -31,7 +31,7 @@ export default function HomePage({ params }: { params: { slug?: string[] } }) {
 
   const startIndex = pageIndex * postsPerPage;
   const endIndex = startIndex + postsPerPage;
-  const pages = getPages()
+  const posts = getPages()
     .sort((a, b) => (b.data.exports.lastModified ?? 0) - (a.data.exports.lastModified ?? 0))
     .slice(startIndex, endIndex);
 
@@ -42,17 +42,17 @@ export default function HomePage({ params }: { params: { slug?: string[] } }) {
           全{totalPosts}記事 <DisplayCurrentPosts startIndex={startIndex} endIndex={endIndex} />
         </h2>
         <div className='flex flex-col gap-4 text-left'>
-          {pages.map((page, i) => {
-            const lastModified = page.data.exports.lastModified;
+          {posts.map((post, i) => {
+            const lastModified = post.data.exports.lastModified;
             let date = 'unknown date';
             if (lastModified !== undefined) {
               date = new Date(lastModified).toLocaleDateString('ja-JP', { timeZone: 'Asia/Tokyo' });
             }
             return (
               <LinkCard
-                title={page.data.title}
-                description={page.data.description ?? ''}
-                url={page.url}
+                title={post.data.title}
+                description={post.data.description ?? ''}
+                url={post.url}
                 date={date}
                 key={i}
               />
