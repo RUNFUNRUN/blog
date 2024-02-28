@@ -7,6 +7,23 @@ const totalPosts = getPages().length;
 const postsPerPage = 5;
 const pageCount = Math.ceil(totalPosts / postsPerPage);
 
+const DisplayCurrentPosts = ({
+  startIndex,
+  endIndex,
+}: {
+  startIndex: number;
+  endIndex: number;
+}) => {
+  const start = startIndex + 1;
+  const end = endIndex < totalPosts ? endIndex : totalPosts;
+  if (start === end) return <span>({start})</span>;
+  return (
+    <span>
+      ({start}~{end})
+    </span>
+  );
+};
+
 export default function HomePage({ params }: { params: { slug?: string[] } }) {
   const pageIndex = params.slug ? parseInt(params.slug[0], 10) - 1 : 0;
   if (pageIndex < 0 || pageIndex >= pageCount) notFound();
@@ -21,7 +38,7 @@ export default function HomePage({ params }: { params: { slug?: string[] } }) {
     <main>
       <div className='mx-4 my-6 lg:mx-auto lg:w-[992px]'>
         <h2 className='text-3xl font-bold my-4'>
-          全{totalPosts}記事 ({startIndex + 1}~{endIndex < totalPosts ? endIndex : totalPosts})
+          全{totalPosts}記事 <DisplayCurrentPosts startIndex={startIndex} endIndex={endIndex} />
         </h2>
         <div className='flex flex-col gap-4 text-left'>
           {pages.map((page, i) => {
