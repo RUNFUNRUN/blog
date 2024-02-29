@@ -5,6 +5,7 @@ import { Inter } from 'next/font/google';
 import { GoogleAnalytics } from '@next/third-parties/google';
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
+import { Footer } from './_components/Footer';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -33,8 +34,11 @@ export default function Layout({ children }: { children: ReactNode }) {
       {process.env.NODE_ENV === 'production' && (
         <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID ?? ''} />
       )}
-      <body>
-        <RootProvider>{children}</RootProvider>
+      <body className='flex min-h-screen flex-col'>
+        <RootProvider>
+          {children}
+          <Footer />
+        </RootProvider>
       </body>
     </html>
   );
