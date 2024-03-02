@@ -12,6 +12,9 @@ const withMDX = createMDX({
 
 /** @type {import('next').NextConfig} */
 const config = {
+  images: {
+    domains: ['i.gyazo.com'],
+  },
   reactStrictMode: true,
 };
 
