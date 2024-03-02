@@ -1,0 +1,249 @@
+---
+title: tailscaleでSSH接続してみた
+description: Twitterでたまたま見つけて気になったので、試してみたいと思います。
+---
+
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+
+# tailscaleについて
+
+https://tailscale.com/
+
+<ImageZoom
+  src='https://i.gyazo.com/a5f4ec3808b421f3c189b7f5f9c2675c.png'
+  width={1378}
+  height={653}
+  alt='image by gyazo'
+/>
+
+> Tailscale makes creating software-defined networks easy: securely connecting users, services, and devices.
+
+とあり、いろいろセキュアに接続できるようです。
+
+今回は、SSH接続を試してみます。
+
+もちろん、無料プランが用意されています。
+
+料金はこのようになっています。
+
+<ImageZoom
+  src='https://i.gyazo.com/0a0ffb6c8595e13f49f9dd7604604021.png'
+  width={1378}
+  height={653}
+  alt='image by gyazo'
+/>
+
+# 設定する
+
+早速Get Startedを押してみます。
+
+アカウントの作成が必要です。利用できるプロバイダーは以下の通りです。
+
+<ImageZoom
+  src='https://i.gyazo.com/ebb1d22c2ef892340ceb74bdf149af55.png'
+  width={1378}
+  height={653}
+  alt='image by gyazo'
+/>
+
+自分はGitHubを利用しました。
+
+<ImageZoom
+  src='https://i.gyazo.com/d15f4d4196d5da25e8aca771fc2ed4f4.png'
+  width={1378}
+  height={653}
+  alt='image by gyazo'
+/>
+
+2つ以上のデバイスを接続する必要があります。
+
+今回はメインデスクトップのWSLのArch LinuxとMacBook Airで設定しようと思います。
+
+最初はLinuxで進めていきます。
+コマンドを早速実行します。
+
+```bash
+~
+❯ curl -fsSL https://tailscale.com/install.sh | sh
+Installing Tailscale for arch, using method pacman
++ sudo pacman -Sy
+:: Synchronizing package databases...
+ core is up to date
+ extra is up to date
+ community is up to date
++ sudo pacman -S tailscale --noconfirm
+resolving dependencies...
+looking for conflicting packages...
+
+Packages (1) tailscale-1.60.1-1
+
+Total Download Size:    8.42 MiB
+Total Installed Size:  32.94 MiB
+
+:: Proceed with installation? [Y/n]
+:: Retrieving packages...
+ tailscale-1.60.1-1-x86_64                                     8.4 MiB   330 KiB/s 00:26 [###################################################] 100%(1/1) checking keys in keyring                                                           [###################################################] 100%
+(1/1) checking package integrity                                                         [###################################################] 100%
+(1/1) loading package files                                                              [###################################################] 100%
+(1/1) checking for file conflicts                                                        [###################################################] 100%
+:: Processing package changes...
+(1/1) installing tailscale                                                               [###################################################] 100%
+ldconfig: /usr/lib/wsl/lib/libcuda.so.1 is not a symbolic link
+
+:: Running post-transaction hooks...
+(1/2) Reloading system manager configuration...
+(2/2) Arming ConditionNeedsUpdate...
++ sudo systemctl enable --now tailscaled
+Created symlink /etc/systemd/system/multi-user.target.wants/tailscaled.service → /usr/lib/systemd/system/tailscaled.service.
++ set +x
+Installation complete! Log in to start using Tailscale by running:
+
+sudo tailscale up
+```
+
+勝手にディストリビューションを判別して、pacmanでインストールしてくれました。
+
+そのまま言われた通りに実行します。(リンクは一応隠してます)
+
+```bash
+~ 30s
+❯ sudo tailscale up
+
+To authenticate, visit:
+
+        https://login.tailscale.com/a/xxxxxxxxx
+
+Success.
+```
+
+リンクを踏んでログインしたら成功しました。
+
+そうすると、desktopというデバイスが追加されていました。
+
+<ImageZoom
+  src='https://i.gyazo.com/de5cace11da1a7f7905c98bc4c77fcf1.png'
+  width={1378}
+  height={653}
+  alt='image by gyazo'
+/>
+
+SSHするためには、`-ssh`オプションをつける必要があるようなので、また実行します。
+
+```bash
+~
+❯ sudo tailscale up -ssh
+[sudo] password for runfunrun:
+```
+
+同じようにMacでも設定します。
+Macの場合はAppストアのリンクが表示されるので、そこからインストールします。
+
+https://apps.apple.com/ca/app/tailscale/id1475387142?mt=12
+
+画面の指示に従ってConnectを押すとこのようになりました。
+
+<ImageZoom
+  src='https://i.gyazo.com/ebdaf80e2a840fca9a37543b725358ff.png'
+  width={1378}
+  height={653}
+  alt='image by gyazo'
+/>
+
+じっさいにコマンドを実行してみます。
+
+```bash
+~ 18s
+❯ ping 100.103.144.60 -c 4
+PING 100.103.144.60 (100.103.144.60) 56(84) bytes of data.
+64 bytes from 100.103.144.60: icmp_seq=1 ttl=64 time=34.5 ms
+64 bytes from 100.103.144.60: icmp_seq=2 ttl=64 time=220 ms
+64 bytes from 100.103.144.60: icmp_seq=3 ttl=64 time=89.3 ms
+64 bytes from 100.103.144.60: icmp_seq=4 ttl=64 time=138 ms
+
+--- 100.103.144.60 ping statistics ---
+4 packets transmitted, 4 received, 0% packet loss, time 3003ms
+rtt min/avg/max/mdev = 34.482/120.386/219.837/68.094 ms
+```
+
+pingが通ったので、Success, it works!を押します。
+
+<ImageZoom
+  src='https://i.gyazo.com/9bf6b986920f3f143e6694f871c8fd66.png'
+  width={1378}
+  height={653}
+  alt='image by gyazo'
+/>
+
+desktopにはSSHというラベルがついてますね。
+現状MacにSSH接続はできないようです。([reddit](https://www.reddit.com/r/Tailscale/comments/13cncn7/tailscale_mac_ssh/)より)
+
+# SSH接続する
+
+実際にMacからArch LinuxにSSH接続してみます。
+
+方法は簡単で、sshコマンドの後に表示されているIPアドレスを指定するだけです。
+
+<ImageZoom
+  src='https://i.gyazo.com/1e99dc3215c7e4b909dcb99a1b940a8b.png'
+  width={1225}
+  height={910}
+  alt='image by gyazo'
+/>
+
+非常に高速に動作します。
+
+Cloudflare TunnelでSSH接続したときは遅延が酷く、Neovimが使い物にならなかったのですが、
+Tailscaleは快適に使えそうです。
+
+Cloudflareのように、ブラウザからの接続もBetaで実装されているようです。
+
+<ImageZoom
+  src='https://i.gyazo.com/59ff077beb86e40cf3ed5d758a9167da.png'
+  width={1378}
+  height={653}
+  alt='image by gyazo'
+/>
+
+...からSSH to machine...を押してユーザーを入力するとできます。
+
+Windowsだと別windowで開きます。Macだとそのまま新規タブで開きました。
+
+<ImageZoom
+  src='https://i.gyazo.com/4f27283fab2e98ff807c1e43218fb6e7.png'
+  width={789}
+  height={501}
+  alt='image by gyazo'
+/>
+
+ブラウザから接続すると、Machinesに追加されます。
+
+<ImageZoom
+  src='https://i.gyazo.com/98e013bc2b1fa770a22dc9f0ded2beaa.png'
+  width={1378}
+  height={653}
+  alt='image by gyazo'
+/>
+
+このブラウザSSH接続はNeovimが正常に描画されませんでした。
+CloudflareのブラウザSSHは正常に描画されていたので、改善の余地ありですね。
+
+Mac側の`.ssh/config`には以下を設定しました。
+
+```
+Host arch
+  HostName 100.69.69.94
+  ServerAliveInterval 60
+```
+
+ポートフォワーディングもできました。
+
+```bash
+ssh -L 3000:localhost:3000 arch
+```
+
+# 感想
+
+とても簡単に設定できて快適だったので、Cloudflareから乗り換えたいと思います。
+他にもいろいろ機能があるみたいなので、見てみたいと思います。
+
+ではまた。
