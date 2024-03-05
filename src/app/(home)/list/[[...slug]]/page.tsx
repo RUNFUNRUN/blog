@@ -2,6 +2,7 @@ import { getPages } from '@/app/source';
 import { notFound } from 'next/navigation';
 import { Pagination } from '../_components/Pagination';
 import { PostCard } from '../../_components/PostCard';
+import { Metadata } from 'next';
 
 const totalPosts = getPages().length;
 const postsPerPage = 5;
@@ -72,4 +73,21 @@ export const generateStaticParams = () => {
   }));
 
   return [{ slug: [] }, ...slugs];
+};
+
+export const generateMetadata = ({ params }: { params: { slug?: string[] } }) => {
+  const slug = params.slug;
+  let index = '';
+  if (slug) {
+    index = ` - ${slug[0]}ページ`;
+  }
+  return {
+    title: 'RUNFUNRUN.tech | 記事一覧' + index,
+    robots: {
+      index: false,
+      googleBot: {
+        index: false,
+      },
+    },
+  } satisfies Metadata;
 };
