@@ -42,8 +42,7 @@ export const generateStaticParams = () => {
 
 export const generateMetadata = ({ params }: { params: { slug?: string[] } }) => {
   const post = getPage(params.slug);
-
-  if (post === undefined) notFound();
+  if (post === undefined) return;
 
   const title = post.data.title;
   const description = post.data.description;
