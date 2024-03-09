@@ -22,6 +22,9 @@ export default function HomePage() {
             。
           </p>
           <p>質問等はプロフィールのコンタクトかDiscordのDMからお願いします。</p>
+          <p>
+            また、記事には誤りがある可能性があります。もし見つけた場合も連絡くれると嬉しいです。
+          </p>
         </div>
         <div>
           <h2 className='text-2xl sm:text-3xl font-bold my-4'>
