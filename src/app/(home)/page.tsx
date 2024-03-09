@@ -16,6 +16,7 @@ export default function HomePage() {
             <Link
               href='https://www.runfunrun.info'
               className='text-blue-500 hover:underline hover:text-blue-400 mx-1'
+              target='_blank'
             >
               こちら
             </Link>
