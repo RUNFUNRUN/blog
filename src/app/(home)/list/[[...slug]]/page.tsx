@@ -25,7 +25,7 @@ const DisplayCurrentPosts = ({
   );
 };
 
-export default function HomePage({ params }: { params: { slug?: string[] } }) {
+export default function Page({ params }: { params: { slug?: string[] } }) {
   const pageIndex = params.slug ? parseInt(params.slug[0], 10) - 1 : 0;
   if (pageIndex < 0 || pageIndex >= pageCount) notFound();
 
