@@ -1,0 +1,453 @@
+---
+title: Astro DB触ってみた
+description: 2024/3/12にAstro DBのアーリープレビューが始まったので、見ていきます。
+---
+
+# Astro DBとは
+
+https://astro.build/db/
+
+ドキュメント https://docs.astro.build/ja/guides/astro-db/
+
+> Astro DB is a fully-managed SQL database designed exclusively for Astro.
+
+訳すと、
+
+> Astro DB は、 Astro 専用に設計されたフルマネージド SQL データベースです。
+
+とあります。
+
+特徴は以下の通りです。
+
+- Powered by LibSQL
+
+> LibSQL balanced lightweight efficiency with proven enterprise-grade performance.
+
+> LibSQL は、軽量効率と実証済みのエンタープライズ グレードのパフォーマンスのバランスをとりました。
+
+- Scale with confidence
+
+> Astro DB’s automatically scales up to meet demand and scales down to $0 when inactive.
+
+> Astro DB は需要に合わせて自動的にスケールアップし、非アクティブな場合は $0 までスケールダウンします。
+
+- Automatically configured
+
+> Everything is setup for you, like a TypeScript ORM with full type-safety out of the box.
+
+> すぐに使用できる完全なタイプ セーフティを備えた TypeScript ORM のように、すべてが自動的にセットアップされます。
+
+[LibSQL](https://github.com/tursodatabase/libsql)はSQLiteのフォークです。
+
+また、Astro DBにはDrizzle ORMがbuilt-inで含まれています。
+Drizzle ORMを使い慣れてる人にとってはかなり嬉しいですね。
+
+# 値段
+
+やっぱり一番気になるのはここですよね。
+
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+
+<ImageZoom
+  src='https://i.gyazo.com/ba1ef94c82bb374bd2080f765415d682.png'
+  width={1378}
+  height={653}
+  alt='image by gyazo'
+/>
+
+なんと、基本無料です。
+
+データベース数、アプリ数は無制限で、ストレージは1GB まで無料です。
+1GB追加ごとに月1.00ドルかかります。
+読み取りは月10億回まで無料で、追加100万回ごとに0.001ドルかかります。
+書き込みは月100万回まで無料で、追加100万回ごとに1.00ドルかかります。
+
+また、自動的にスケーリングされますが、クレジットカードの登録は必要ないため、
+勝手に課金されることはないのがいいですよね。
+
+個人で使う分には、制限を超えることは少ないと思うのでかなり良い感じだと思います。
+制限を超えても結構良心的な値段だと思います。
+
+# 使ってみる
+
+まずはAstro Studioにサインアップします。
+
+Astro Studioに関しては、[こちら](https://docs.astro.build/ja/guides/astro-db/#astro-studio)
+には以下のように書かれています。
+
+> Astro DB can connect to the Astro Studio platform to quickly add a hosted database to your project. You can view, manage and deploy new hosted databases all from the Astro Studio web portal.
+
+> Astro DB はAstro Studio プラットフォームに接続して、ホストされたデータベースをプロジェクトにすばやく追加できます。新しいホスト型データベースの表示、管理、展開はすべて Astro Studio Web ポータルから行うことができます。
+
+https://studio.astro.build/
+
+ここから、使えます。パパっとGitHubでアカウントを作っちゃいましょう。
+
+## プロジェクト作成
+
+今回は、簡単のためテンプレートから作成します。
+
+<ImageZoom
+  src='https://i.gyazo.com/2c56fd0656c5d9fb2693e614b91f3277.png'
+  width={1378}
+  height={653}
+  alt='image by gyazo'
+/>
+
+Start a Projectを押します。
+
+<ImageZoom
+  src='https://i.gyazo.com/013fe59d4363d2e82886df805a25ee0f.png'
+  width={1378}
+  height={653}
+  alt='image by gyazo'
+/>
+
+Create from Templateを押します。
+
+<ImageZoom
+  src='https://i.gyazo.com/70c6c3fe4e15454e192dfd877265bd76.png'
+  width={1378}
+  height={653}
+  alt='image by gyazo'
+/>
+
+3種類ありますが、今回はJob Boardを選択します。
+
+<ImageZoom
+  src='https://i.gyazo.com/cc6a8a6d865b821e9946a62ccf7bcc7f.png'
+  width={1378}
+  height={653}
+  alt='image by gyazo'
+/>
+
+リポジトリ名は適当にastrodb-jobboardにしました。
+RegionをAsia(Tokyo)にして、Create a private Git repositoryのチェックを外して、
+Create New Projectを押します。
+
+しばらく待つと、プロジェクトが作成されます。
+
+https://github.com/RUNFUNRUN/astrodb-jobboard
+
+<ImageZoom
+  src='https://i.gyazo.com/1332b9246cc2a08164f02c4be90be49d.png'
+  width={1378}
+  height={653}
+  alt='image by gyazo'
+/>
+
+また、Astro StudioのWeb UI内からSQL ConsoleとStackBlitzが使えるようです。
+
+## 見てみる
+
+早速クローンしてローカルで動かします。
+
+```bash
+gh repo clone RUNFUNRUN/astrodb-jobboard
+cd astrodb-jobboard
+bun i
+bun dev
+```
+
+ログに以下のようなものが出てきます。
+
+```
+21:44:04 [astro:db] New local database created.
+```
+
+最初にローカルサーバーを立ててDBを作成しないと、`db/seed.ts`でLSPがエラーを出してしまいます。
+
+あと、前提としてこのプロジェクトはSSRで動いている点に注意です。
+
+同時並行で中も見ていきましょう。
+
+```typescript title="db/config.ts"
+import { NOW, column, defineDb, defineTable } from 'astro:db';
+
+export const Company = defineTable({
+  columns: {
+    id: column.number({ primaryKey: true }),
+    title: column.text(),
+    description: column.text(),
+    logo: column.text(),
+  },
+});
+
+export const JobType = defineTable({
+  columns: {
+    id: column.number({ primaryKey: true }),
+    title: column.text(),
+    value: column.text({ unique: true }),
+  },
+});
+
+export const JobPosting = defineTable({
+  columns: {
+    id: column.number({ primaryKey: true }),
+    title: column.text(),
+    companyId: column.number({ references: () => Company.columns.id }),
+    description: column.text(),
+    type: column.number({ references: () => JobType.columns.id }),
+    location: column.text(),
+    posted: column.date({ default: NOW }),
+    richText: column.text({ optional: true }),
+  },
+});
+
+// https://astro.build/db/config
+export default defineDb({
+  tables: {
+    JobPosting,
+    Company,
+    JobType,
+  },
+});
+```
+
+```typescript title="db/seed.ts"
+import { Company, JobPosting, JobType, db } from 'astro:db';
+
+export default async function seed() {
+  const companies = await db
+    .insert(Company)
+    .values([
+      {
+        title: 'Astro',
+        description: 'Open-source website framework with a focus on content',
+        logo: 'https://pbs.twimg.com/profile_images/1632785343433908224/SnMGR19O_400x400.png',
+      },
+      {
+        title: 'Meta',
+        description:
+          'Meta is a company that is focused on building the metaverse and other buzzwords',
+        logo: 'https://pbs.twimg.com/profile_images/1453818753880190978/HqrrEcrI_400x400.png',
+      },
+      {
+        title: 'Slack',
+        description: 'Workspace application',
+        logo: 'https://pbs.twimg.com/profile_images/1461144163789983748/N5iAWd2d_400x400.jpg',
+      },
+    ])
+    .returning();
+
+  const jobtypes = await db
+    .insert(JobType)
+    .values([
+      {
+        title: 'Full-time',
+        value: 'full-time',
+      },
+      {
+        title: 'Half-time',
+        value: 'half-time',
+      },
+      {
+        title: 'Contract',
+        value: 'contract',
+      },
+      {
+        title: 'Internship',
+        value: 'internship',
+      },
+    ])
+    .returning();
+
+  await db.insert(JobPosting).values([
+    {
+      title: 'Senior UX Writer',
+      companyId: companies[0].id,
+      description: 'Open-source website framework with a focus on content',
+      type: jobtypes[0].id,
+      location: 'New York, NY',
+      posted: new Date('2022-12-13'),
+      richText: `<h2>About the role</h2>
+      <p>
+        As the first Product Design hire at PermitFlow, you will work with the
+        CTO and engineering team to lead and execute design and strategy of
+        PermitFlow's product experience. We are the leading construction permit
+        application software for builders. Our current team consists of
+        engineers from Uber, Amazon, Stripe, NerdWallet, Harvard, Stanford, and
+        more.
+      </p>`,
+    },
+    {
+      title: 'Junior whatever',
+      companyId: companies[2].id,
+      description: 'Workspace application',
+      type: jobtypes[1].id,
+      location: 'Remote',
+      posted: new Date('2021-12-13'),
+      richText: `<h2>About the role</h2>
+    <p>
+      As the first Product Design hire at PermitFlow, you will work with the
+      CTO and engineering team to lead and execute design and strategy of
+      PermitFlow's product experience. We are the leading construction permit
+      application software for builders. Our current team consists of
+      engineers from Uber, Amazon, Stripe, NerdWallet, Harvard, Stanford, and
+      more.
+    </p>`,
+    },
+    {
+      title: 'Amazing role',
+      companyId: companies[1].id,
+      description: 'Building a new meta-verse or whatever other buzzword',
+      type: jobtypes[0].id,
+      location: 'Ghent, Belgium',
+      posted: new Date('12/13/2020'),
+      richText: `<h2>About the role</h2>
+    <p>
+      As the first Amazing Role  hire at meta, you will work with the
+      CTO and engineering team to lead and execute design and strategy of
+      PermitFlow's product experience. We are the leading construction permit
+      application software for builders. Our current team consists of
+      engineers from Uber, Amazon, Stripe, NerdWallet, Harvard, Stanford, and
+      more.
+    </p>`,
+    },
+    {
+      title: 'Remote Assistant',
+      companyId: companies[0].id,
+      description: 'Open-source website framework with a focus on content',
+      type: jobtypes[2].id,
+      location: 'Remote',
+      posted: new Date('2019-12-13'),
+      richText: `<h2>About the role</h2>
+      <p>
+        As a remote assistant, you will work with the CTO and engineering team to
+        lead and execute design and strategy of PermitFlow's product experience.
+        We are the leading construction permit application software for builders.
+        Our current team consists of engineers from Uber, Amazon, Stripe,
+        NerdWallet, Harvard, Stanford, and more.
+      </p>`,
+    },
+  ]);
+}
+```
+
+`config.ts`ではテーブルの定義を、`seed.ts`では初期データの入力をしてるようです。
+
+次に、呼び出し側の実装を見ていきます。
+今回は一覧部分を見ます。(ファイル内から一部抜粋してます。)
+
+```typescript title="src/pages/index.astro"
+const jobs = await db
+  .select()
+  .from(JobPosting)
+  .innerJoin(JobType, eq(JobPosting.type, JobType.id))
+  .innerJoin(Company, eq(JobPosting.companyId, Company.id));
+const locations = [...new Set(jobs.map((job) => job.JobPosting.location))];
+const types = await db.select().from(JobType);
+```
+
+結構使いやすそうです。Drizzle ORM使ってる人はすぐ使えそうです。
+
+## デプロイ
+
+今回はVercelにデプロイしてみます。
+
+その前に、`package.json`の`build`スクリプトを以下のように変更します。
+
+```json title="package.json"
+{
+  ...
+  "scripts": {
+    ...
+    "build": "astro build --remote"
+    ...
+  }
+  ...
+}
+```
+
+ちなみに、ローカル環境で本番DBにアクセスしたい場合は、同様に`astro dev`に`--remote`オプションをつけ、
+`.env`を作成してvercelと同じように変数を設定すればいいです。
+
+```bash
+touch .env
+```
+
+```text title=".env"
+ASTRO_STUDIO_APP_TOKEN=xxxx
+```
+
+```json title="package.json"
+{
+  ...
+  "scripts": {
+    ...
+    "build": "astro build --remote"
+    ...
+  }
+  ...
+}
+```
+
+VercelにAstroプロジェクトをデプロイする場合、必要なパッケージがあるのでインストールします。
+
+設定も勝手にやってくれます。
+
+```bash
+bunx astro add vercel
+```
+
+pushしたら、次はAstro Studioからトークンを取得します。
+
+<ImageZoom
+  src='https://i.gyazo.com/5a454de6cb1be9d2991ef8a802729bc5.png'
+  width={1378}
+  height={653}
+  alt='image by gyazo'
+/>
+
+次にVercelでプロジェクトを作成します。
+さっきのトークンを環境変数に設定します。
+
+<ImageZoom
+  src='https://i.gyazo.com/afe0195b57c28ec3e8a1ec4481a9a934.png'
+  width={1378}
+  height={653}
+  alt='image by gyazo'
+/>
+
+これでデプロイしてみます。
+
+<ImageZoom
+  src='https://i.gyazo.com/5beb48955f7894d96fdd52eeb2c70046.png'
+  width={1378}
+  height={653}
+  alt='image by gyazo'
+/>
+
+無事デプロイできました。でも、プレビューを見ると内容がありませんね。
+
+`seed.ts`で設定したデータはあくまで開発用なので、自分でデータを入れる必要があります。
+
+でも最初から入れておきたいデータありますよね。
+
+そういう時は以下を実行します。(環境変数を設定してる前提)
+
+```bash
+bun run astro db execute db/seed.ts --remote
+```
+
+今回はSSRなので、本番にもそのままリロードするだけで反映されます。
+
+https://astrodb-jobboard-ten.vercel.app/
+
+<ImageZoom
+  src='https://i.gyazo.com/0f9e991d46218ae583f9f6fedc0bde27.png'
+  width={1378}
+  height={653}
+  alt='image by gyazo'
+/>
+
+いい感じです。
+
+# さいごに
+
+Astro DBはまだアーリープレビューですが、かなり使いやすそうです。
+自分の中でAstroはSSGのイメージが強かったですが、今回SSRに触れてみました。
+AstroはReact等のあライブラリでCSRもできるのも良いですね。
+今度Astroで何か作ってみたいなと思いました。
+
+ではまた。
