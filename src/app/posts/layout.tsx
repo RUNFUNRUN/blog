@@ -1,11 +1,11 @@
-import { pageTree } from '../source';
+import { sortedByDatePageTree } from '../source';
 import { DocsLayout } from 'fumadocs-ui/layout';
 import type { ReactNode } from 'react';
 
 export default function RootDocsLayout({ children }: { children: ReactNode }) {
   return (
     <DocsLayout
-      tree={pageTree}
+      tree={sortedByDatePageTree}
       nav={{ title: 'RUNFUNRUN.tech', githubUrl: 'https://github.com/RUNFUNRUN/blog' }}
     >
       {children}

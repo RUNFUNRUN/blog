@@ -18,11 +18,7 @@ const frontmatterSchema = defaultSchemas.frontmatter.extend({
     }),
 });
 
-export const {
-  getPage,
-  getPages,
-  pageTree: sortedByDateTree,
-} = loader({
+export const { getPage, getPages, pageTree } = loader({
   baseUrl: '/posts',
   source: createMDXSource(map, { schema: { frontmatter: frontmatterSchema } }),
 });
@@ -38,9 +34,7 @@ const isPageNode = (node: PageTree.Node): node is PageTree.Item => {
   return node.type === 'page';
 };
 
-export const pageTree: PageTree.Root = {
+export const sortedByDatePageTree: PageTree.Root = {
   name: 'Posts',
-  children: sortedByDateTree.children
-    .filter(isPageNode)
-    .sort((a, b) => getDate(b.url) - getDate(a.url)),
+  children: pageTree.children.filter(isPageNode).sort((a, b) => getDate(b.url) - getDate(a.url)),
 };
