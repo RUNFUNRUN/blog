@@ -32,7 +32,7 @@ export default function Page({ params }: { params: { slug?: string[] } }) {
   const startIndex = pageIndex * postsPerPage;
   const endIndex = startIndex + postsPerPage;
   const posts = getPages()
-    .sort((a, b) => (b.data.exports.lastModified ?? 0) - (a.data.exports.lastModified ?? 0))
+    .sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime())
     .slice(startIndex, endIndex);
 
   return (
@@ -43,11 +43,9 @@ export default function Page({ params }: { params: { slug?: string[] } }) {
         </h2>
         <div className='flex flex-col gap-4 text-left'>
           {posts.map((post, i) => {
-            const lastModified = post.data.exports.lastModified;
-            let date = 'unknown date';
-            if (lastModified !== undefined) {
-              date = new Date(lastModified).toLocaleDateString('ja-JP', { timeZone: 'Asia/Tokyo' });
-            }
+            const date = new Date(post.data.date).toLocaleDateString('ja-JP', {
+              timeZone: 'Asia/Tokyo',
+            });
             return (
               <PostCard
                 title={post.data.title}

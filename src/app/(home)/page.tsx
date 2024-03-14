@@ -4,7 +4,7 @@ import { PostCard } from './_components/PostCard';
 
 export default function HomePage() {
   const posts = getPages()
-    .sort((a, b) => (b.data.exports.lastModified ?? 0) - (a.data.exports.lastModified ?? 0))
+    .sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime())
     .slice(0, 5);
 
   return (
@@ -38,11 +38,9 @@ export default function HomePage() {
         </div>
         <div className='flex flex-col gap-4 text-left'>
           {posts.map((post, i) => {
-            const lastModified = post.data.exports.lastModified;
-            let date = 'unknown date';
-            if (lastModified !== undefined) {
-              date = new Date(lastModified).toLocaleDateString('ja-JP', { timeZone: 'Asia/Tokyo' });
-            }
+            const date = new Date(post.data.date).toLocaleDateString('ja-JP', {
+              timeZone: 'Asia/Tokyo',
+            });
             return (
               <PostCard
                 title={post.data.title}

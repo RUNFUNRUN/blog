@@ -1,6 +1,7 @@
 ---
 title: Fumadocsでブログ作ってみた。
 description: Next.jsのApp Routerで作られてるドキュメントビルドライブラリを使ってみた。
+date: 2024-02-07
 ---
 
 https://fumadocs.vercel.app/
@@ -23,13 +24,10 @@ bunx create-fumadocs-app
 コードブロックもいい感じです。(コードは適当)
 
 ```ts
-import {Client, Events, GatewayIntentBits } from "discord.js";
+import { Client, Events, GatewayIntentBits } from 'discord.js';
 
 const client = new Client({
-  intents: [
-    GatewayIntentBits.Guilds,
-    GatewayIntentBits.GuildMessages,
-  ],
+  intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages],
 });
 
 client.once(Events.ClientReady, (c: Client) => {

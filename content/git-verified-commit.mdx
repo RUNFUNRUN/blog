@@ -1,6 +1,7 @@
 ---
 title: Gitでコミットに著名してみる
 description: GitHubでコミットにverifiedとついてたらかっこいいですよね。
+date: 2024-02-11
 ---
 
 ここではぱっと手順を書いていきます。
@@ -52,6 +53,7 @@ Macだと、信用データベースができました。みたくでるかも�
 ```bash
 gpg --gen-key
 ```
+
 名前とメアドはgitconfigと同じにしてください。名前はGitHubと同じでやってるけど、違くてもできるかは不明。
 
 次に鍵を取得をします。どこが鍵かめっちゃわかりづらいので、このコマンドで見れます。
@@ -105,6 +107,7 @@ export GPG_TTY=$(tty)
 ```bash
 gpg --armor --export <key>
 ```
+
 コピーしたらGitHubのSetting→SSH and GPG keysの下のほうのNew GPG keyで登録してください。
 
 これでコミットしたら著名できてると思います。

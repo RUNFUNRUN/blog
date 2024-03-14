@@ -11,11 +11,11 @@ export default function Page({ params }: { params: { slug?: string[] } }) {
     notFound();
   }
 
+  const date = new Date(post.data.date).toLocaleDateString('ja-JP', { timeZone: 'Asia/Tokyo' });
+
   const lastModified = post.data.exports.lastModified;
-  let date = 'unknown date';
   let lastUpdate: Date | undefined = undefined;
   if (lastModified !== undefined) {
-    date = new Date(lastModified).toLocaleDateString('ja-JP', { timeZone: 'Asia/Tokyo' });
     lastUpdate = new Date(lastModified);
   }
 
