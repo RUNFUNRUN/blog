@@ -13,7 +13,12 @@ const withMDX = createMDX({
 /** @type {import('next').NextConfig} */
 const config = {
   images: {
-    domains: ['i.gyazo.com'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'i.gyazo.com',
+      },
+    ],
   },
   reactStrictMode: true,
 };
