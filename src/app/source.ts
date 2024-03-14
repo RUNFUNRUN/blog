@@ -4,8 +4,6 @@ import { loader } from 'fumadocs-core/source';
 import { z } from 'zod';
 import { PageTree } from 'fumadocs-core/server';
 
-const baseUrl = '/posts';
-
 const frontmatterSchema = defaultSchemas.frontmatter.extend({
   date: z
     .string()
@@ -25,7 +23,7 @@ export const {
   getPages,
   pageTree: sortedByDateTree,
 } = loader({
-  baseUrl,
+  baseUrl: '/posts',
   source: createMDXSource(map, { schema: { frontmatter: frontmatterSchema } }),
 });
 
