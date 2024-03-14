@@ -28,8 +28,7 @@ export const {
 });
 
 const getDate = (url: string) => {
-  const modifiedUrl = url.replace(/^\/posts/, '');
-  const slugs = modifiedUrl.slice(1).split('/');
+  const slugs = url.replace(/^\/posts\//, '').split('/');
   const post = getPage(slugs);
   if (post === undefined) return 0;
   return post.data.date.getTime();
