@@ -34,6 +34,7 @@ export async function GET(req: NextRequest) {
               marginLeft: '2rem',
               marginRight: '2rem',
               flexGrow: '1',
+              borderRadius: '1rem',
             }}
           >
             <p
@@ -81,6 +82,7 @@ export async function GET(req: NextRequest) {
             marginLeft: '2rem',
             marginRight: '2rem',
             flexGrow: '1',
+            borderRadius: '1rem',
           }}
         >
           <p
