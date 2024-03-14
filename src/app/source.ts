@@ -39,8 +39,8 @@ const isPageNode = (node: PageTree.Node): node is PageTree.Item => {
 };
 
 export const pageTree: PageTree.Root = {
-  name: 'Blog',
-  children: [
-    ...sortedByDateTree.children.filter(isPageNode).sort((a, b) => getDate(b.url) - getDate(a.url)),
-  ],
+  name: 'Posts',
+  children: sortedByDateTree.children
+    .filter(isPageNode)
+    .sort((a, b) => getDate(b.url) - getDate(a.url)),
 };
