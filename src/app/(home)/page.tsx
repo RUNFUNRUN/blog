@@ -4,7 +4,7 @@ import { PostCard } from './_components/PostCard';
 
 export default function HomePage() {
   const posts = getPages()
-    .sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime())
+    .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
     .slice(0, 5);
 
   return (

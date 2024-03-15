@@ -32,7 +32,7 @@ export default function Page({ params }: { params: { slug?: string[] } }) {
   const startIndex = pageIndex * postsPerPage;
   const endIndex = startIndex + postsPerPage;
   const posts = getPages()
-    .sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime())
+    .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
     .slice(startIndex, endIndex);
 
   return (
