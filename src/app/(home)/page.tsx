@@ -22,7 +22,17 @@ export default function HomePage() {
             </Link>
             。
           </p>
-          <p>質問等はプロフィールのコンタクトかDiscordのDMからお願いします。</p>
+          <p>
+            質問等はプロフィールの
+            <Link
+              href='https://www.runfunrun.info/contact'
+              className='text-blue-500 hover:underline hover:text-blue-400 mx-1'
+              target='_blank'
+            >
+              Contact
+            </Link>
+            かDiscord(ID: runfunrun)のDMからお願いします。
+          </p>
           <p>
             また、記事には誤りがある可能性があります。もし見つけた場合は連絡またはIssue頂けると幸いです。
           </p>
