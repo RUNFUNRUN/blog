@@ -1,8 +1,8 @@
-import { map } from '.map';
-import { createMDXSource, defaultSchemas } from 'fumadocs-mdx';
+import type { PageTree } from 'fumadocs-core/server';
 import { loader } from 'fumadocs-core/source';
+import { createMDXSource, defaultSchemas } from 'fumadocs-mdx';
 import { z } from 'zod';
-import { PageTree } from 'fumadocs-core/server';
+import { map } from '.map';
 
 const frontmatterSchema = defaultSchemas.frontmatter.extend({
   date: z
@@ -12,7 +12,10 @@ const frontmatterSchema = defaultSchemas.frontmatter.extend({
       try {
         return new Date(value);
       } catch {
-        context.addIssue({ code: z.ZodIssueCode.custom, message: 'Invalid date' });
+        context.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'Invalid date',
+        });
         return z.NEVER;
       }
     }),
@@ -36,5 +39,7 @@ const isPageNode = (node: PageTree.Node): node is PageTree.Item => {
 
 export const sortedByDatePageTree: PageTree.Root = {
   name: 'Posts',
-  children: pageTree.children.filter(isPageNode).sort((a, b) => getDate(b.url) - getDate(a.url)),
+  children: pageTree.children
+    .filter(isPageNode)
+    .sort((a, b) => getDate(b.url) - getDate(a.url)),
 };

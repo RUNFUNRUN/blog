@@ -1,6 +1,11 @@
+import {
+  ChevronLeft,
+  ChevronRight,
+  ChevronsLeft,
+  ChevronsRight,
+} from 'lucide-react';
 import Link from 'next/link';
-import { ReactNode } from 'react';
-import { ChevronRight, ChevronLeft, ChevronsRight, ChevronsLeft } from 'lucide-react';
+import type { ReactNode } from 'react';
 
 const Card = ({
   children,
@@ -14,11 +19,15 @@ const Card = ({
   disable: boolean | undefined;
 }) => {
   if (disable) {
-    return <div className='rounded-full border bg-card p-2 text-muted-foreground'>{children}</div>;
+    return (
+      <div className='rounded-full border bg-card p-2 text-muted-foreground'>
+        {children}
+      </div>
+    );
   }
   return (
     <Link
-      href={path + '/' + num.toString()}
+      href={`${path}/${num.toString()}`}
       className='rounded-full border bg-card p-2 text-card-foreground transition-colors hover:bg-accent hover:text-accent-foreground'
     >
       {children}

@@ -1,5 +1,5 @@
-import Link from 'next/link';
 import { getPages } from '@/app/source';
+import Link from 'next/link';
 import { PostCard } from './_components/PostCard';
 
 export default function HomePage() {
@@ -40,7 +40,10 @@ export default function HomePage() {
         <div>
           <h2 className='text-2xl sm:text-3xl font-bold my-4'>
             最新の記事 (
-            <Link href='/list' className='text-blue-500 hover:underline hover:text-blue-400 mx-1'>
+            <Link
+              href='/list'
+              className='text-blue-500 hover:underline hover:text-blue-400 mx-1'
+            >
               全記事はこちら
             </Link>
             )

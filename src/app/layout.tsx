@@ -1,18 +1,20 @@
-import './global.css';
-import 'katex/dist/katex.css';
-import { RootProvider } from 'fumadocs-ui/provider';
-import { Inter } from 'next/font/google';
 import { GoogleAnalytics } from '@next/third-parties/google';
+import { RootProvider } from 'fumadocs-ui/provider';
+import 'katex/dist/katex.css';
 import type { Metadata } from 'next';
+import { Inter } from 'next/font/google';
 import type { ReactNode } from 'react';
 import { Footer } from './_components/Footer';
+import './global.css';
 
 const inter = Inter({
   subsets: ['latin'],
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'),
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000',
+  ),
   title: 'RUNFUNRUN.tech',
   description: 'This is my tech blog.',
   openGraph: {

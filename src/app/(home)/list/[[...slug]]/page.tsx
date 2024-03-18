@@ -1,8 +1,8 @@
 import { getPages } from '@/app/source';
+import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { Pagination } from '../_components/Pagination';
 import { PostCard } from '../../_components/PostCard';
-import { Metadata } from 'next';
+import { Pagination } from '../_components/Pagination';
 
 const totalPosts = getPages().length;
 const postsPerPage = 5;
@@ -26,7 +26,7 @@ const DisplayCurrentPosts = ({
 };
 
 export default function Page({ params }: { params: { slug?: string[] } }) {
-  const pageIndex = params.slug ? parseInt(params.slug[0], 10) - 1 : 0;
+  const pageIndex = params.slug ? Number.parseInt(params.slug[0], 10) - 1 : 0;
   if (pageIndex < 0 || pageIndex >= pageCount) notFound();
 
   const startIndex = pageIndex * postsPerPage;
@@ -39,7 +39,8 @@ export default function Page({ params }: { params: { slug?: string[] } }) {
     <main>
       <div className='mx-4 my-6 lg:mx-auto lg:w-[992px]'>
         <h2 className='text-3xl font-bold my-4'>
-          全{totalPosts}記事 <DisplayCurrentPosts startIndex={startIndex} endIndex={endIndex} />
+          全{totalPosts}記事{' '}
+          <DisplayCurrentPosts startIndex={startIndex} endIndex={endIndex} />
         </h2>
         <div className='flex flex-col gap-4 text-left'>
           {posts.map((post) => {
@@ -73,14 +74,16 @@ export const generateStaticParams = () => {
   return [{ slug: [] }, ...slugs];
 };
 
-export const generateMetadata = ({ params }: { params: { slug?: string[] } }) => {
+export const generateMetadata = ({
+  params,
+}: { params: { slug?: string[] } }) => {
   const slug = params.slug;
   let index = '';
   if (slug) {
     index = ` - ${slug[0]}ページ`;
   }
   return {
-    title: 'RUNFUNRUN.tech | 記事一覧' + index,
+    title: `RUNFUNRUN.tech | 記事一覧${index}`,
     robots: {
       index: false,
       googleBot: {

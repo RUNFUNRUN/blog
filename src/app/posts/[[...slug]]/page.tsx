@@ -1,7 +1,7 @@
 import { getPage, getPages } from '@/app/source';
-import type { Metadata } from 'next';
-import { DocsPage, DocsBody } from 'fumadocs-ui/page';
 import { RollButton } from 'fumadocs-ui/components/roll-button';
+import { DocsBody, DocsPage } from 'fumadocs-ui/page';
+import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
 export default function Page({ params }: { params: { slug?: string[] } }) {
@@ -11,7 +11,9 @@ export default function Page({ params }: { params: { slug?: string[] } }) {
     notFound();
   }
 
-  const date = new Date(post.data.date).toLocaleDateString('ja-JP', { timeZone: 'Asia/Tokyo' });
+  const date = new Date(post.data.date).toLocaleDateString('ja-JP', {
+    timeZone: 'Asia/Tokyo',
+  });
 
   const lastModified = post.data.exports.lastModified;
   let lastUpdate: Date | undefined = undefined;
@@ -40,7 +42,9 @@ export const generateStaticParams = () => {
   }));
 };
 
-export const generateMetadata = ({ params }: { params: { slug?: string[] } }) => {
+export const generateMetadata = ({
+  params,
+}: { params: { slug?: string[] } }) => {
   const post = getPage(params.slug);
   if (post === undefined) return;
 
@@ -51,19 +55,21 @@ export const generateMetadata = ({ params }: { params: { slug?: string[] } }) =>
   imageParams.set('description', description ?? '');
 
   return {
-    metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'),
+    metadataBase: new URL(
+      process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000',
+    ),
     title: title,
     description: description,
     openGraph: {
       title: title,
       description: description,
-      images: '/api/og?' + imageParams.toString(),
+      images: `/api/og?${imageParams.toString()}`,
       url: post.url,
     },
     twitter: {
       title: title,
       description: description,
-      images: '/api/og?' + imageParams.toString(),
+      images: `/api/og?${imageParams.toString()}`,
     },
   } satisfies Metadata;
 };
