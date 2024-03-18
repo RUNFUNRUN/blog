@@ -42,7 +42,7 @@ export default function Page({ params }: { params: { slug?: string[] } }) {
           全{totalPosts}記事 <DisplayCurrentPosts startIndex={startIndex} endIndex={endIndex} />
         </h2>
         <div className='flex flex-col gap-4 text-left'>
-          {posts.map((post, i) => {
+          {posts.map((post) => {
             const date = new Date(post.data.date).toLocaleDateString('ja-JP', {
               timeZone: 'Asia/Tokyo',
             });
@@ -52,7 +52,7 @@ export default function Page({ params }: { params: { slug?: string[] } }) {
                 description={post.data.description ?? ''}
                 url={post.url}
                 date={date}
-                key={i}
+                key={post.url}
               />
             );
           })}
