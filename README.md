@@ -3,17 +3,32 @@
 This is a Next.js application generated with
 [Create Fumadocs](https://github.com/fuma-nama/fumadocs).
 
+Install dependencies:
+
+```bash
+bun install
+```
+
 Run development server:
 
 ```bash
-npm run dev
-# or
-pnpm dev
-# or
-yarn dev
+bun dev
 ```
 
 Open http://localhost:3000 with your browser to see the result.
+
+Dev commands:
+
+```bash
+#format
+bun run format
+#lint
+bun run lint
+#lint(fix)
+bun run lint:fix
+#format, lint and import sort
+bun run check
+```
 
 ## Learn More
 
