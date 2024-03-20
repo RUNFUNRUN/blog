@@ -1,0 +1,74 @@
+---
+title: LunarVimでtsserverとdeno_lsを切り替える方法
+description: lvimで動的にLSP(言語サーバー)を切り替える方法を紹介します。
+date: 2024-03-20
+---
+
+# LunarVimのLSP設定方法
+
+LunarVimには、デフォルトでLSPが設定されており、それを変えるにはドキュメントに書いてあります。
+
+https://www.lunarvim.org/docs/configuration/language-features/language-servers
+
+Use `jedi_language_server` instead of `pyright`
+
+```lua
+-- add `pyright` to `skipped_servers` list
+vim.list_extend(lvim.lsp.automatic_configuration.skipped_servers, { "pyright" })
+-- remove `jedi_language_server` from `skipped_servers` list
+lvim.lsp.automatic_configuration.skipped_servers = vim.tbl_filter(function(server)
+  return server ~= "jedi_language_server"
+end, lvim.lsp.automatic_configuration.skipped_servers)
+```
+
+skipped_serversに追加することで、その言語サーバーを無効にすることができます。
+`jedi_language_server`をskipped_serversから排除することで、有効にすることができます。
+
+しかし、この方法で適用するには設定を変更する度に`:LvimCacheReset`を実行する必要があります。
+
+# 代替方法
+
+LunarVimで、元々適用されてないLSPを追加するには、以下のようにします。
+
+```lua
+local lspconfig = require('lvim.lsp.manager')
+lspconfig.setup('emmet_ls', {
+  filetypes = {
+    'typescript',
+    ...
+  },
+})
+```
+
+この2個の方法を組み合わせることで、実現できます。
+
+# tsserverとdeno_lsを切り替える
+
+プロジェクトルートに`package.json`が存在する場合は`tsserver`を使い、
+存在しない場合は`deno_ls`を使うという設定をします。
+
+```lua
+local function is_packagejson_present()
+  for _, filename in ipairs({ 'package.json' }) do
+    if vim.fn.filereadable(filename) == 1 then
+      return true
+    end
+  end
+  return false
+end
+
+if is_packagejson_present() then
+  lspconfig.setup('tsserver')
+else
+  lspconfig.setup('denols')
+end
+```
+
+注意点としては、プロジェクトルートでlvimを開かないと
+`package.json`が認識されないので`deno_ls`が使われます。
+
+# 最後に
+
+LunarVimっていいですよね。
+
+ではまた。
