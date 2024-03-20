@@ -10,7 +10,7 @@ const notoSansJP = fetch(
   ),
 ).then((res) => res.arrayBuffer());
 
-export async function GET(req: NextRequest) {
+export const GET = async (req: NextRequest) => {
   const title = req.nextUrl.searchParams.get('title');
   const description = req.nextUrl.searchParams.get('description');
   if (title === null && description === null) {
@@ -124,4 +124,4 @@ export async function GET(req: NextRequest) {
       fonts: [{ name: 'Inter', data: await notoSansJP }],
     },
   );
-}
+};
