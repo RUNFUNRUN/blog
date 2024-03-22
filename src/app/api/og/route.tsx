@@ -55,7 +55,7 @@ export const GET = async (req: NextRequest) => {
       {
         width: 1200,
         height: 630,
-        fonts: [{ name: 'Inter', data: await notoSansJP }],
+        fonts: [{ name: 'notoSansJP', data: await notoSansJP }],
       },
     );
   }
@@ -121,7 +121,7 @@ export const GET = async (req: NextRequest) => {
     {
       width: 1200,
       height: 630,
-      fonts: [{ name: 'Inter', data: await notoSansJP }],
+      fonts: [{ name: 'notoSansJP', data: await notoSansJP }],
     },
   );
 };
