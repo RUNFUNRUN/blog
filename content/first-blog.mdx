@@ -23,7 +23,7 @@ bunx create-fumadocs-app
 
 コードブロックもいい感じです。(コードは適当)
 
-```ts
+```ts title="discord.ts"
 import { Client, Events, GatewayIntentBits } from 'discord.js';
 
 const client = new Client({
@@ -36,5 +36,11 @@ client.once(Events.ClientReady, (c: Client) => {
 
 client.login(process.env.DISCORD_TOKEN);
 ```
+
+数式も書けます。
+
+$$
+x = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a}
+$$
 
 詳しくはまたどこかで書きます。
