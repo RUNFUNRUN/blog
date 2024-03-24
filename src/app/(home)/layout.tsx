@@ -13,3 +13,5 @@ const HomeLayout = ({ children }: { children: ReactNode }) => {
     </Layout>
   );
 };
+
+export default HomeLayout;
