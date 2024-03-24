@@ -4,7 +4,7 @@ import { DocsBody, DocsPage } from 'fumadocs-ui/page';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
-export default function Page({ params }: { params: { slug?: string[] } }) {
+const Page = ({ params }: { params: { slug?: string[] } }) => {
   const post = getPage(params.slug);
 
   if (post === undefined) {
@@ -34,7 +34,9 @@ export default function Page({ params }: { params: { slug?: string[] } }) {
       </DocsBody>
     </DocsPage>
   );
-}
+};
+
+export default Page;
 
 export const generateStaticParams = () => {
   return getPages().map((page) => ({

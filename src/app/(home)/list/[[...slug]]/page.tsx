@@ -25,7 +25,7 @@ const DisplayCurrentPosts = ({
   );
 };
 
-export default function Page({ params }: { params: { slug?: string[] } }) {
+const Page = ({ params }: { params: { slug?: string[] } }) => {
   const pageIndex = params.slug ? Number.parseInt(params.slug[0], 10) - 1 : 0;
   if (pageIndex < 0 || pageIndex >= pageCount) notFound();
 
@@ -64,7 +64,9 @@ export default function Page({ params }: { params: { slug?: string[] } }) {
       </div>
     </main>
   );
-}
+};
+
+export default Page;
 
 export const generateStaticParams = () => {
   const slugs = Array.from({ length: pageCount }, (_, index) => ({

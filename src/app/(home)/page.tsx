@@ -2,7 +2,7 @@ import { getPages } from '@/app/source';
 import { InlineLink } from './_components/InlineLink';
 import { PostCard } from './_components/PostCard';
 
-export default function HomePage() {
+const HomePage = () => {
   const posts = getPages()
     .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
     .slice(0, 5);
@@ -53,4 +53,6 @@ export default function HomePage() {
       </div>
     </main>
   );
-}
+};
+
+export default HomePage;

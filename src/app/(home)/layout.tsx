@@ -1,7 +1,7 @@
 import { Layout } from 'fumadocs-ui/layout';
 import type { ReactNode } from 'react';
 
-export default function HomeLayout({ children }: { children: ReactNode }) {
+const HomeLayout = ({ children }: { children: ReactNode }) => {
   return (
     <Layout
       nav={{
@@ -12,4 +12,4 @@ export default function HomeLayout({ children }: { children: ReactNode }) {
       {children}
     </Layout>
   );
-}
+};
