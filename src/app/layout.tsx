@@ -4,7 +4,7 @@ import 'katex/dist/katex.css';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import type { ReactNode } from 'react';
-import { Footer } from './_components/Footer';
+import { Footer } from './_components/footer';
 import './global.css';
 
 const inter = Inter({

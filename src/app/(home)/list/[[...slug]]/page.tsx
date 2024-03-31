@@ -1,8 +1,8 @@
 import { getPages } from '@/app/source';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { PostCard } from '../../_components/PostCard';
-import { Pagination } from '../_components/Pagination';
+import { PostCard } from '../../_components/post-card';
+import { Pagination } from '../_components/pagination';
 
 const totalPosts = getPages().length;
 const postsPerPage = 5;

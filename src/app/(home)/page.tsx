@@ -1,6 +1,6 @@
 import { getPages } from '@/app/source';
-import { InlineLink } from './_components/InlineLink';
-import { PostCard } from './_components/PostCard';
+import { InlineLink } from './_components/inline-link';
+import { PostCard } from './_components/post-card';
 
 const HomePage = () => {
   const posts = getPages()
