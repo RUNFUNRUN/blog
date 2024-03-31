@@ -17,7 +17,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
       {process.env.NODE_ENV === 'production' && (
         <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID ?? ''} />
       )}
-      <body className='flex min-h-screen flex-col'>
+      <body className='flex min-h-dvh flex-col'>
         <RootProvider>
           {children}
           <Footer />
