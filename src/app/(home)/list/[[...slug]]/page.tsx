@@ -86,5 +86,11 @@ export const generateMetadata = ({
   }
   return {
     title: `RUNFUNRUN.tech | 記事一覧${index}`,
+    robots: {
+      index: false,
+      googleBot: {
+        index: false,
+      },
+    },
   } satisfies Metadata;
 };
