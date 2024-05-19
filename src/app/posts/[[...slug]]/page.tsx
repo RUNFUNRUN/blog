@@ -1,3 +1,5 @@
+export const dynamicParams = false;
+
 import { getPage, getPages } from '@/app/source';
 import { RollButton } from 'fumadocs-ui/components/roll-button';
 import { DocsBody, DocsPage } from 'fumadocs-ui/page';
