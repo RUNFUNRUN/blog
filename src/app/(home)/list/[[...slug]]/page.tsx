@@ -1,3 +1,5 @@
+export const dynamicParams = false;
+
 import { getPages } from '@/app/source';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
