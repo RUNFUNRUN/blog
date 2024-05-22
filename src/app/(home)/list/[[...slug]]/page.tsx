@@ -1,10 +1,10 @@
-export const dynamicParams = false;
-
 import { getPages } from '@/app/source';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { PostCard } from '../../_components/post-card';
 import { Pagination } from '../_components/pagination';
+
+export const dynamicParams = false;
 
 const totalPosts = getPages().length;
 const postsPerPage = 5;
