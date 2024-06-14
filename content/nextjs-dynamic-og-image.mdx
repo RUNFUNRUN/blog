@@ -290,7 +290,6 @@ Next.jsの`Metadata`では`metadataBase`を設定することで、
 ```tsx title="src/app/posts/[[...slug]]/page.tsx"
 import { getPage, getPages } from '@/app/source';
 import type { Metadata } from 'next';
-import { notFound } from 'next/navigation';
 ...
 
 export const generateMetadata = ({ params }: { params: { slug?: string[] } }) => {
