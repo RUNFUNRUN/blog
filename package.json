@@ -9,8 +9,8 @@
     "start": "next start",
     "format": "biome format --write .",
     "lint": "biome lint .",
-    "lint:fix": "biome lint --apply-unsafe .",
-    "check": "biome check --apply-unsafe ."
+    "lint:fix": "biome lint --unsafe .",
+    "check": "biome check --unsafe ."
   },
   "dependencies": {
     "@next/third-parties": "^14.2.4",
