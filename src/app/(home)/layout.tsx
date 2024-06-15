@@ -6,8 +6,8 @@ const HomeLayout = ({ children }: { children: ReactNode }) => {
     <Layout
       nav={{
         title: 'RUNFUNRUN.tech',
-        githubUrl: 'https://github.com/RUNFUNRUN/blog',
       }}
+      githubUrl='https://github.com/RUNFUNRUN/blog'
     >
       {children}
     </Layout>

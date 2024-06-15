@@ -6,8 +6,8 @@ export default function NotFound() {
     <Layout
       nav={{
         title: 'RUNFUNRUN.tech',
-        githubUrl: 'https://github.com/RUNFUNRUN/blog',
       }}
+      githubUrl='https://github.com/RUNFUNRUN/blog'
     >
       <div className='text-center'>
         <p className='my-4 text-4xl font-bold'>404 Not Found</p>
