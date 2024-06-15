@@ -1,0 +1,39 @@
+---
+title: neovimオススメ設定① ddする時に空白行をヤンクしない
+description: neovimのオススメ設定シリーズ第1弾。(第2弾があるかは未定)
+date: 2024-06-015
+---
+
+# はじめに
+
+今回はluaで書くことを前提にしています。
+
+# ヤンクせずに行削除するには
+
+`_dd`をすることで、ヤンクせずに行を削除できます。
+
+これを利用して、`dd`コマンドをオーバーライドします。
+
+# 設定
+
+```lua title="init.lua"
+local opts = { noremap = true, silent = true }
+vim.api.nvim_set_keymap('n', 'dd', '<Cmd>lua Delete_line()<CR>', opts)
+
+function Delete_line()
+  local line = vim.api.nvim_get_current_line()
+  if string.match(line, '^%s*$') then
+    vim.api.nvim_command('normal! "_dd')
+  else
+    vim.api.nvim_command('normal! dd')
+  end
+end
+```
+
+# 最後に
+
+簡単な設定ですが、これを設定してからQOLがかなり上がりました。
+
+皆さんも是非試してみてください。
+
+ではまた。
