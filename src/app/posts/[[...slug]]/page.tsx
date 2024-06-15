@@ -1,5 +1,4 @@
 import { getPage, getPages } from '@/app/source';
-import { RollButton } from 'fumadocs-ui/components/roll-button';
 import { DocsBody, DocsPage } from 'fumadocs-ui/page';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
@@ -27,7 +26,6 @@ const Page = ({ params }: { params: { slug?: string[] } }) => {
 
   return (
     <DocsPage toc={post.data.exports.toc} lastUpdate={lastUpdate}>
-      <RollButton />
       <DocsBody>
         <h4 className='text-right'>{date}</h4>
         <h1 className='mb-auto'>{post.data.title}</h1>
