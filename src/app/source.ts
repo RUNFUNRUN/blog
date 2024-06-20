@@ -33,13 +33,9 @@ const getDate = (url: string) => {
   return post.data.date.getTime();
 };
 
-const isPageNode = (node: PageTree.Node): node is PageTree.Item => {
-  return node.type === 'page';
-};
-
 export const sortedByDatePageTree: PageTree.Root = {
   name: 'Posts',
   children: pageTree.children
-    .filter(isPageNode)
+    .filter((node) => node.type === 'page')
     .sort((a, b) => getDate(b.url) - getDate(a.url)),
 };
