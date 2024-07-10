@@ -27,7 +27,7 @@ bun run lint
 #lint(fix)
 bun run lint:fix
 #format, lint and import sort
-bun run check
+bun run check:fix
 ```
 
 ## Learn More
