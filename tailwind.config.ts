@@ -9,6 +9,10 @@ const config: Config = {
     './src/mdx-components.{ts,tsx}',
     './node_modules/fumadocs-ui/dist/**/*.js',
   ],
-  presets: [createPreset()],
+  presets: [
+    createPreset({
+      addGlobalColors: true,
+    }),
+  ],
 };
 export default config;

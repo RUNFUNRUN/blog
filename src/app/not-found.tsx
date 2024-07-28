@@ -1,9 +1,9 @@
-import { Layout } from 'fumadocs-ui/layout';
+import { HomeLayout } from 'fumadocs-ui/home-layout';
 import Image from 'next/image';
 
-export default function NotFound() {
+const NotFound = () => {
   return (
-    <Layout
+    <HomeLayout
       nav={{
         title: 'RUNFUNRUN.tech',
       }}
@@ -22,6 +22,8 @@ export default function NotFound() {
           className='mx-auto'
         />
       </div>
-    </Layout>
+    </HomeLayout>
   );
-}
+};
+
+export default NotFound;

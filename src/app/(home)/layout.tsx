@@ -1,17 +1,17 @@
-import { Layout } from 'fumadocs-ui/layout';
 import type { ReactNode } from 'react';
+import { HomeLayout } from 'fumadocs-ui/home-layout';
 
-const HomeLayout = ({ children }: { children: ReactNode }) => {
+const Layout = ({ children }: { children: ReactNode }) => {
   return (
-    <Layout
+    <HomeLayout
       nav={{
         title: 'RUNFUNRUN.tech',
       }}
       githubUrl='https://github.com/RUNFUNRUN/blog'
     >
       {children}
-    </Layout>
+    </HomeLayout>
   );
 };
 
-export default HomeLayout;
+export default Layout;
