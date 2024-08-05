@@ -7,7 +7,7 @@ const RootDocsLayout = ({ children }: { children: ReactNode }) => {
     <DocsLayout
       tree={sortedByDatePageTree}
       nav={{
-        title: 'RUNFUNRUN.tech',
+        title: 'RUNFUNRUN.dev',
       }}
       githubUrl='https://github.com/RUNFUNRUN/blog'
     >

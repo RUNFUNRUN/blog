@@ -87,7 +87,7 @@ export const generateMetadata = ({
     index = ` - ${slug[0]}ページ`;
   }
   return {
-    title: `RUNFUNRUN.tech | 記事一覧${index}`,
+    title: `RUNFUNRUN.dev | 記事一覧${index}`,
     robots: {
       index: false,
       googleBot: {

@@ -48,7 +48,7 @@ export const GET = async (req: NextRequest) => {
               marginRight: 'auto',
             }}
           >
-            RUNFUNRUN.tech
+            RUNFUNRUN.dev
           </p>
         </div>
       </div>,
@@ -94,7 +94,7 @@ export const GET = async (req: NextRequest) => {
             marginRight: '4rem',
           }}
         >
-          RUNFUNRUN.tech
+          RUNFUNRUN.dev
         </p>
         <div
           style={{

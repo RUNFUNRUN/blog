@@ -33,16 +33,16 @@ export const metadata: Metadata = {
   metadataBase: new URL(
     process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000',
   ),
-  title: 'RUNFUNRUN.tech',
+  title: 'RUNFUNRUN.dev',
   description: 'This is my tech blog.',
   openGraph: {
-    title: 'RUNFUNRUN.tech',
+    title: 'RUNFUNRUN.dev',
     description: 'This is my tech blog.',
     images: '/api/og',
     url: '/',
   },
   twitter: {
-    title: 'RUNFUNRUN.tech',
+    title: 'RUNFUNRUN.dev',
     description: 'This is my tech blog.',
     images: '/api/og',
   },

@@ -5,7 +5,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
   return (
     <HomeLayout
       nav={{
-        title: 'RUNFUNRUN.tech',
+        title: 'RUNFUNRUN.dev',
       }}
       githubUrl='https://github.com/RUNFUNRUN/blog'
     >
