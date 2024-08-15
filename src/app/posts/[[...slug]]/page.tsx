@@ -17,10 +17,7 @@ const Page = ({ params }: { params: { slug?: string[] } }) => {
   });
 
   const lastModified = post.data.exports.lastModified;
-  let lastUpdate: Date | undefined = undefined;
-  if (lastModified !== undefined) {
-    lastUpdate = new Date(lastModified);
-  }
+  const lastUpdate = lastModified ? new Date(lastModified) : undefined;
 
   const MDX = post.data.exports.default;
 
