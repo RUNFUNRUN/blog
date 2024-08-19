@@ -1,0 +1,166 @@
+---
+title: Kali Linux+TryHackMeでサイバーセキュリティに入門する
+description: Kali LinuxをWSL2にインストールして環境構築編を行う。
+date: 2024-08-19
+---
+
+import { Card } from 'fumadocs-ui/components/card';
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+
+# はじめに
+
+最近、面白いYouTubeチャンネルを見つけてセキュリティに興味を持ったので、自分もやってみたいと思い立ちました。
+
+チャンネルはこちらです。
+
+<Card
+  href="https://www.youtube.com/@tamashiiwoyokose"
+  title="しいたま@サイバーセキュリティ"
+  description="free cybersecurity education and ethical hacking このチャンネルでは、主にサイバーセキュリティの話題に関する解説動画を投稿します。 動画内の技術は、法律の範囲内でのみ使用し、悪用はしないでください"
+/>
+
+動画内でKali LinuxというOSと[TryHackMe](https://tryhackme.com/)というWebサイトでハッキングをしていて、とりあえず自分も真似してみたいと思います。
+
+[HackTheBox](https://academy.hackthebox.com/)という類似サービスもあるらしいです。
+
+自分は現在WindowsをメインOSとして使用しているので、まずはWSL2に実際にKali Linuxをインストールしてみます。
+
+ターミナルはWindowsターミナルのプレビュー版を使用しています。  
+余談ですが、以前Windowsターミナルの通常版だとneovimの表示が一部バグっていたため、プレビュー版を使用しています。
+
+# インストール
+
+まずはwslを最新バージョンに更新します。
+
+```powershell
+wsl --update                                                                                                                                                  19:19:57
+更新プログラムを確認しています。
+Linux 用 Windows サブシステムの最新バージョンは既にインストールされています。
+```
+
+そしたらディストリビューションのリストを出してkali-linuxがあるのを確認します。  
+(Kali Linuxが標準で用意されているのを初めて知りました笑)
+
+```powershell
+$ wsl --list --online                                                                                                                                           19:20:03
+インストールできる有効なディストリビューションの一覧を次に示します。
+'wsl.exe --install <Distro>' を使用してインストールします。
+
+NAME                                   FRIENDLY NAME
+Ubuntu                                 Ubuntu
+Debian                                 Debian GNU/Linux
+kali-linux                             Kali Linux Rolling
+Ubuntu-18.04                           Ubuntu 18.04 LTS
+Ubuntu-20.04                           Ubuntu 20.04 LTS
+Ubuntu-22.04                           Ubuntu 22.04 LTS
+Ubuntu-24.04                           Ubuntu 24.04 LTS
+OracleLinux_7_9                        Oracle Linux 7.9
+OracleLinux_8_7                        Oracle Linux 8.7
+OracleLinux_9_1                        Oracle Linux 9.1
+openSUSE-Leap-15.6                     openSUSE Leap 15.6
+SUSE-Linux-Enterprise-15-SP5           SUSE Linux Enterprise 15 SP5
+SUSE-Linux-Enterprise-Server-15-SP6    SUSE Linux Enterprise Server 15 SP6
+openSUSE-Tumbleweed                    openSUSE Tumbleweed
+```
+
+早速インストールします。
+
+```powershell
+$ wsl --install -d kali-linux                                                                                                                                   19:22:20
+インストール中: Kali Linux Rolling
+Kali Linux Rolling がインストールされました。
+Kali Linux Rolling を起動しています...
+Installing, this may take a few minutes...
+Please create a default UNIX user account. The username does not need to match your Windows username.
+For more information visit: https://aka.ms/wslusers
+Enter new UNIX username: runfunrun
+New password:
+Retype new password:
+passwd: password updated successfully
+Installation successful!
+┏━(Message from Kali developers)
+┃
+┃ This is a minimal installation of Kali Linux, you likely
+┃ want to install supplementary tools. Learn how:
+┃ ⇒ https://www.kali.org/docs/troubleshooting/common-minimum-setup/
+┃
+┗━(Run: “touch ~/.hushlogin” to hide this message)
+┌──(runfunrun㉿desktop)-[~]
+└─$
+logout
+この操作を正しく終了しました。
+```
+
+かなりサクッとインストールすることができました。  
+Windowsターミナルを再起動すると、新規タブの一覧にも追加されています。
+
+<ImageZoom
+  src='https://i.gyazo.com/e54052fcea8739b2e1b78f44815e5062.png'
+  width={450}
+  height={507}
+  alt='image by gyazo'
+/>
+
+さっそく開いていきます。
+デフォルトでかっこいいです。
+
+<ImageZoom
+  src='https://i.gyazo.com/02565e61f333c03a58da597c6d17cd45.png'
+  width={786}
+  height={282}
+  alt='image by gyazo'
+/>
+
+シェルも一応確認しておきます。
+
+```bash
+$ echo $SHELL
+/bin/bash
+```
+
+bashですね。  
+メッセージも非表示にしちゃいます。
+
+```bash
+touch ~/.hushlogin
+```
+
+これで再度立ち上げると、メッセージが消えています。
+
+# VPN設定
+
+TryHackMeやHackTheBoxの仮想サーバーに接続するにはopenvpnの設定が必要です。
+
+まず、[TryHackMe](https://tryhackme.com/)にアクセスしてアカウントを作成します。  
+自分はgoogleアカウントでサインアップしました。いくつか質問に答えたら完了です。  
+軽くIntroduction to Cyber Securityを終わらせます。(普通に読めばできました)
+
+ログインできたら、自分のアイコンからAccessタブに移動します。  
+そこで、右のDownload configure fileをクリックしてovpnファイルをダウンロードします。
+今回自分はVPN Serverをインドに変更しました。
+
+今回、Windows側で[OpenVPN](https://www.openvpn.jp/download/)をインストールします。
+WSLだと動かないらしく、実際試してみましたが無理でした。
+
+手順は公式の[YouTube](https://www.youtube.com/watch?v=996h-TwbUFc)がわかりやすいです。
+UIが若干異なりますが大体同じで、
+`C:\Users\{ユーザー名}\OpenVPN\config`に先ほどダウンロードしたovpnファイルを配置して起動するだけです。
+
+OpenVPNが起動したら実際に接続テストを行います。
+テストは簡単で、[10.10.10.10](http://10.10.10.10/)にブラウザでアクセスするだけです。
+
+このような画面が表示されれば完了です！
+
+<ImageZoom
+  src='https://i.gyazo.com/4779328e72c82390a560b63854823191.png'
+  width={1920}
+  height={911}
+  alt='image by gyazo'
+/>
+
+# 最後に
+
+今回は以上になります。これからちょくちょくやっていきたいと思います。  
+Kali Linuxについても、もっといじってみたいですね。
+
+ではまた。
