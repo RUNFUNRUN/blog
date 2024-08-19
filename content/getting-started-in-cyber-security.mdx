@@ -158,6 +158,24 @@ OpenVPNが起動したら実際に接続テストを行います。
   alt='image by gyazo'
 />
 
+一応Kali Linuxからもpingを叩いてみます。
+
+```bash
+$ ping 10.10.10.10
+PING 10.10.10.10 (10.10.10.10) 56(84) bytes of data.
+64 bytes from 10.10.10.10: icmp_seq=1 ttl=59 time=261 ms
+64 bytes from 10.10.10.10: icmp_seq=2 ttl=59 time=266 ms
+64 bytes from 10.10.10.10: icmp_seq=3 ttl=59 time=260 ms
+64 bytes from 10.10.10.10: icmp_seq=4 ttl=59 time=260 ms
+64 bytes from 10.10.10.10: icmp_seq=5 ttl=59 time=260 ms
+^C
+--- 10.10.10.10 ping statistics ---
+6 packets transmitted, 5 received, 16.6667% packet loss, time 5007ms
+rtt min/avg/max/mdev = 259.594/261.172/266.067/2.494 ms
+```
+
+無事、疎通確認が出来ました。
+
 # 最後に
 
 今回は以上になります。これからちょくちょくやっていきたいと思います。  
