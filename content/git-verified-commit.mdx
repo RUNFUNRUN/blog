@@ -6,7 +6,7 @@ date: 2024-02-11
 
 ここではぱっと手順を書いていきます。
 
-# gpgのインストール
+## gpgのインストール
 
 各パッケージマネージャーでインストールしてください。
 
@@ -36,7 +36,7 @@ sudo yum install gnupg
 もしgnupg2を使う場合はここから下のコマンドの`gpg`を`gpg2`に読み替えてください。
 `gpg`でも`gpg2`にパスが通ってる場合もあると思います。その場合は大丈夫です。
 
-# keyの作成
+## keyの作成
 
 まず、リストを見てみてください。
 
@@ -76,7 +76,7 @@ gpg> expire
 gpg> save
 ```
 
-# gitconfigの設定
+## gitconfigの設定
 
 ```bash
 git config --global user.signingkey <key>
@@ -90,7 +90,7 @@ git config --global gpg.program gpg
 git config --global commit.gpgsign true
 ```
 
-# path設定
+## path設定
 
 bashの方は`.bashrc`に、zshの方は`.zshrc`に以下を追加してください。
 
@@ -98,7 +98,7 @@ bashの方は`.bashrc`に、zshの方は`.zshrc`に以下を追加してくだ�
 export GPG_TTY=$(tty)
 ```
 
-# GitHubの設定
+## GitHubの設定
 
 公開鍵をGitHubに登録する必要があります。
 
@@ -112,7 +112,7 @@ gpg --armor --export <key>
 
 これでコミットしたら著名できてると思います。
 
-# Mac限定オプション
+## Mac限定オプション
 
 Macはパスフレーズの入力画面をTUIではなく、別ウィンドウで出来ます。
 

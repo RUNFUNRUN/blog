@@ -4,7 +4,7 @@ description: Next.jsのプロジェクトでeslintを自動で実行するため
 date: 2024-02-20
 ---
 
-# GitHub Actionsとは
+## GitHub Actionsとは
 
 [公式サイト](https://github.co.jp/features/actions) より引用
 
@@ -14,7 +14,7 @@ date: 2024-02-20
 
 より詳しい情報は[ドキュメント](https://docs.github.com/ja/actions)に書いてあります。
 
-# どうやる
+## どうやる
 
 リポジトリに`.github/workflows`というディレクトリを作成して、その中にymlを配置する形です。
 
@@ -62,11 +62,11 @@ jobs:
 jobsの中でインストールするのはeslintだけでもいいのですが、pluginを入れているかつ、
 Next.jsを使っていて`next lint`を使いたいということで、どうせなら全部インストールしちゃいました。
 
-# 最後に
+## 最後に
 
 実際の導入していたプロジェクトはこのようになっています。
 
-https://github.com/RUNFUNRUN/VALORANT-Oekaki-Chat/blob/15e2293209aafce8c8629d1529f6577e0b134030/.github/workflows/bun-eslint.yml
+[https://github.com/RUNFUNRUN/VALORANT-Oekaki-Chat/blob/15e2293209aafce8c8629d1529f6577e0b134030/.github/workflows/bun-eslint.yml](https://github.com/RUNFUNRUN/VALORANT-Oekaki-Chat/blob/15e2293209aafce8c8629d1529f6577e0b134030/.github/workflows/bun-eslint.yml)
 
 このようにすることで、プルリクが来ても自分でチェックする箇所が減っていいですね。
 

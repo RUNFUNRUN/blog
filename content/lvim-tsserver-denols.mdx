@@ -4,11 +4,11 @@ description: lvimで動的にLSP(言語サーバー)を切り替える方法を�
 date: 2024-03-20
 ---
 
-# LunarVimのLSP設定方法
+## LunarVimのLSP設定方法
 
 LunarVimには、デフォルトでLSPが設定されており、それを変えるにはドキュメントに書いてあります。
 
-https://www.lunarvim.org/docs/configuration/language-features/language-servers
+[https://www.lunarvim.org/docs/configuration/language-features/language-servers](https://www.lunarvim.org/docs/configuration/language-features/language-servers)
 
 > Use `jedi_language_server` instead of `pyright`
 >
@@ -26,7 +26,7 @@ skipped_serversに追加することで、その言語サーバーを無効に�
 
 しかし、この方法で適用するには設定を変更する度に`:LvimCacheReset`を実行する必要があります。
 
-# 代替方法
+## 代替方法
 
 LunarVimで、元々適用されてないLSPを追加するには、以下のようにします。
 
@@ -38,11 +38,12 @@ lspconfig.setup('emmet_ls', {
   },
 })
 ```
+
 これはemmet_lsをtypescriptファイルに適用する例です。
 
 この2個の方法を組み合わせることで、実現できます。
 
-# tsserverとdeno_lsを切り替える
+## tsserverとdeno_lsを切り替える
 
 プロジェクトルートに`package.json`が存在する場合は`tsserver`を使い、
 存在しない場合は`deno_ls`を使うという設定をします。
@@ -74,7 +75,7 @@ end
 
 また、この方法でも設定後一度だけ`:LvimCacheReset`を実行する必要があるので忘れずに。
 
-# 最後に
+## 最後に
 
 LunarVimっていいですよね。
 

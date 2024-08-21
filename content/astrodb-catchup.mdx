@@ -4,11 +4,11 @@ description: 2024/3/12にAstro DBのアーリープレビューが始まった�
 date: 2024-03-13
 ---
 
-# Astro DBとは
+## Astro DBとは
 
-https://astro.build/db/
+[https://astro.build/db/](https://astro.build/db/)
 
-ドキュメント https://docs.astro.build/ja/guides/astro-db/
+ドキュメント [https://docs.astro.build/ja/guides/astro-db/](https://docs.astro.build/ja/guides/astro-db/)
 
 > Astro DB is a fully-managed SQL database designed exclusively for Astro.
 
@@ -43,7 +43,7 @@ https://astro.build/db/
 また、Astro DBにはDrizzle ORMがbuilt-inで含まれています。
 Drizzle ORMを使い慣れてる人にとってはかなり嬉しいですね。
 
-# 値段
+## 値段
 
 やっぱり一番気になるのはここですよね。
 
@@ -69,7 +69,7 @@ import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
 個人で使う分には、制限を超えることは少ないと思うのでかなり良い感じだと思います。
 制限を超えても結構良心的な値段だと思います。
 
-# 使ってみる
+## 使ってみる
 
 まずはAstro Studioにサインアップします。
 
@@ -80,11 +80,11 @@ Astro Studioに関しては、[こちら](https://docs.astro.build/ja/guides/ast
 
 > Astro DB はAstro Studio プラットフォームに接続して、ホストされたデータベースをプロジェクトにすばやく追加できます。新しいホスト型データベースの表示、管理、展開はすべて Astro Studio Web ポータルから行うことができます。
 
-https://studio.astro.build/
+[https://studio.astro.build/](https://studio.astro.build/)
 
 ここから、使えます。パパっとGitHubでアカウントを作っちゃいましょう。
 
-## プロジェクト作成
+### プロジェクト作成
 
 今回は、簡単のためテンプレートから作成します。
 
@@ -128,7 +128,7 @@ Create New Projectを押します。
 
 しばらく待つと、プロジェクトが作成されます。
 
-https://github.com/RUNFUNRUN/astrodb-jobboard
+[https://github.com/RUNFUNRUN/astrodb-jobboard](https://github.com/RUNFUNRUN/astrodb-jobboard)
 
 <ImageZoom
   src='https://i.gyazo.com/1332b9246cc2a08164f02c4be90be49d.png'
@@ -139,7 +139,7 @@ https://github.com/RUNFUNRUN/astrodb-jobboard
 
 また、Astro StudioのWeb UI内からSQL ConsoleとStackBlitzが使えるようです。
 
-## 見てみる
+### 見てみる
 
 早速クローンしてローカルで動かします。
 
@@ -152,7 +152,7 @@ bun dev
 
 ログに以下のようなものが出てきます。
 
-```
+```text
 21:44:04 [astro:db] New local database created.
 ```
 
@@ -342,7 +342,7 @@ const types = await db.select().from(JobType);
 
 結構使いやすそうです。Drizzle ORM使ってる人はすぐ使えそうです。
 
-## デプロイ
+### デプロイ
 
 今回はVercelにデプロイしてみます。
 
@@ -433,7 +433,7 @@ bun run astro db execute db/seed.ts --remote
 
 今回はSSRなので、本番にもそのままリロードするだけで反映されます。
 
-https://astrodb-jobboard-ten.vercel.app/
+[https://astrodb-jobboard-ten.vercel.app/](https://astrodb-jobboard-ten.vercel.app/)
 
 <ImageZoom
   src='https://i.gyazo.com/0f9e991d46218ae583f9f6fedc0bde27.png'
@@ -444,7 +444,7 @@ https://astrodb-jobboard-ten.vercel.app/
 
 いい感じです。
 
-# さいごに
+## 最後に
 
 GitHub Actionsとの連携など、まだまだ触れていない機能がたくさんありますが、今回はここまでにします。
 

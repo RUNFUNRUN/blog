@@ -6,9 +6,9 @@ date: 2024-03-03
 
 import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
 
-# tailscaleについて
+## tailscaleについて
 
-https://tailscale.com/
+[https://tailscale.com/](https://tailscale.com/)
 
 <ImageZoom
   src='https://i.gyazo.com/a5f4ec3808b421f3c189b7f5f9c2675c.png'
@@ -34,7 +34,7 @@ https://tailscale.com/
   alt='image by gyazo'
 />
 
-# 設定する
+## 設定する
 
 早速Get Startedを押してみます。
 
@@ -140,7 +140,7 @@ SSHするためには、`-ssh`オプションをつける必要があるよう�
 同じようにMacでも設定します。
 Macの場合はAppストアのリンクが表示されるので、そこからインストールします。
 
-https://apps.apple.com/ca/app/tailscale/id1475387142?mt=12
+[https://apps.apple.com/ca/app/tailscale/id1475387142?mt=12](https://apps.apple.com/ca/app/tailscale/id1475387142?mt=12)
 
 画面の指示に従ってConnectを押すとこのようになりました。
 
@@ -179,7 +179,7 @@ pingが通ったので、Success, it works!を押します。
 desktopにはSSHというラベルがついてますね。
 現状MacにSSH接続はできないようです。([reddit](https://www.reddit.com/r/Tailscale/comments/13cncn7/tailscale_mac_ssh/)より)
 
-# SSH接続する
+## SSH接続する
 
 実際にMacからArch LinuxにSSH接続してみます。
 
@@ -231,7 +231,7 @@ CloudflareのブラウザSSHは正常に描画されていたので、改善の�
 
 Mac側の`.ssh/config`には以下を設定しました。
 
-```
+```text
 Host arch
   HostName 100.69.69.94
   ServerAliveInterval 60
@@ -243,7 +243,7 @@ Host arch
 ssh -L 3000:localhost:3000 arch
 ```
 
-# 感想
+## 感想
 
 とても簡単に設定できて快適だったので、Cloudflareから乗り換えたいと思います。
 他にもいろいろ機能があるみたいなので、見てみたいと思います。
