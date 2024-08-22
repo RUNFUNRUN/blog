@@ -1,6 +1,6 @@
 ---
-title: neovimオススメ設定① ddする時に空白行をヤンクしない
-description: neovimのオススメ設定シリーズ第1弾。(第2弾があるかは未定)
+title: Neovimオススメ設定① ddする時に空白行をヤンクしない
+description: Neovimのオススメ設定シリーズ第1弾。(第2弾があるかは未定)
 date: 2024-06-015
 ---
 
@@ -29,6 +29,9 @@ function DeleteLine()
   end
 end
 ```
+
+`local function`にしてはダメです。  
+`DeleteLine`関数をグローバルにしないと動きません。
 
 ## 最後に
 
