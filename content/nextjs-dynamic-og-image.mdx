@@ -98,8 +98,10 @@ const notoSansJP = fetch(
 ).then((res) => res.arrayBuffer());
 
 export const GET = async (req: NextRequest) => {
-  const title = req.nextUrl.searchParams.get('title');
-  const description = req.nextUrl.searchParams.get('description');
+  const searchParams = req.nextUrl.searchParams;
+  const title = searchParams.get('title');
+  const description = searchParams.get('description');
+
   if (title === null && description === null) {
     return new ImageResponse(
       (
