@@ -1,5 +1,11 @@
 import { getPage, getPages } from '@/app/source';
-import { DocsBody, DocsPage } from 'fumadocs-ui/page';
+import defaultComponents from 'fumadocs-ui/mdx';
+import {
+  DocsBody,
+  DocsDescription,
+  DocsPage,
+  DocsTitle,
+} from 'fumadocs-ui/page';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
@@ -16,18 +22,34 @@ const Page = ({ params }: { params: { slug?: string[] } }) => {
     timeZone: 'Asia/Tokyo',
   });
 
-  const lastModified = post.data.exports.lastModified;
+  const lastModified = post.data.lastModified;
   const lastUpdate = lastModified ? new Date(lastModified) : undefined;
 
-  const MDX = post.data.exports.default;
+  const path = `content/${post.file.path}`;
+
+  const MDX = post.data.body;
 
   return (
-    <DocsPage toc={post.data.exports.toc} lastUpdate={lastUpdate}>
+    <DocsPage
+      toc={post.data.toc}
+      full={post.data.full}
+      lastUpdate={lastUpdate}
+      editOnGithub={{
+        repo: 'blog',
+        owner: 'RUNFUNRUN',
+        sha: 'main',
+        path,
+      }}
+      tableOfContent={{
+        style: 'clerk',
+        single: false,
+      }}
+    >
+      <p className='text-right'>{date}</p>
+      <DocsTitle>{post.data.title}</DocsTitle>
+      <DocsDescription>{post.data.description}</DocsDescription>
       <DocsBody>
-        <h4 className='text-right'>{date}</h4>
-        <h1 className='mb-auto'>{post.data.title}</h1>
-        <p className='mt-4 mb-10'>{post.data.description}</p>
-        <MDX />
+        <MDX components={defaultComponents} />
       </DocsBody>
     </DocsPage>
   );
