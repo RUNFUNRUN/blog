@@ -5,6 +5,7 @@ import {
   defineConfig,
   frontmatterSchema,
 } from 'fumadocs-mdx/config';
+import { transformerTwoslash } from 'fumadocs-twoslash';
 import rehypeKatex from 'rehype-katex';
 import remarkMath from 'remark-math';
 import { z } from 'zod';
@@ -37,11 +38,12 @@ export default defineConfig({
     rehypeCodeOptions: {
       inline: 'tailing-curly-colon',
       themes: {
-        light: 'tokyo-night',
+        light: 'github-light',
         dark: 'tokyo-night',
       },
       transformers: [
         ...(rehypeCodeDefaultOptions.transformers ?? []),
+        transformerTwoslash(),
         transformerRemoveNotationEscape(),
       ],
     },
