@@ -38,31 +38,29 @@ const Page = ({ params }: { params: { slug?: string[] } }) => {
     .slice(startIndex, endIndex);
 
   return (
-    <main>
-      <div className='mx-4 my-6 lg:mx-auto lg:w-[992px]'>
-        <h2 className='text-3xl font-bold my-4'>
-          全{totalPosts}記事{' '}
-          <DisplayCurrentPosts startIndex={startIndex} endIndex={endIndex} />
-        </h2>
-        <div className='flex flex-col gap-4 text-left'>
-          {posts.map((post) => {
-            const date = new Date(post.data.date).toLocaleDateString('ja-JP', {
-              timeZone: 'Asia/Tokyo',
-            });
-            return (
-              <PostCard
-                title={post.data.title}
-                description={post.data.description ?? ''}
-                url={post.url}
-                date={date}
-                key={post.url}
-              />
-            );
-          })}
-        </div>
-        <div className='my-6'>
-          <Pagination current={pageIndex + 1} end={pageCount} path='/list' />
-        </div>
+    <main className='mx-4 my-12 lg:mx-auto lg:w-[992px]'>
+      <h2 className='text-3xl font-bold mb-4'>
+        全{totalPosts}記事{' '}
+        <DisplayCurrentPosts startIndex={startIndex} endIndex={endIndex} />
+      </h2>
+      <div className='flex flex-col gap-4 text-left'>
+        {posts.map((post) => {
+          const date = new Date(post.data.date).toLocaleDateString('ja-JP', {
+            timeZone: 'Asia/Tokyo',
+          });
+          return (
+            <PostCard
+              title={post.data.title}
+              description={post.data.description ?? ''}
+              url={post.url}
+              date={date}
+              key={post.url}
+            />
+          );
+        })}
+      </div>
+      <div className='mt-6'>
+        <Pagination current={pageIndex + 1} end={pageCount} path='/list' />
       </div>
     </main>
   );

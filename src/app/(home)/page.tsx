@@ -8,8 +8,8 @@ const HomePage = () => {
     .slice(0, 5);
 
   return (
-    <main className='mx-4 my-6 lg:mx-auto lg:w-[992px]'>
-      <div className='my-6 text-2xl font-bold'>
+    <main className='mx-4 my-12 lg:mx-auto lg:w-[992px]'>
+      <div className='mb-6 text-2xl font-bold'>
         <p>
           RUNFUNRUNのブログです。プロフィールは
           <InlineLink href='https://www.runfunrun.info' blank>
@@ -29,9 +29,9 @@ const HomePage = () => {
         </p>
       </div>
       <div>
-        <h2 className='text-2xl sm:text-3xl font-bold my-4'>
+        <p className='text-2xl sm:text-3xl font-bold my-4'>
           最新の記事 (<InlineLink href='/list'>全記事はこちら</InlineLink>)
-        </h2>
+        </p>
       </div>
       <div className='flex flex-col gap-4 text-left'>
         {posts.map((post) => {
