@@ -34,7 +34,7 @@ const Page = ({ params }: { params: { slug?: string[] } }) => {
   const startIndex = pageIndex * postsPerPage;
   const endIndex = startIndex + postsPerPage;
   const posts = getPages()
-    .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
+    .toSorted((a, b) => b.data.date.getTime() - a.data.date.getTime())
     .slice(startIndex, endIndex);
 
   return (

@@ -19,5 +19,5 @@ export const sortedByDatePageTree: PageTree.Root = {
   name: 'Posts',
   children: pageTree.children
     .filter((node) => node.type === 'page')
-    .sort((a, b) => getDate(b.url) - getDate(a.url)),
+    .toSorted((a, b) => getDate(b.url) - getDate(a.url)),
 };
