@@ -79,17 +79,17 @@ export const generateMetadata = ({
     metadataBase: new URL(
       process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000',
     ),
-    title: title,
-    description: description,
+    title,
+    description,
     openGraph: {
-      title: title,
-      description: description,
+      title,
+      description,
       images: `/api/og?${imageParams}`,
       url: post.url,
     },
     twitter: {
-      title: title,
-      description: description,
+      title,
+      description,
       images: `/api/og?${imageParams}`,
     },
   } satisfies Metadata;
