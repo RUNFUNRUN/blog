@@ -17,15 +17,14 @@ date: 2024-06-015
 ## 設定
 
 ```lua title="init.lua"
-local opts = { noremap = true, silent = true }
-vim.api.nvim_set_keymap('n', 'dd', '<Cmd>lua DeleteLine()<CR>', opts)
+vim.keymap.set("n", "dd", "<Cmd>lua DeleteLine()<CR>", { noremap = true, silent = true })
 
 function DeleteLine()
   local line = vim.api.nvim_get_current_line()
   if string.match(line, '^%s*$') then
-    vim.api.nvim_command('normal! "_dd')
+    vim.cmd('normal! "_dd')
   else
-    vim.api.nvim_command('normal! dd')
+    vim.cmd('normal! dd')
   end
 end
 ```
@@ -40,3 +39,32 @@ end
 皆さんも是非試してみてください。
 
 ではまた。
+
+## 追記
+
+visualモードで複数行選択した時の`d`に関しても、関数を追加しました。
+
+```lua title="init.lua"
+vim.keymap.set("x", "d", "<Cmd>lua DeleteBlock()<CR>", { noremap = true, silent = true })
+
+function DeleteBlock()
+  local start_line = vim.fn.line("'<")
+  local end_line = vim.fn.line("'>")
+  local lines = vim.fn.getline(start_line, end_line)
+  if type(lines) == "string" then
+    lines = { lines }
+  end
+  local all_blank = true
+  for _, line in ipairs(lines) do
+    if not line:match("^%s*$") then
+      all_blank = false
+      break
+    end
+  end
+  if all_blank then
+    vim.cmd('normal! "_d')
+  else
+    vim.cmd("normal! d")
+  end
+end
+```
