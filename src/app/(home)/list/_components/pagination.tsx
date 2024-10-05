@@ -13,7 +13,7 @@ const Card = ({
   path,
   disable,
 }: {
-  children?: ReactNode;
+  children: ReactNode;
   num: number;
   path: string;
   disable: boolean | undefined;
