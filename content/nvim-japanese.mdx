@@ -1,0 +1,74 @@
+---
+title: Neovimオススメ設定② 日本語入力を快適にするim-select.nvimのすゝめ
+description: Neovimのオススメ設定シリーズ第2弾。
+date: 2024-10-06
+---
+
+## はじめに
+
+オススメ設定というよりもオススメプラグイン紹介になります。
+
+皆さんはneovimで日本語入力をするとき、入力言語の切り替えでストレスを抱えていると思います。(断定)  
+人によっては、skk([vim-skk/skkeleton](https://github.com/vim-skk/skkeleton))を使用している人もいるでしょう。
+
+今回は皆さんに別の選択肢を提示したいと考えています。
+
+## im-select.nvim
+
+[https://github.com/keaising/im-select.nvim](https://github.com/keaising/im-select.nvim)
+
+READMEを読めばわかる通りですが、自動で入力メソッドを切り替えてくれるプラグインです。  
+Macではそのまま使えばいいのですが、Windowsだと不都合なことが起きます。(Linuxは未検証)
+
+それは、**IMEがオフになってしまうこと**です。他のウィンドウにいった時とneovimを終了した時に困ります。
+また、SSH接続等でim-selectが無いと言われたりするのが面倒なので、設定を付け加えます。
+
+## 設定
+
+今回はlazy.nvimの設定です。各種プラグインマネージャーに読み替えてください。  
+また、LazyVimを使用しているので`config`の場所が`init`になっています。
+
+```lua title="im-select.lua"
+return {
+  {
+    "keaising/im-select.nvim",
+    init = function()
+      if vim.env.DISPLAY then
+        require("im_select").setup()
+
+        if vim.fn.has("wsl") or vim.fn.has("win32") then
+          vim.api.nvim_create_autocmd("VimLeave", {
+            callback = function()
+              vim.fn.system("im-select.exe 1041")
+            end,
+          })
+          vim.api.nvim_create_autocmd("FocusLost", {
+            callback = function()
+              vim.fn.system("im-select.exe 1041")
+            end,
+          })
+        end
+      end
+    end,
+  },
+}
+```
+
+SSHしている時は起動してほしくないので、`SSH_TTY`がnullの時に起動しなければ良いです。  
+と、思っていたのですがSSH中にユーザーを変更するとこの環境変数がnullになってしまいます。
+
+なので、`DISPLAY`がnullかどうかで判断することにしました。  
+これで、余計な時には起動しないようにします。
+
+また、先ほど述べたほうにWindows環境だとIMEがオフになるので、neovimを終了した時またはカレントウィンドウを変更した時にIMEをオンにする設定を入れます。
+
+日本語IMEはim-selectで1041なので、Windows環境またはWSL環境でneovimを終了した時とフォーカスを失ったときにIMEをオンにしてやります。  
+再びneovimにフォーカスを移した時はプラグイン側がやってくれます。
+
+## 最後に
+
+これでまたneovim生活が快適になりました。  
+ただ、少し不具合もあってINSERTモードにしてもIMEがオンにならない時とフォーカスを別アプリに移してもIMEがオンにならない時があります。
+原因がわかった方は教えていただけると幸いです。自分もわかったら追記します。
+
+ではまた。
