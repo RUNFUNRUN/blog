@@ -17,16 +17,14 @@ date: 2024-06-15
 ## 設定
 
 ```lua title="init.lua"
-vim.keymap.set("n", "dd", "<Cmd>lua DeleteLine()<CR>", { noremap = true, silent = true })
-
-function DeleteLine()
+vim.keymap.set("n", "dd", function()
   local line = vim.api.nvim_get_current_line()
   if string.match(line, '^%s*$') then
     vim.cmd('normal! "_dd')
   else
     vim.cmd('normal! dd')
   end
-end
+end, { noremap = true, silent = true })
 ```
 
 `local function`にしてはダメです。  
@@ -45,9 +43,7 @@ end
 visualモードで複数行選択した時の`d`に関しても、関数を追加しました。
 
 ```lua title="init.lua"
-vim.keymap.set("x", "d", "<Cmd>lua DeleteBlock()<CR>", { noremap = true, silent = true })
-
-function DeleteBlock()
+vim.keymap.set("x", "d", function()
   local start_line = vim.fn.line("'<")
   local end_line = vim.fn.line("'>")
   local lines = vim.fn.getline(start_line, end_line)
@@ -66,5 +62,5 @@ function DeleteBlock()
   else
     vim.cmd("normal! d")
   end
-end
+end, { noremap = true, silent = true })
 ```
