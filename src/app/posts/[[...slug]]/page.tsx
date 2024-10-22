@@ -1,4 +1,4 @@
-import { getPage, getPages } from '@/app/source';
+import { getPage, getPages } from '@/libs/source';
 import defaultComponents from 'fumadocs-ui/mdx';
 import {
   DocsBody,
@@ -11,7 +11,8 @@ import { notFound } from 'next/navigation';
 
 export const dynamicParams = false;
 
-const Page = ({ params }: { params: { slug?: string[] } }) => {
+const Page = async (props: { params: Promise<{ slug?: string[] }> }) => {
+  const params = await props.params;
   const post = getPage(params.slug);
 
   if (post === undefined) {
@@ -63,9 +64,10 @@ export const generateStaticParams = () => {
   }));
 };
 
-export const generateMetadata = ({
-  params,
-}: { params: { slug?: string[] } }) => {
+export const generateMetadata = async (props: {
+  params: Promise<{ slug?: string[] }>;
+}) => {
+  const params = await props.params;
   const post = getPage(params.slug);
   if (post === undefined) return;
 

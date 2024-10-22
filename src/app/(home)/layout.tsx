@@ -1,4 +1,4 @@
-import { HomeLayout } from 'fumadocs-ui/home-layout';
+import { HomeLayout } from 'fumadocs-ui/layouts/home';
 import type { ReactNode } from 'react';
 
 const Layout = ({ children }: { children: ReactNode }) => {

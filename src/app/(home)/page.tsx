@@ -1,4 +1,4 @@
-import { getPages } from '@/app/source';
+import { getPages } from '@/libs/source';
 import { InlineLink } from './_components/inline-link';
 import { PostCard } from './_components/post-card';
 

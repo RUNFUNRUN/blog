@@ -1,4 +1,4 @@
-import { getPages } from '@/app/source';
+import { getPages } from '@/libs/source';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { PostCard } from '../../_components/post-card';
@@ -27,7 +27,8 @@ const DisplayCurrentPosts = ({
   );
 };
 
-const Page = ({ params }: { params: { slug?: string[] } }) => {
+const Page = async (props: { params: Promise<{ slug?: string[] }> }) => {
+  const params = await props.params;
   const pageIndex = params.slug ? Number.parseInt(params.slug[0], 10) - 1 : 0;
   if (pageIndex < 0 || pageIndex >= pageCount) notFound();
 
@@ -76,9 +77,10 @@ export const generateStaticParams = () => {
   return [{ slug: [] }, ...slugs];
 };
 
-export const generateMetadata = ({
-  params,
-}: { params: { slug?: string[] } }) => {
+export const generateMetadata = async (props: {
+  params: Promise<{ slug?: string[] }>;
+}) => {
+  const params = await props.params;
   const slug = params.slug;
   let index = '';
   if (slug) {
