@@ -3,7 +3,7 @@ import RSS from 'rss';
 
 const url = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://www.runfunrun.dev';
 
-export const revalidate = 60 * 60 * 24 * 1;
+export const revalidate = 86400; //60 * 60 * 24 * 1
 
 export const GET = () => {
   const feed = new RSS({
