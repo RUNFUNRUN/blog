@@ -1,14 +1,10 @@
 import { HomeLayout } from 'fumadocs-ui/layouts/home';
 import type { ReactNode } from 'react';
+import { baseOptions, linkItems } from '../layout.config';
 
 const Layout = ({ children }: { children: ReactNode }) => {
   return (
-    <HomeLayout
-      nav={{
-        title: 'RUNFUNRUN.dev',
-      }}
-      githubUrl='https://github.com/RUNFUNRUN/blog'
-    >
+    <HomeLayout {...baseOptions} links={linkItems}>
       {children}
     </HomeLayout>
   );

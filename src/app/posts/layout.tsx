@@ -1,16 +1,11 @@
 import { sortedByDatePageTree } from '@/libs/source';
 import { DocsLayout } from 'fumadocs-ui/layouts/notebook';
 import type { ReactNode } from 'react';
+import { baseOptions, linkItems } from '../layout.config';
 
 const RootDocsLayout = ({ children }: { children: ReactNode }) => {
   return (
-    <DocsLayout
-      tree={sortedByDatePageTree}
-      nav={{
-        title: 'RUNFUNRUN.dev',
-      }}
-      githubUrl='https://github.com/RUNFUNRUN/blog'
-    >
+    <DocsLayout {...baseOptions} tree={sortedByDatePageTree} links={linkItems}>
       {children}
     </DocsLayout>
   );
