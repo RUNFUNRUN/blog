@@ -12,7 +12,9 @@ const config: Config = {
   presets: [
     createPreset({
       addGlobalColors: true,
+      preset: 'vitepress',
     }),
   ],
 };
+
 export default config;
