@@ -1,7 +1,9 @@
 import { getPages } from '@/libs/source';
 import RSS from 'rss';
 
-const url = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://www.runfunrun.dev';
+const url = new URL(
+  process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000',
+);
 
 export const revalidate = 86400; //60 * 60 * 24 * 1
 
@@ -9,8 +11,8 @@ export const GET = () => {
   const feed = new RSS({
     title: 'RUNFUNRUN.dev',
     description: 'This is my tech blog.',
-    site_url: url,
-    feed_url: `${url}/rss.xml`,
+    site_url: url.toString(),
+    feed_url: `${url}/api/rss.xml`,
     language: 'ja',
   });
 

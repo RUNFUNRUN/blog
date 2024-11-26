@@ -29,21 +29,30 @@ const Layout = ({ children }: { children: ReactNode }) => {
 
 export default Layout;
 
+const title = 'RUNFUNRUN.dev';
+const description = 'This is my tech blog.';
+
 export const metadata: Metadata = {
   metadataBase: new URL(
     process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000',
   ),
-  title: 'RUNFUNRUN.dev',
-  description: 'This is my tech blog.',
+  title,
+  description,
   openGraph: {
-    title: 'RUNFUNRUN.dev',
-    description: 'This is my tech blog.',
+    title,
+    description,
     images: '/api/og',
     url: '/',
   },
   twitter: {
-    title: 'RUNFUNRUN.dev',
-    description: 'This is my tech blog.',
+    title,
+    description,
     images: '/api/og',
+  },
+  alternates: {
+    canonical: '/',
+    types: {
+      'application/rss+xml': '/api/rss.xml',
+    },
   },
 };
