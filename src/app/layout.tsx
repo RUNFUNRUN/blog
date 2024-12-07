@@ -6,6 +6,7 @@ import { Inter } from 'next/font/google';
 import type { ReactNode } from 'react';
 import { Footer } from './_components/footer';
 import './global.css';
+import { description, title } from './layout.config';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -28,9 +29,6 @@ const Layout = ({ children }: { children: ReactNode }) => {
 };
 
 export default Layout;
-
-const title = 'RUNFUNRUN.dev';
-const description = 'This is my tech blog.';
 
 export const metadata: Metadata = {
   metadataBase: new URL(

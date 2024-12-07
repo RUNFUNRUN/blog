@@ -1,3 +1,4 @@
+import { title } from '@/app/layout.config';
 import { getPages } from '@/libs/source';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
@@ -87,7 +88,7 @@ export const generateMetadata = async (props: {
     index = ` - ${slug[0]}ページ`;
   }
   return {
-    title: `RUNFUNRUN.dev | 記事一覧${index}`,
+    title: `${title} | 記事一覧${index}`,
     robots: {
       index: false,
       googleBot: {

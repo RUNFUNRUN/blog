@@ -1,3 +1,4 @@
+import { description, title } from '@/app/layout.config';
 import { getPages } from '@/libs/source';
 import RSS from 'rss';
 
@@ -9,8 +10,8 @@ export const revalidate = 86400; //60 * 60 * 24 * 1
 
 export const GET = () => {
   const feed = new RSS({
-    title: 'RUNFUNRUN.dev',
-    description: 'This is my tech blog.',
+    title,
+    description,
     site_url: url.toString(),
     feed_url: `${url}/api/rss.xml`,
     language: 'ja',
