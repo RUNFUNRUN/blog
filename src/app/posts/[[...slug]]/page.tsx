@@ -1,5 +1,9 @@
 import { getPage, getPages } from '@/libs/source';
 import { CodeBlock, Pre } from 'fumadocs-ui/components/codeblock';
+import {
+  ImageZoom,
+  type ImageZoomProps,
+} from 'fumadocs-ui/components/image-zoom';
 import defaultMdxComponents from 'fumadocs-ui/mdx';
 import defaultComponents from 'fumadocs-ui/mdx';
 import {
@@ -55,6 +59,7 @@ const Page = async (props: { params: Promise<{ slug?: string[] }> }) => {
         <MDX
           components={{
             ...defaultMdxComponents,
+            img: (props: ImageZoomProps) => <ImageZoom {...props} />,
             pre: ({ ref: _ref, ...props }) => (
               <CodeBlock
                 {...props}

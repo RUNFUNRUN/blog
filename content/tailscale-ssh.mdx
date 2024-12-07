@@ -4,18 +4,11 @@ description: Twitterでたまたま見つけて気になったので、試して
 date: 2024-03-03
 ---
 
-import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
-
 ## tailscaleについて
 
 [https://tailscale.com/](https://tailscale.com/)
 
-<ImageZoom
-  src='https://i.gyazo.com/a5f4ec3808b421f3c189b7f5f9c2675c.png'
-  width={1920}
-  height={911}
-  alt='image by gyazo'
-/>
+![about](https://i.gyazo.com/a5f4ec3808b421f3c189b7f5f9c2675c.png)
 
 > Tailscale makes creating software-defined networks easy: securely connecting users, services, and devices.
 
@@ -27,12 +20,7 @@ import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
 
 料金はこのようになっています。
 
-<ImageZoom
-  src='https://i.gyazo.com/0a0ffb6c8595e13f49f9dd7604604021.png'
-  width={1920}
-  height={911}
-  alt='image by gyazo'
-/>
+![price](https://i.gyazo.com/0a0ffb6c8595e13f49f9dd7604604021.png)
 
 ## 設定する
 
@@ -40,21 +28,11 @@ import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
 
 アカウントの作成が必要です。利用できるプロバイダーは以下の通りです。
 
-<ImageZoom
-  src='https://i.gyazo.com/ebb1d22c2ef892340ceb74bdf149af55.png'
-  width={1920}
-  height={911}
-  alt='image by gyazo'
-/>
+![providers](https://i.gyazo.com/ebb1d22c2ef892340ceb74bdf149af55.png)
 
 自分はGitHubを利用しました。
 
-<ImageZoom
-  src='https://i.gyazo.com/d15f4d4196d5da25e8aca771fc2ed4f4.png'
-  width={1920}
-  height={911}
-  alt='image by gyazo'
-/>
+![connect](https://i.gyazo.com/d15f4d4196d5da25e8aca771fc2ed4f4.png)
 
 2つ以上のデバイスを接続する必要があります。
 
@@ -122,12 +100,7 @@ Success.
 
 そうすると、desktopというデバイスが追加されていました。
 
-<ImageZoom
-  src='https://i.gyazo.com/de5cace11da1a7f7905c98bc4c77fcf1.png'
-  width={1920}
-  height={911}
-  alt='image by gyazo'
-/>
+![desktop](https://i.gyazo.com/de5cace11da1a7f7905c98bc4c77fcf1.png)
 
 SSHするためには、`-ssh`オプションをつける必要があるようなので、また実行します。
 
@@ -144,12 +117,7 @@ Macの場合はAppストアのリンクが表示されるので、そこから�
 
 画面の指示に従ってConnectを押すとこのようになりました。
 
-<ImageZoom
-  src='https://i.gyazo.com/ebdaf80e2a840fca9a37543b725358ff.png'
-  width={1920}
-  height={911}
-  alt='image by gyazo'
-/>
+![mac](https://i.gyazo.com/ebdaf80e2a840fca9a37543b725358ff.png)
 
 実際にコマンドを実行してみます。
 
@@ -169,12 +137,7 @@ rtt min/avg/max/mdev = 34.482/120.386/219.837/68.094 ms
 
 pingが通ったので、Success, it works!を押します。
 
-<ImageZoom
-  src='https://i.gyazo.com/9bf6b986920f3f143e6694f871c8fd66.png'
-  width={1920}
-  height={911}
-  alt='image by gyazo'
-/>
+![dash](https://i.gyazo.com/9bf6b986920f3f143e6694f871c8fd66.png)
 
 desktopにはSSHというラベルがついてますね。
 現状MacにSSH接続はできないようです。([reddit](https://www.reddit.com/r/Tailscale/comments/13cncn7/tailscale_mac_ssh/)より)
@@ -185,12 +148,7 @@ desktopにはSSHというラベルがついてますね。
 
 方法は簡単で、sshコマンドの後に表示されているIPアドレスを指定するだけです。
 
-<ImageZoom
-  src='https://i.gyazo.com/1e99dc3215c7e4b909dcb99a1b940a8b.png'
-  width={1225}
-  height={910}
-  alt='image by gyazo'
-/>
+![ssh](https://i.gyazo.com/1e99dc3215c7e4b909dcb99a1b940a8b.png)
 
 非常に高速に動作します。
 
@@ -199,32 +157,17 @@ Tailscaleは快適に使えそうです。
 
 Cloudflareのように、ブラウザからの接続もBetaで実装されているようです。
 
-<ImageZoom
-  src='https://i.gyazo.com/59ff077beb86e40cf3ed5d758a9167da.png'
-  width={1920}
-  height={911}
-  alt='image by gyazo'
-/>
+![ssh on browser](https://i.gyazo.com/59ff077beb86e40cf3ed5d758a9167da.png)
 
 ...からSSH to machine...を押してユーザーを入力するとできます。
 
 Windowsだと別windowで開きます。Macだとそのまま新規タブで開きました。
 
-<ImageZoom
-  src='https://i.gyazo.com/4f27283fab2e98ff807c1e43218fb6e7.png'
-  width={789}
-  height={501}
-  alt='image by gyazo'
-/>
+![window](https://i.gyazo.com/4f27283fab2e98ff807c1e43218fb6e7.png)
 
 ブラウザから接続すると、Machinesに追加されます。
 
-<ImageZoom
-  src='https://i.gyazo.com/98e013bc2b1fa770a22dc9f0ded2beaa.png'
-  width={1920}
-  height={911}
-  alt='image by gyazo'
-/>
+![machines](https://i.gyazo.com/98e013bc2b1fa770a22dc9f0ded2beaa.png)
 
 このブラウザSSH接続はNeovimが正常に描画されませんでした。
 CloudflareのブラウザSSHは正常に描画されていたので、改善の余地ありですね。

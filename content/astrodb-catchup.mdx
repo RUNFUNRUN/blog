@@ -47,14 +47,7 @@ Drizzle ORMを使い慣れてる人にとってはかなり嬉しいですね。
 
 やっぱり一番気になるのはここですよね。
 
-import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
-
-<ImageZoom
-  src='https://i.gyazo.com/ba1ef94c82bb374bd2080f765415d682.png'
-  width={1920}
-  height={911}
-  alt='image by gyazo'
-/>
+![price](https://i.gyazo.com/ba1ef94c82bb374bd2080f765415d682.png)
 
 なんと、基本無料です。
 
@@ -88,39 +81,19 @@ Astro Studioに関しては、[こちら](https://docs.astro.build/ja/guides/ast
 
 今回は、簡単のためテンプレートから作成します。
 
-<ImageZoom
-  src='https://i.gyazo.com/2c56fd0656c5d9fb2693e614b91f3277.png'
-  width={1920}
-  height={911}
-  alt='image by gyazo'
-/>
+![setup1](https://i.gyazo.com/2c56fd0656c5d9fb2693e614b91f3277.png)
 
 Start a Projectを押します。
 
-<ImageZoom
-  src='https://i.gyazo.com/013fe59d4363d2e82886df805a25ee0f.png'
-  width={1920}
-  height={911}
-  alt='image by gyazo'
-/>
+![setup2](https://i.gyazo.com/013fe59d4363d2e82886df805a25ee0f.png)
 
 Create from Templateを押します。
 
-<ImageZoom
-  src='https://i.gyazo.com/70c6c3fe4e15454e192dfd877265bd76.png'
-  width={1920}
-  height={911}
-  alt='image by gyazo'
-/>
+![setup3](https://i.gyazo.com/70c6c3fe4e15454e192dfd877265bd76.png)
 
 3種類ありますが、今回はJob Boardを選択します。
 
-<ImageZoom
-  src='https://i.gyazo.com/cc6a8a6d865b821e9946a62ccf7bcc7f.png'
-  width={1920}
-  height={911}
-  alt='image by gyazo'
-/>
+![setup4](https://i.gyazo.com/cc6a8a6d865b821e9946a62ccf7bcc7f.png)
 
 リポジトリ名は適当にastrodb-jobboardにしました。
 RegionをAsia(Tokyo)にして、Create a private Git repositoryのチェックを外して、
@@ -130,12 +103,7 @@ Create New Projectを押します。
 
 [https://github.com/RUNFUNRUN/astrodb-jobboard](https://github.com/RUNFUNRUN/astrodb-jobboard)
 
-<ImageZoom
-  src='https://i.gyazo.com/1332b9246cc2a08164f02c4be90be49d.png'
-  width={1920}
-  height={911}
-  alt='image by gyazo'
-/>
+![setup5](https://i.gyazo.com/1332b9246cc2a08164f02c4be90be49d.png)
 
 また、Astro StudioのWeb UI内からSQL ConsoleとStackBlitzが使えるようです。
 
@@ -393,31 +361,16 @@ bunx astro add vercel
 
 pushしたら、次はAstro Studioからトークンを取得します。
 
-<ImageZoom
-  src='https://i.gyazo.com/5a454de6cb1be9d2991ef8a802729bc5.png'
-  width={1920}
-  height={911}
-  alt='image by gyazo'
-/>
+![deploy1](https://i.gyazo.com/5a454de6cb1be9d2991ef8a802729bc5.png)
 
 次にVercelでプロジェクトを作成します。
 さっきのトークンを環境変数に設定します。
 
-<ImageZoom
-  src='https://i.gyazo.com/afe0195b57c28ec3e8a1ec4481a9a934.png'
-  width={1920}
-  height={911}
-  alt='image by gyazo'
-/>
+![deploy2](https://i.gyazo.com/afe0195b57c28ec3e8a1ec4481a9a934.png)
 
 これでデプロイしてみます。
 
-<ImageZoom
-  src='https://i.gyazo.com/5beb48955f7894d96fdd52eeb2c70046.png'
-  width={1920}
-  height={911}
-  alt='image by gyazo'
-/>
+![deploy3](https://i.gyazo.com/5beb48955f7894d96fdd52eeb2c70046.png)
 
 無事デプロイできました。でも、プレビューを見ると内容がありませんね。
 
@@ -435,12 +388,7 @@ bun run astro db execute db/seed.ts --remote
 
 [https://astrodb-jobboard-ten.vercel.app/](https://astrodb-jobboard-ten.vercel.app/)
 
-<ImageZoom
-  src='https://i.gyazo.com/0f9e991d46218ae583f9f6fedc0bde27.png'
-  width={1920}
-  height={911}
-  alt='image by gyazo'
-/>
+![deploy4](https://i.gyazo.com/0f9e991d46218ae583f9f6fedc0bde27.png)
 
 いい感じです。
 
