@@ -1,4 +1,6 @@
 import { getPage, getPages } from '@/libs/source';
+import { CodeBlock, Pre } from 'fumadocs-ui/components/codeblock';
+import defaultMdxComponents from 'fumadocs-ui/mdx';
 import defaultComponents from 'fumadocs-ui/mdx';
 import {
   DocsBody,
@@ -50,7 +52,21 @@ const Page = async (props: { params: Promise<{ slug?: string[] }> }) => {
       <DocsTitle>{post.data.title}</DocsTitle>
       <DocsDescription>{post.data.description}</DocsDescription>
       <DocsBody>
-        <MDX components={defaultComponents} />
+        <MDX
+          components={{
+            ...defaultMdxComponents,
+            pre: ({ ref: _ref, ...props }) => (
+              <CodeBlock
+                {...props}
+                viewportProps={{
+                  className: 'max-h-fit',
+                }}
+              >
+                <Pre>{props.children}</Pre>
+              </CodeBlock>
+            ),
+          }}
+        />
       </DocsBody>
     </DocsPage>
   );
