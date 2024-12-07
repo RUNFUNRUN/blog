@@ -18,8 +18,8 @@ const HomePage = () => {
           。
         </p>
         <p>
-          質問等はプロフィールの
-          <InlineLink href='https://www.runfunrun.info/contact' blank>
+          質問等はポートフォリオの
+          <InlineLink href='https://runfun.run/contact' blank>
             Contact
           </InlineLink>
           かDiscord(ID: runfunrun)のDMからお願いします。
