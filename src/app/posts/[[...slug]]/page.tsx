@@ -115,5 +115,8 @@ export const generateMetadata = async (props: {
       description,
       images: `/api/og?${imageParams}`,
     },
+    alternates: {
+      canonical: post.url,
+    },
   } satisfies Metadata;
 };
