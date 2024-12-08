@@ -5,7 +5,6 @@ import {
   type ImageZoomProps,
 } from 'fumadocs-ui/components/image-zoom';
 import defaultMdxComponents from 'fumadocs-ui/mdx';
-import defaultComponents from 'fumadocs-ui/mdx';
 import {
   DocsBody,
   DocsDescription,
