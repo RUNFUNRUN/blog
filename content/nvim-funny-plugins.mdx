@@ -125,15 +125,15 @@ YouTubeにNeovimのコーディング動画をあげる時に便利そうです�
   init = function(opts)
     require("showkeys").setup(opts)
 
-    local state = false
+    local enable = false
     Snacks.toggle({
       name = "Showkeys",
       get = function()
-        return state
+        return enable
       end,
       set = function()
         require("showkeys").toggle()
-        state = not state
+        enable = not enable
       end,
     }):map("<leader>uk")
   end,
@@ -143,9 +143,8 @@ YouTubeにNeovimのコーディング動画をあげる時に便利そうです�
 僕はLazyVimを使用しているので、[snacks.nvim](https://github.com/folke/snacks.nvim)が組み込まれています。
 そのトグル機能を使用しています。
 その際にsnacks.nvimが先に読み込まれるように`dependencies`に追加しておきます。  
-本当は`get`で現在の状態を取得する必要があるのですが、showkeysのstateはexportされていないので、
-参照できません。
-そのため、自分で`state`変数を定義してそれを切り替えて表現しています。
+本当は`get`で現在の状態を取得する必要があるのですが、showkeysの状態はexportされていないので、参照できません。
+そのため、自分で`enable`変数を定義してそれを切り替えて表現しています。
 
 ![enable](https://i.gyazo.com/85e9554e22797e57274fc8576a004415.png)
 
@@ -159,7 +158,7 @@ YouTubeにNeovimのコーディング動画をあげる時に便利そうです�
 
 ただし、コマンドで`ShowkeysToggle`を実行するとあべこべになってしまう点に注意が必要です。
 
-気が向いたらstateをexportするようにPRを送ってみます。
+気が向いたら状態を取得できるようにPRを送ってみます。
 
 また、このプラグインは`ShowkeysToggle`コマンドを叩くことで起動しますが、
 それだとsnacks.nvimのトグルが利用できないので、`init`で`setup()`を実行して強制起動させます。
