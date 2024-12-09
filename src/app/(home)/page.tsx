@@ -12,7 +12,7 @@ const HomePage = () => {
       <div className='mb-6 text-2xl font-bold'>
         <p>
           RUNFUNRUNのブログです。プロフィールは
-          <InlineLink href='https://www.runfunrun.info' blank>
+          <InlineLink href='https://runfun.run' blank>
             こちら
           </InlineLink>
           。
