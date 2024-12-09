@@ -1,0 +1,172 @@
+---
+title: Neovimおもしろプラグイン紹介
+description: あなたのNeovimライフがちょっとリッチになるプラグインをご紹介
+date: 2024-12-10
+---
+
+## はじめに
+
+今回は全く必要ないけど、あるとちょっと楽しいプラグインを3つ紹介したいと思います。  
+以下の3つなります。
+
+- [andweeb/presence.nvim](https://github.com/andweeb/presence.nvim)
+
+- [sphamba/smear-cursor.nvim](https://github.com/sphamba/smear-cursor.nvim)
+
+- [nvzone/showkeys](https://github.com/nvzone/showkeys)
+
+設定はLazyVimの場合を書いています。
+皆さんが使ってる各種プラグインマネージャー・ディストリビューションに合わせて読み替えてください。
+
+では、それぞれ見ていきます。
+
+## andweeb/presence.nvim
+
+こちらはdiscordのアクティビティにNeovimを表示するためのプラグインです。  
+これで俺はNeovimを使ってるんだぞ！とイキることができます。  
+皆さんも*vimを使い始めた理由はカッコいいからですよね！
+是非イキリましょう。
+
+![discord](https://i.gyazo.com/249141a23fba5f281b882cedab41a2d9.png)
+
+設定はこれだけです。
+
+```lua title="discord.lua"
+{
+  "andweeb/presence.nvim",
+  init = function()
+    require("presence").setup({})
+  end,
+},
+```
+
+ただし、ファイル名やプロジェクト名が盛れるのでセキュリティには気をつけましょう。
+
+他の人のプロフィールだと、リポジトリのリンクが表示されてしまいます。
+(プライベートリポジトリはもちろん見えませんが、、、)
+
+## sphamba/smear-cursor.nvim
+
+こちらはカーソルをビュンビュンさせるプラグインです。
+
+[https://github.com/sphamba/smear-cursor.nvim](https://github.com/sphamba/smear-cursor.nvim)
+
+公式ページのDemoを見るとわかりやすいですが、
+簡単に言うと[Neovide](https://neovide.dev/)の[カーソルアニメーション](https://neovide.dev/features.html#animated-cursor)を再現したものです。
+
+こちらも簡単に設定できます。
+注意点としては、requireするときに`-`が`_`になっていることです。
+
+```lua title="cursor.lua"
+{
+  "sphamba/smear-cursor.nvim",
+  init = function()
+    require("smear_cursor").setup()
+  end,
+},
+```
+
+そもそも、LazyVimにはExtrasとして用意されているので、`lua/config/lazy.lua`に一行追加するだけです。
+[Smear-cursor | LazyVim](https://www.lazyvim.org/extras/ui/smear-cursor)
+
+Kitty terminalでは、わざわざプラグインを入れなくとも再現可能で、一行設定を追加するだけです。
+
+```text title="kitty.conf"
+cursor_trail 3
+```
+
+(正直、こっちの方がスムーズで良いです。当たり前ですが笑)
+
+スクロールを滑らかにする[karb94/neoscroll.nvim](https://github.com/karb94/neoscroll.nvim)というプラグインもあるので、興味ある方は是非。
+
+Neovide風では無くなってしまいますが、[echasnovski/mini.animate](https://github.com/echasnovski/mini.animate)というプラグインもあります。
+
+## nvzone/showkeys
+
+[keycastr](https://github.com/keycastr/keycastr)をNeovimの中で再現できます。
+知らない方向けに話すと、キーの入力を画面に出すことができます。
+
+YouTubeにNeovimのコーディング動画をあげる時に便利そうですね、、、(あげるとは言ってない)  
+まあYouTubeにあげることは無くても、ライブコーディングやペアプロで使えそうです。
+
+ちなみに、[NvChad](https://nvchad.com/)の作者さんが作ってます。
+
+デフォルトで右下に表示されます。
+
+![showkeys](https://i.gyazo.com/5d99c8dae1b3f65551b14c178249f11c.png)
+
+設定は簡単で以下の通りです。
+
+```lua title="showkeys.lua"
+{
+  "nvzone/showkeys",
+  cmd = "ShowkeysToggle",
+  opts = {
+    timeout = 1,
+    maxkeys = 5,
+  }
+}
+```
+
+オプションは[こちら](https://github.com/nvzone/showkeys/blob/main/lua/showkeys/state.lua#L7)を参考にしてください。
+位置は`position`プロパティで変えることができます。
+
+僕は以下のように設定しています。
+
+```lua title="showkeys.lua"
+{
+  "nvzone/showkeys",
+  dependencies = { "folke/snacks.nvim" },
+  cmd = "ShowkeysToggle",
+  opts = {
+    timeout = 3,
+    maxkeys = 5,
+  },
+  init = function(opts)
+    require("showkeys").setup(opts)
+
+    local state = false
+    Snacks.toggle({
+      name = "Showkeys",
+      get = function()
+        return state
+      end,
+      set = function()
+        require("showkeys").toggle()
+        state = not state
+      end,
+    }):map("<leader>uk")
+  end,
+},
+```
+
+僕はLazyVimを使用しているので、[snacks.nvim](https://github.com/folke/snacks.nvim)が組み込まれています。
+そのトグル機能を使用しています。
+その際にsnacks.nvimが先に読み込まれるように`dependencies`に追加しておきます。  
+本当は`get`で現在の状態を取得する必要があるのですが、showkeysのstateはexportされていないので、
+参照できません。
+そのため、自分で`state`変数を定義してそれを切り替えて表現しています。
+
+![enable](https://i.gyazo.com/85e9554e22797e57274fc8576a004415.png)
+
+![disable](https://i.gyazo.com/ab9cab43faf86a49dcade306a74766f5.png)
+
+これで有効無効の通知が動きます。
+
+また、[which-key](https://github.com/folke/which-key.nvim)にもしっかり表示されています。(kの部分です)
+
+![which-key](https://i.gyazo.com/7bffe0a00bfa96562c745f62ab594ddf.png)
+
+気が向いたらstateをexportするようにPRを送ってみます。
+
+また、このプラグインは`ShowkeysToggle`コマンドを叩くことで起動しますが、
+それだとsnacks.nvimのトグルが利用できないので、`init`で`setup()`を実行して強制起動させます。
+
+## 最後に
+
+気づいたらほとんどshowkeysの説明になってしまいましたが、
+皆さんのNeovimライフが少しでも今より良くなれば幸いです。
+
+また面白いプラグインを見つけたら紹介したいと思います。
+
+ではまた。
