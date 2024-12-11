@@ -1,12 +1,12 @@
 import { GoogleAnalytics } from '@next/third-parties/google';
 import { RootProvider } from 'fumadocs-ui/provider';
-import 'katex/dist/katex.css';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import type { ReactNode } from 'react';
 import { Footer } from './_components/footer';
-import './global.css';
 import { description, title } from './layout.config';
+import './global.css';
+import 'katex/dist/katex.css';
 
 const inter = Inter({
   subsets: ['latin'],
