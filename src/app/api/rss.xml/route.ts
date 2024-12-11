@@ -13,7 +13,7 @@ export const GET = () => {
     title,
     description,
     site_url: url.toString(),
-    feed_url: `${url}/api/rss.xml`,
+    feed_url: new URL('/api/rss.xml', url).toString(),
     language: 'ja',
   });
 
