@@ -2,7 +2,7 @@ import { description, title } from '@/app/layout.config';
 import { getPages } from '@/libs/source';
 import RSS from 'rss';
 
-const url = new URL(
+const baseUrl = new URL(
   process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000',
 );
 
@@ -12,19 +12,19 @@ export const GET = () => {
   const feed = new RSS({
     title,
     description,
-    site_url: url.toString(),
-    feed_url: new URL('/api/rss.xml', url).toString(),
+    site_url: baseUrl.toString(),
+    feed_url: new URL('/api/rss.xml', baseUrl).toString(),
     language: 'ja',
   });
 
-  const pages = getPages();
+  const posts = getPages();
 
-  for (const page of pages) {
+  for (const post of posts) {
     feed.item({
-      title: page.data.title,
-      description: page.data.description ?? '',
-      url: new URL(page.url, url).toString(),
-      date: page.data.date,
+      title: post.data.title,
+      description: post.data.description ?? '',
+      url: new URL(post.url, baseUrl).toString(),
+      date: post.data.date,
     });
   }
 
