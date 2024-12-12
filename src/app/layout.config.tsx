@@ -7,7 +7,7 @@ export const description = 'This is my tech blog.';
 
 export const baseOptions: BaseLayoutProps = {
   nav: {
-    title: 'RUNFUNRUN.dev',
+    title,
   },
   githubUrl: 'https://github.com/RUNFUNRUN/blog',
 };
