@@ -122,8 +122,8 @@ YouTubeにNeovimのコーディング動画をあげる時に便利そうです�
     timeout = 3,
     maxkeys = 5,
   },
-  init = function(opts)
-    require("showkeys").setup(opts)
+  init = function()
+    local showkeys = require("showkeys")
 
     local enable = false
     Snacks.toggle({
@@ -132,7 +132,7 @@ YouTubeにNeovimのコーディング動画をあげる時に便利そうです�
         return enable
       end,
       set = function()
-        require("showkeys").toggle()
+        showkeys.toggle()
         enable = not enable
       end,
     }):map("<leader>uk")
@@ -157,11 +157,9 @@ YouTubeにNeovimのコーディング動画をあげる時に便利そうです�
 ![which-key](https://i.gyazo.com/7bffe0a00bfa96562c745f62ab594ddf.png)
 
 ただし、コマンドで`ShowkeysToggle`を実行するとあべこべになってしまう点に注意が必要です。
+コマンドを上書きすればできるとは思いますが、今回はしていません。
 
 気が向いたら状態を取得できるようにPRを送ってみます。
-
-また、このプラグインは`ShowkeysToggle`コマンドを叩くことで起動しますが、
-それだとsnacks.nvimのトグルが利用できないので、`init`で`setup()`を実行して強制起動させます。
 
 ## 最後に
 
