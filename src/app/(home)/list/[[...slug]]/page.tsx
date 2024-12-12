@@ -1,4 +1,4 @@
-import { title } from '@/app/layout.config';
+import { title as homeTitle } from '@/app/layout.config';
 import { getPages } from '@/libs/source';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
@@ -87,8 +87,15 @@ export const generateMetadata = async (props: {
   if (slug) {
     index = ` - ${slug[0]}ページ`;
   }
+  const title = `${homeTitle} | 記事一覧${index}`;
+
   return {
-    title: `${title} | 記事一覧${index}`,
+    title,
+    openGraph: {
+      title,
+      images: '/api/og',
+      url: `/list/${slug === undefined ? '' : slug[0]}`,
+    },
     robots: {
       index: false,
       googleBot: {

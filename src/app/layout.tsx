@@ -40,7 +40,6 @@ export const metadata: Metadata = {
     title,
     description,
     images: '/api/og',
-    url: '/',
   },
   twitter: {
     title,
