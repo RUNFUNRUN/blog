@@ -48,7 +48,6 @@ export const metadata: Metadata = {
     images: '/api/og',
   },
   alternates: {
-    canonical: '/',
     types: {
       'application/rss+xml': '/api/rss.xml',
     },

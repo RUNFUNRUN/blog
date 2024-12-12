@@ -1,4 +1,5 @@
 import { getPages } from '@/libs/source';
+import type { Metadata } from 'next';
 import { InlineLink } from './_components/inline-link';
 import { PostCard } from './_components/post-card';
 
@@ -54,3 +55,11 @@ const HomePage = () => {
 };
 
 export default HomePage;
+
+export const generateMetadata = () => {
+  return {
+    alternates: {
+      canonical: '/',
+    },
+  } satisfies Metadata;
+};
