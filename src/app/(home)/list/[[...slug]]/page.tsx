@@ -102,5 +102,10 @@ export const generateMetadata = async (props: {
         index: false,
       },
     },
+    alternates: {
+      types: {
+        'application/rss+xml': '/api/rss.xml',
+      },
+    },
   } satisfies Metadata;
 };

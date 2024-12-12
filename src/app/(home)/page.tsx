@@ -63,6 +63,9 @@ export const generateMetadata = () => {
     },
     alternates: {
       canonical: '/',
+      types: {
+        'application/rss+xml': '/api/rss.xml',
+      },
     },
   } satisfies Metadata;
 };
