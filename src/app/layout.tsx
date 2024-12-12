@@ -1,4 +1,3 @@
-import { GoogleAnalytics } from '@next/third-parties/google';
 import { RootProvider } from 'fumadocs-ui/provider';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
@@ -15,9 +14,6 @@ const inter = Inter({
 const Layout = ({ children }: { children: ReactNode }) => {
   return (
     <html lang='ja' className={inter.className}>
-      {process.env.NODE_ENV === 'production' && (
-        <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID ?? ''} />
-      )}
       <body className='flex min-h-dvh flex-col'>
         <RootProvider>
           {children}
