@@ -34,9 +34,7 @@ date: 2024-12-10
 ```lua title="discord.lua"
 {
   "andweeb/presence.nvim",
-  init = function()
-    require("presence").setup({})
-  end,
+  lazy = false,
 },
 ```
 
@@ -117,23 +115,19 @@ YouTubeにNeovimのコーディング動画をあげる時に便利そうです�
 {
   "nvzone/showkeys",
   dependencies = { "folke/snacks.nvim" },
-  cmd = "ShowkeysToggle",
   opts = {
     timeout = 3,
     maxkeys = 5,
   },
   init = function()
     local showkeys = require("showkeys")
-
-    local enable = false
     Snacks.toggle({
       name = "Showkeys",
       get = function()
-        return enable
+        return require("showkeys.state").visible
       end,
       set = function()
         showkeys.toggle()
-        enable = not enable
       end,
     }):map("<leader>uk")
   end,
@@ -142,9 +136,7 @@ YouTubeにNeovimのコーディング動画をあげる時に便利そうです�
 
 僕はLazyVimを使用しているので、[snacks.nvim](https://github.com/folke/snacks.nvim)が組み込まれています。
 そのトグル機能を使用しています。
-その際にsnacks.nvimが先に読み込まれるように`dependencies`に追加しておきます。  
-本当は`get`で現在の状態を取得する必要があるのですが、showkeysの状態はexportされていないので、参照できません。
-そのため、自分で`enable`変数を定義してそれを切り替えて表現しています。
+その際にsnacks.nvimが先に読み込まれるように`dependencies`に追加しておきます。
 
 ![enable](https://i.gyazo.com/85e9554e22797e57274fc8576a004415.png)
 
@@ -155,11 +147,6 @@ YouTubeにNeovimのコーディング動画をあげる時に便利そうです�
 また、[which-key](https://github.com/folke/which-key.nvim)にもしっかり表示されています。(kの部分です)
 
 ![which-key](https://i.gyazo.com/7bffe0a00bfa96562c745f62ab594ddf.png)
-
-ただし、コマンドで`ShowkeysToggle`を実行するとあべこべになってしまう点に注意が必要です。
-コマンドを上書きすればできるとは思いますが、今回はしていません。
-
-気が向いたら状態を取得できるようにPRを送ってみます。
 
 ## 最後に
 
