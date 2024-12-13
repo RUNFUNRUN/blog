@@ -1,6 +1,6 @@
 import { description, title } from '@/app/layout.config';
 import { getPages } from '@/libs/source';
-import RSS from 'rss';
+import { Feed } from 'feed';
 
 export const dynamic = 'force-static';
 
@@ -9,26 +9,36 @@ export const GET = () => {
     process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000',
   );
 
-  const feed = new RSS({
+  const feed = new Feed({
     title,
     description,
-    site_url: baseUrl.toString(),
-    feed_url: new URL('/api/rss.xml', baseUrl).toString(),
+    id: baseUrl.toString(),
+    copyright: 'RUNFUNRUN',
+    link: baseUrl.toString(),
+    feed: new URL('/api/rss.xml', baseUrl).toString(),
     language: 'ja',
+    updated: new Date(),
+    favicon: new URL('/favicon.ico', baseUrl).toString(),
   });
 
   const posts = getPages();
 
   for (const post of posts) {
-    feed.item({
+    feed.addItem({
       title: post.data.title,
-      description: post.data.description ?? '',
-      url: new URL(post.url, baseUrl).toString(),
+      description: post.data.description,
+      link: new URL(post.url, baseUrl).toString(),
       date: post.data.date,
+      author: [
+        {
+          name: 'RUNFUNRUN',
+          link: 'https://runfun.run',
+        },
+      ],
     });
   }
 
-  return new Response(feed.xml(), {
+  return new Response(feed.rss2(), {
     headers: {
       'Content-Type': 'application/xml',
     },
