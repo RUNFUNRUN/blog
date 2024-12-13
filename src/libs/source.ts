@@ -8,6 +8,8 @@ export const { getPage, getPages, pageTree } = loader({
   source: createMDXSource(blog, []),
 });
 
+export type Post = ReturnType<typeof getPage>;
+
 const getDate = (url: string) => {
   const slugs = url.replace(/^\/posts\//, '').split('/');
   const post = getPage(slugs);

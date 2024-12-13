@@ -13,6 +13,7 @@ import {
 } from 'fumadocs-ui/page';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
+import { JsonLd } from '../_components/json-ld';
 
 export const dynamicParams = false;
 
@@ -72,6 +73,7 @@ const Page = async (props: { params: Promise<{ slug?: string[] }> }) => {
           }}
         />
       </DocsBody>
+      <JsonLd post={post} />
     </DocsPage>
   );
 };
