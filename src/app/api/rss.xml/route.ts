@@ -4,6 +4,15 @@ import { Feed } from 'feed';
 
 export const dynamic = 'force-static';
 
+const escapeForXML = (str: string) => {
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&apos;');
+};
+
 export const GET = () => {
   const baseUrl = new URL(
     process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000',
@@ -32,7 +41,13 @@ export const GET = () => {
       title: post.data.title,
       description: post.data.description,
       link: new URL(post.url, baseUrl).toString(),
-      image: new URL(`/api/og?${imageParams}`, baseUrl).toString(),
+      image: {
+        title: post.data.title,
+        type: 'image/png',
+        url: escapeForXML(
+          new URL(`/api/og?${imageParams}`, baseUrl).toString(),
+        ),
+      },
       date: post.data.date,
       author: [
         {
