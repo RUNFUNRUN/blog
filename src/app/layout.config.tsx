@@ -15,6 +15,7 @@ export const baseOptions: BaseLayoutProps = {
 export const linkItems: LinkItemType[] = [
   {
     type: 'icon',
+    label: 'rss',
     icon: <Rss />,
     text: 'RSS',
     url: '/api/rss.xml',
