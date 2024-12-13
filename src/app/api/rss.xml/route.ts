@@ -2,13 +2,13 @@ import { description, title } from '@/app/layout.config';
 import { getPages } from '@/libs/source';
 import RSS from 'rss';
 
-const baseUrl = new URL(
-  process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000',
-);
-
-export const revalidate = 86400; //60 * 60 * 24 * 1
+export const dynamic = 'force-static';
 
 export const GET = () => {
+  const baseUrl = new URL(
+    process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000',
+  );
+
   const feed = new RSS({
     title,
     description,
@@ -31,7 +31,6 @@ export const GET = () => {
   return new Response(feed.xml(), {
     headers: {
       'Content-Type': 'application/xml',
-      'Cache-Control': `s-maxage=${revalidate}, stale-while-revalidate`,
     },
   });
 };
