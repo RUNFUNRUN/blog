@@ -72,7 +72,7 @@ export const JsonLd = ({ post }: { post: Post }) => {
   };
 
   return (
-    <Script
+    <script
       type='application/ld+json'
       // biome-ignore lint/security/noDangerouslySetInnerHtml:
       dangerouslySetInnerHTML={{ __html: JSON.stringify(graph) }}
