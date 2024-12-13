@@ -24,10 +24,15 @@ export const GET = () => {
   const posts = getPages();
 
   for (const post of posts) {
+    const imageParams = new URLSearchParams();
+    imageParams.set('title', post.data.title);
+    imageParams.set('description', post.data.description ?? '');
+
     feed.addItem({
       title: post.data.title,
       description: post.data.description,
       link: new URL(post.url, baseUrl).toString(),
+      image: new URL(`/api/og?${imageParams}`, baseUrl).toString(),
       date: post.data.date,
       author: [
         {
