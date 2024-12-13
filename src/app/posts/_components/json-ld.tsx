@@ -23,9 +23,10 @@ export const JsonLd = ({ post }: { post: Post }) => {
     headline: post.data.title,
     description: post.data.description,
     image: new URL(`/api/og?${imageParams}`, baseUrl).toString(),
-    datePublished: new Date(post.data.date).toLocaleDateString('ja-JP', {
-      timeZone: 'Asia/Tokyo',
-    }),
+    datePublished: new Date(post.data.date).toISOString(),
+    dateModified: post.data.lastModified
+      ? new Date(post.data.lastModified).toISOString()
+      : undefined,
     mainEntityOfPage: {
       '@type': 'WebPage',
       '@id': url,
@@ -33,16 +34,16 @@ export const JsonLd = ({ post }: { post: Post }) => {
     author: {
       '@type': 'Person',
       name: 'RUNFUNRUN',
+      url: 'https://runfun.run',
     },
     publisher: {
-      '@type': 'Organization',
-      name: homeTitle,
+      '@type': 'Person',
+      name: 'RUNFUNRUN',
     },
   };
 
   const breadcrumbList: BreadcrumbList = {
     '@type': 'BreadcrumbList',
-    name: 'パンくずリスト',
     itemListElement: [
       {
         '@type': 'ListItem',
