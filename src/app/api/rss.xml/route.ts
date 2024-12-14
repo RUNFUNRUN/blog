@@ -58,7 +58,7 @@ export const GET = () => {
     });
   }
 
-  return new Response(feed.rss2(), {
+  return new Response(feed.atom1(), {
     headers: {
       'Content-Type': 'application/xml',
     },
