@@ -1,14 +1,10 @@
 import { HomeLayout } from 'fumadocs-ui/layouts/home';
 import Image from 'next/image';
+import { baseOptions, linkItems } from './layout.config';
 
 const NotFound = () => {
   return (
-    <HomeLayout
-      nav={{
-        title: 'RUNFUNRUN.dev',
-      }}
-      githubUrl='https://github.com/RUNFUNRUN/blog'
-    >
+    <HomeLayout {...baseOptions} links={linkItems}>
       <div className='text-center'>
         <p className='my-4 text-4xl font-bold'>404 Not Found</p>
         <p className='text-lg'>
