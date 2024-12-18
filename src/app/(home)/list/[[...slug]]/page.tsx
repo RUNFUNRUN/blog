@@ -94,7 +94,7 @@ export const generateMetadata = async (props: {
     openGraph: {
       title,
       images: '/api/og',
-      url: `/list/${slug === undefined ? '' : slug[0]}`,
+      url: `/list/${slug ? slug[0] : ''}`,
     },
     robots: {
       index: false,

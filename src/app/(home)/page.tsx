@@ -59,6 +59,7 @@ export default HomePage;
 export const generateMetadata = () => {
   return {
     openGraph: {
+      images: '/api/og',
       url: '/',
     },
     alternates: {

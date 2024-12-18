@@ -15,7 +15,7 @@ export const GET = async (req: NextRequest) => {
   const title = searchParams.get('title');
   const description = searchParams.get('description');
 
-  if (title === null && description === null) {
+  if (!title) {
     return new ImageResponse(
       <div
         style={{
