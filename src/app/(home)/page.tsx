@@ -1,5 +1,4 @@
 import { getPages } from '@/libs/source';
-import type { Metadata } from 'next';
 import { InlineLink } from './_components/inline-link';
 import { PostCard } from './_components/post-card';
 
@@ -55,18 +54,3 @@ const HomePage = () => {
 };
 
 export default HomePage;
-
-export const generateMetadata = () => {
-  return {
-    openGraph: {
-      images: '/api/og',
-      url: '/',
-    },
-    alternates: {
-      canonical: '/',
-      types: {
-        'application/rss+xml': '/api/rss.xml',
-      },
-    },
-  } satisfies Metadata;
-};
