@@ -1,0 +1,169 @@
+---
+title: 世界一くだらないミスでハッキングされていた件
+description: たまたま気づけて良かったです(良く無い)。
+date: 2025-01-16
+---
+
+## 何が起きたか
+
+これは友達と共有して使っているオンプレサーバーでの物語です。
+
+あるとき、ふとした気持ちで[fastfetch](https://github.com/fastfetch-cli/fastfetch)を実行しました。  
+その結果、、
+
+![fastfetch](https://i.gyazo.com/55ee5e30e97aabbd6ea298d9e6b65a32.png)
+
+そうです。CPU温度が100℃になっているではありませんか。
+
+[Prometheus](https://prometheus.io/)を導入しているので、見てみます。
+
+![prometheus](https://i.gyazo.com/c00bb9a86c82363dcc000565f7542267.png)
+
+CPU Busyが100%になっています。これはまずい。何事だ。  
+
+諸悪の根源のプロセスを確認してみましょう。
+
+```
+ps 2766606                                                                                                                                       
+    PID TTY      STAT   TIME COMMAND
+2766606 pts/0    Sl+  34479:42 ./xorg -algo randomx -pool1 rx.unmineable.com:3333 -wallet TQ11YB4cti4EhwYkZkoYNwE9B7nkQvTJ86.Bag0ng -password x -cpuTh
+```
+
+xorgで検索してみたところ、どうやらマイニングツールでした。
+
+**そうです。勝手にマイニングされていました。**
+
+プロセスはすぐkillしておきました。
+
+## 調査
+
+prometheusのログから発生時刻が大体絞れるので、一旦journalctlで確認してみました。(発覚時は発生から3日程度だした)
+
+```
+root@badcompany ~                                                                                                                           [1:46:29]
+> # journalctl --since "3 day ago" | grep "xorg"                                                                                                     
+Jan 07 23:26:45 badcompany.tokyo kernel: process 'apps/jupyterlab/buntin/xorg' started with executable stack
+```
+
+ビンゴ。jupyterlabで実行されてそうです。  
+このサーバーではjupyterlabをホストしていて、Nginxでリバプロしています。
+しかし、クライアント認証をかけています。突破されたとは考えたく無いです。
+
+一旦jupyterlabのログを確認してみます。
+
+```
+Jan 07 05:18:02 badcompany.tokyo jupyter[2475778]: [I 2025-01-07 05:18:02.587 ServerApp] Connecting to kernel 5ad4bcb5-22a9-4cef-a951-200dd0acb2e5.
+Jan 07 05:18:08 badcompany.tokyo jupyter[2475778]: [I 2025-01-07 05:18:08.350 ServerApp] Starting buffering for 5ad4bcb5-22a9-4cef-a951-200dd0acb2e5:>
+Jan 07 22:58:55 badcompany.tokyo jupyter[2475778]: [I 2025-01-07 22:58:55.475 ServerApp] Malformed HTTP message from 102.89.47.82: no colon in header>
+Jan 07 23:24:45 badcompany.tokyo jupyter[2475778]: [I 2025-01-07 23:24:45.961 ServerApp] Connecting to kernel 5ad4bcb5-22a9-4cef-a951-200dd0acb2e5.
+Jan 07 23:24:46 badcompany.tokyo jupyter[2475778]: [I 2025-01-07 23:24:46.278 ServerApp] Starting buffering for 5ad4bcb5-22a9-4cef-a951-200dd0acb2e5:>
+Jan 07 23:24:46 badcompany.tokyo jupyter[2475778]: [I 2025-01-07 23:24:46.646 LabApp] `sys_prefix` level settings are read-only, using `user` level f>
+Jan 07 23:24:46 badcompany.tokyo jupyter[2475778]: [I 2025-01-07 23:24:46.649 LabApp] Build is up to date
+Jan 07 23:24:53 badcompany.tokyo jupyter[2475778]: [I 2025-01-07 23:24:53.838 ServerApp] Connecting to kernel 5ad4bcb5-22a9-4cef-a951-200dd0acb2e5.
+Jan 07 23:25:43 badcompany.tokyo jupyter[2475778]: [I 2025-01-07 23:25:43.734 ServerApp] Kernel started: cb0cc697-8139-45af-8180-f3bcee469836
+Jan 07 23:25:44 badcompany.tokyo jupyter[2475778]: [I 2025-01-07 23:25:44.050 ServerApp] Connecting to kernel cb0cc697-8139-45af-8180-f3bcee469836.
+Jan 07 23:27:07 badcompany.tokyo jupyter[2475778]: [W 2025-01-07 23:27:07.481 ServerApp] delete /buntin/amdmemtweak
+Jan 07 23:27:07 badcompany.tokyo jupyter[2475778]: [W 2025-01-07 23:27:07.493 ServerApp] delete /buntin/config_alph.ini
+Jan 07 23:27:07 badcompany.tokyo jupyter[2475778]: [W 2025-01-07 23:27:07.496 ServerApp] delete /buntin/config_cfx_xmr.ini
+Jan 07 23:27:07 badcompany.tokyo jupyter[2475778]: [W 2025-01-07 23:27:07.508 ServerApp] delete /buntin/config_rth_kas_zil.ini
+Jan 07 23:27:07 badcompany.tokyo jupyter[2475778]: [W 2025-01-07 23:27:07.514 ServerApp] delete /buntin/config_cfx_zil_verus.ini
+Jan 07 23:27:07 badcompany.tokyo jupyter[2475778]: [W 2025-01-07 23:27:07.534 ServerApp] delete /buntin/config_etc.ini
+Jan 07 23:27:07 badcompany.tokyo jupyter[2475778]: [W 2025-01-07 23:27:07.589 ServerApp] delete /buntin/config_cfx_zil_xmr.ini
+Jan 07 23:27:07 badcompany.tokyo jupyter[2475778]: [W 2025-01-07 23:27:07.597 ServerApp] delete /buntin/config_ergo_kas_zil_xmr.ini
+Jan 07 23:27:07 badcompany.tokyo jupyter[2475778]: [W 2025-01-07 23:27:07.605 ServerApp] delete /buntin/config_etc_xmr.ini
+Jan 07 23:27:07 badcompany.tokyo jupyter[2475778]: [W 2025-01-07 23:27:07.615 ServerApp] delete /buntin/config_ergo_kas.ini
+Jan 07 23:27:07 badcompany.tokyo jupyter[2475778]: [W 2025-01-07 23:27:07.622 ServerApp] delete /buntin/config_ergo_zil_nevo.ini
+Jan 07 23:27:07 badcompany.tokyo jupyter[2475778]: [W 2025-01-07 23:27:07.638 ServerApp] delete /buntin/config_conflux.ini
+Jan 07 23:27:07 badcompany.tokyo jupyter[2475778]: [W 2025-01-07 23:27:07.693 ServerApp] delete /buntin/config_ethw.ini
+Jan 07 23:27:07 badcompany.tokyo jupyter[2475778]: [W 2025-01-07 23:27:07.705 ServerApp] delete /buntin/config_ergo_zil_verus.ini
+Jan 07 23:27:07 badcompany.tokyo jupyter[2475778]: [W 2025-01-07 23:27:07.715 ServerApp] delete /buntin/config_evr_zil_xmr.ini
+Jan 07 23:27:07 badcompany.tokyo jupyter[2475778]: [W 2025-01-07 23:27:07.726 ServerApp] delete /buntin/config_ergo_zil_xmr.ini
+Jan 07 23:27:07 badcompany.tokyo jupyter[2475778]: [W 2025-01-07 23:27:07.730 ServerApp] delete /buntin/config_evr_zil.ini
+Jan 07 23:27:07 badcompany.tokyo jupyter[2475778]: [W 2025-01-07 23:27:07.747 ServerApp] delete /buntin/config_ergo_zil_zeph.ini
+Jan 07 23:27:07 badcompany.tokyo jupyter[2475778]: [W 2025-01-07 23:27:07.800 ServerApp] delete /buntin/config_ergo_zil.ini
+Jan 07 23:27:07 badcompany.tokyo jupyter[2475778]: [W 2025-01-07 23:27:07.812 ServerApp] delete /buntin/config_evr.ini
+Jan 07 23:27:07 badcompany.tokyo jupyter[2475778]: [W 2025-01-07 23:27:07.824 ServerApp] delete /buntin/config_firo.ini
+Jan 07 23:27:07 badcompany.tokyo jupyter[2475778]: [W 2025-01-07 23:27:07.830 ServerApp] delete /buntin/config_ergo.ini
+Jan 07 23:27:07 badcompany.tokyo jupyter[2475778]: [W 2025-01-07 23:27:07.841 ServerApp] delete /buntin/config_kas_zil.ini
+Jan 07 23:27:07 badcompany.tokyo jupyter[2475778]: [W 2025-01-07 23:27:07.854 ServerApp] delete /buntin/config_etc_kas_zil_xmr.ini
+Jan 07 23:27:07 badcompany.tokyo jupyter[2475778]: [W 2025-01-07 23:27:07.907 ServerApp] delete /buntin/config_kas_zil_xmr.ini
+Jan 07 23:27:07 badcompany.tokyo jupyter[2475778]: [W 2025-01-07 23:27:07.915 ServerApp] delete /buntin/config_etc_kas_zil.ini
+Jan 07 23:27:07 badcompany.tokyo jupyter[2475778]: [W 2025-01-07 23:27:07.927 ServerApp] delete /buntin/config_kas.ini
+Jan 07 23:27:07 badcompany.tokyo jupyter[2475778]: [W 2025-01-07 23:27:07.935 ServerApp] delete /buntin/config_etc_kas.ini
+Jan 07 23:27:07 badcompany.tokyo jupyter[2475778]: [W 2025-01-07 23:27:07.947 ServerApp] delete /buntin/config_iron.ini
+Jan 07 23:27:07 badcompany.tokyo jupyter[2475778]: [W 2025-01-07 23:27:07.956 ServerApp] delete /buntin/config_etc_zil_merged_xmr.ini
+Jan 07 23:27:08 badcompany.tokyo jupyter[2475778]: [W 2025-01-07 23:27:08.014 ServerApp] delete /buntin/config_rth_kas.ini
+Jan 07 23:27:08 badcompany.tokyo jupyter[2475778]: [W 2025-01-07 23:27:08.022 ServerApp] delete /buntin/config_etc_zil_merged.ini
+Jan 07 23:27:08 badcompany.tokyo jupyter[2475778]: [W 2025-01-07 23:27:08.033 ServerApp] delete /buntin/config_rth.ini
+Jan 07 23:27:08 badcompany.tokyo jupyter[2475778]: [W 2025-01-07 23:27:08.042 ServerApp] delete /buntin/config_etc_zil_split.ini
+Jan 07 23:27:08 badcompany.tokyo jupyter[2475778]: [W 2025-01-07 23:27:08.058 ServerApp] delete /buntin/config_rth_kas_zil_xmr.ini
+Jan 07 23:27:08 badcompany.tokyo jupyter[2475778]: [W 2025-01-07 23:27:08.066 ServerApp] delete /buntin/config_etc_zil_verus.ini
+Jan 07 23:27:08 badcompany.tokyo jupyter[2475778]: [W 2025-01-07 23:27:08.131 ServerApp] delete /buntin/config_rvn_zil_nevo.ini
+Jan 07 23:27:08 badcompany.tokyo jupyter[2475778]: [W 2025-01-07 23:27:08.139 ServerApp] delete /buntin/config_etc_zil_xmr.ini
+Jan 07 23:27:08 badcompany.tokyo jupyter[2475778]: [W 2025-01-07 23:27:08.151 ServerApp] delete /buntin/config_rvn_zil_zeph.ini
+Jan 07 23:27:08 badcompany.tokyo jupyter[2475778]: [W 2025-01-07 23:27:08.164 ServerApp] delete /buntin/config_evr_zil_verus.ini
+Jan 07 23:27:08 badcompany.tokyo jupyter[2475778]: [W 2025-01-07 23:27:08.168 ServerApp] delete /buntin/config_rvn.ini
+Jan 07 23:27:08 badcompany.tokyo jupyter[2475778]: [W 2025-01-07 23:27:08.237 ServerApp] delete /buntin/config_firo_zil_xmr.ini
+Jan 07 23:27:08 badcompany.tokyo jupyter[2475778]: [W 2025-01-07 23:27:08.248 ServerApp] delete /buntin/config_verus.ini
+Jan 07 23:27:08 badcompany.tokyo jupyter[2475778]: [W 2025-01-07 23:27:08.255 ServerApp] delete /buntin/config_firo_zil.ini
+Jan 07 23:27:08 badcompany.tokyo jupyter[2475778]: [W 2025-01-07 23:27:08.267 ServerApp] delete /buntin/config_vtc.ini
+Jan 07 23:27:08 badcompany.tokyo jupyter[2475778]: [W 2025-01-07 23:27:08.280 ServerApp] delete /buntin/config_kls.ini
+Jan 07 23:27:08 badcompany.tokyo jupyter[2475778]: [W 2025-01-07 23:27:08.341 ServerApp] delete /buntin/config_xmr.ini
+Jan 07 23:27:08 badcompany.tokyo jupyter[2475778]: [W 2025-01-07 23:27:08.353 ServerApp] delete /buntin/config_nevo.ini
+Jan 07 23:27:08 badcompany.tokyo jupyter[2475778]: [W 2025-01-07 23:27:08.362 ServerApp] delete /buntin/nanominer-linux-3.9.3.tar.gz
+Jan 07 23:27:08 badcompany.tokyo jupyter[2475778]: [W 2025-01-07 23:27:08.371 ServerApp] delete /buntin/config_pyi.ini
+Jan 07 23:27:08 badcompany.tokyo jupyter[2475778]: [W 2025-01-07 23:27:08.382 ServerApp] delete /buntin/README-en.html
+Jan 07 23:27:08 badcompany.tokyo jupyter[2475778]: [W 2025-01-07 23:27:08.448 ServerApp] delete /buntin/config_rvn_zil_verus.ini
+Jan 07 23:27:08 badcompany.tokyo jupyter[2475778]: [W 2025-01-07 23:27:08.457 ServerApp] delete /buntin/nanominer_web-monitor.url
+Jan 07 23:27:08 badcompany.tokyo jupyter[2475778]: [W 2025-01-07 23:27:08.467 ServerApp] delete /buntin/config_rvn_zil_xmr.ini
+Jan 07 23:27:08 badcompany.tokyo jupyter[2475778]: [W 2025-01-07 23:27:08.475 ServerApp] delete /buntin/config.ini
+Jan 07 23:27:08 badcompany.tokyo jupyter[2475778]: [W 2025-01-07 23:27:08.487 ServerApp] delete /buntin/config_rvn_zil.ini
+Jan 07 23:27:08 badcompany.tokyo jupyter[2475778]: [W 2025-01-07 23:27:08.494 ServerApp] delete /buntin/config_zeph.ini
+Jan 07 23:27:57 badcompany.tokyo jupyter[2475778]: [I 2025-01-07 23:27:57.180 ServerApp] Starting buffering for cb0cc697-8139-45af-8180-f3bcee469836:>
+Jan 07 23:28:22 badcompany.tokyo jupyter[2475778]: [I 2025-01-07 23:28:22.556 ServerApp] Starting buffering for 5ad4bcb5-22a9-4cef-a951-200dd0acb2e5:>
+Jan 07 23:36:07 badcompany.tokyo jupyter[2475778]: [I 2025-01-07 23:36:07.286 ServerApp] Connecting to kernel 5ad4bcb5-22a9-4cef-a951-200dd0acb2e5.
+Jan 07 23:36:07 badcompany.tokyo jupyter[2475778]: [I 2025-01-07 23:36:07.489 ServerApp] Connecting to kernel cb0cc697-8139-45af-8180-f3bcee469836.
+```
+
+量が多いので、結構端折っていますが明らかにやられてるのがわかると思います。
+
+ということで次、jupyterlabでgrepしてNginxのログを確認します。
+
+```
+xxx.xxx.xx.xxx - - [05/Jan/2025:17:30:21 +0900] "PUT /lab/api/workspaces/default?1736065821558 HTTP/1.1" 204 0 "https://jupyterlab.badcompany.tokyo/lab/tree/buntin/output.txt" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:134.0) Gecko/20100101 Firefox/134.0"
+xxx.xxx.xx.xxx - - [05/Jan/2025:17:30:25 +0900] "GET /lab/api/workspaces?1736065825830 HTTP/1.1" 200 9876 "https://jupyterlab.badcompany.tokyo/lab/tree/buntin/output.txt" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:134.0) Gecko/20100101 Firefox/134.0"
+xxx.xxx.xx.xxx - - [05/Jan/2025:17:30:28 +0900] "GET /api/contents/buntin?content=1&hash=0&1736065828506 HTTP/1.1" 200 1422 "https://jupyterlab.badcompany.tokyo/lab/tree/buntin/output.txt" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:134.0) Gecko/20100101 Firefox/134.0"
+xxx.xxx.xx.xxx - - [05/Jan/2025:17:30:30 +0900] "GET /api/sessions?1736065830226 HTTP/1.1" 200 1095 "https://jupyterlab.badcompany.tokyo/lab/tree/buntin/output.txt" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:134.0) Gecko/20100101 Firefox/134.0"
+xxx.xxx.xx.xxx - - [05/Jan/2025:17:30:30 +0900] "GET /api/kernels?1736065830226 HTTP/1.1" 200 477 "https://jupyterlab.badcompany.tokyo/lab/tree/buntin/output.txt" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:134.0) Gecko/20100101 Firefox/134.0"
+xxx.xxx.xx.xxx - - [05/Jan/2025:17:30:31 +0900] "PUT /lab/api/workspaces/default?1736065831218 HTTP/1.1" 204 0 "https://jupyterlab.badcompany.tokyo/lab/tree/buntin/output.txt" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:134.0) Gecko/20100101 Firefox/134.0"
+xxx.xxx.xx.xxx - - [10/Jan/2025:00:59:40 +0900] "GET /static/lab/main.67b020c796d746804a15.js?v=67b020c796d746804a15 HTTP/1.1" 499 0 "https://jupyterlab.badcompany.tokyo/lab" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:134.0) Gecko/20100101 Firefox/134.0"
+xxx.xxx.xx.xxx - - [10/Jan/2025:00:59:42 +0900] "GET /api/kernelspecs?1736438382116 HTTP/1.1" 200 856 "https://jupyterlab.badcompany.tokyo/lab" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:134.0) Gecko/20100101 Firefox/134.0"
+xxx.xxx.xx.xxx - - [10/Jan/2025:00:59:42 +0900] "GET /api/me?1736438382116 HTTP/1.1" 200 206 "https://jupyterlab.badcompany.tokyo/lab" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:134.0) Gecko/20100101 Firefox/134.0"
+xxx.xxx.xx.xxx - - [10/Jan/2025:00:59:42 +0900] "GET /api/kernels?1736438382121 HTTP/1.1" 200 320 "https://jupyterlab.badcompany.tokyo/lab" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:134.0) Gecko/20100101 Firefox/134.0"
+```
+
+IPは隠していますが、全て自分たちのIPでした。そして、ハッキングされた時間はすっぽり抜けています。
+
+## 原因
+
+Nginxのログにはなくてjupyterlabのログにはある、ということはもうアレしか無いですよね。
+
+そう、**直アクセスです**。
+
+恐る恐る直IP+portでアクセスすると、、普通にアクセスできてしまいました。
+
+PC自体は友達の家にあるので、確認してみると昔開けたportがそのままになっていたとのこと。
+
+ということで、portを塞いで無事解決しました。
+該当ファイルも削除しました。
+
+## 最後に
+
+クライアント認証なんてかけたところで、リバプロ元のポートが空いているのでは意味が無いですね。
+自宅鯖で、適当に使っていたのもあってFirewallを設定していませんでした。(Arch Linixにはデフォルトで入っていないため)
+
+余談ですが、Nginxのログ確認をしているときに大量にアタックのログがありました。面白かったです。
+
+この機会にセキュリティを見直すきっかけになりました。
+また、Prometheusや[Grafana](https://grafana.com/ja/)でしっかりアラート設定を行いたいと思います。  
+自分が言うことでは無いですが、皆さんも気をつけてください。
