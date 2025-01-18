@@ -23,8 +23,8 @@ CPU Busyが100%になっています。これはまずい。何事だ。
 
 諸悪の根源のプロセスを確認してみましょう。
 
-```
-ps 2766606                                                                                                                                       
+```bash
+$ ps 2766606                                                                                                                                       
     PID TTY      STAT   TIME COMMAND
 2766606 pts/0    Sl+  34479:42 ./xorg -algo randomx -pool1 rx.unmineable.com:3333 -wallet TQ11YB4cti4EhwYkZkoYNwE9B7nkQvTJ86.Bag0ng -password x -cpuTh
 ```
@@ -39,9 +39,8 @@ xorgで検索してみたところ、どうやらマイニングツールでし�
 
 prometheusのログから発生時刻が大体絞れるので、一旦journalctlで確認してみました。(発覚時は発生から3日程度だした)
 
-```
-root@badcompany ~                                                                                                                           [1:46:29]
-> # journalctl --since "3 day ago" | grep "xorg"                                                                                                     
+```bash
+$ journalctl --since "3 day ago" | grep "xorg"                                                                                                     
 Jan 07 23:26:45 badcompany.tokyo kernel: process 'apps/jupyterlab/buntin/xorg' started with executable stack
 ```
 
