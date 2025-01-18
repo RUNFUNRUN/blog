@@ -1,9 +1,9 @@
 import { title as homeTitle } from '@/app/layout.config';
-import { getPages } from '@/libs/source';
+import { Pagination } from '@/components/pagination';
+import { PostCard } from '@/components/post-card';
+import { getPages } from '@/lib/source';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { PostCard } from '../../_components/post-card';
-import { Pagination } from '../_components/pagination';
 
 export const dynamicParams = false;
 

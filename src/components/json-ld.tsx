@@ -1,5 +1,5 @@
 import { title as homeTitle } from '@/app/layout.config';
-import type { Post } from '@/libs/source';
+import type { Post } from '@/lib/source';
 import type { BlogPosting, BreadcrumbList, Graph } from 'schema-dts';
 
 export const JsonLd = ({ post }: { post: Post }) => {

@@ -1,5 +1,5 @@
-import { sortedByDatePageTree } from '@/libs/source';
-import { DocsLayout } from 'fumadocs-ui/layouts/notebook';
+import { DocsLayout } from '@/components/docs';
+import { sortedByDatePageTree } from '@/lib/source';
 import type { ReactNode } from 'react';
 import { baseOptions, linkItems } from '../layout.config';
 

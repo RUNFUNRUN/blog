@@ -1,6 +1,6 @@
-import { getPages } from '@/libs/source';
-import { InlineLink } from './_components/inline-link';
-import { PostCard } from './_components/post-card';
+import { InlineLink } from '@/components/inline-link';
+import { PostCard } from '@/components/post-card';
+import { getPages } from '@/lib/source';
 
 const HomePage = () => {
   const posts = getPages()
@@ -30,7 +30,7 @@ const HomePage = () => {
       </div>
       <div className='space-y-4'>
         <p className='text-2xl sm:text-3xl font-bold'>
-          最新の記事 (<InlineLink href='/list'>全記事はこちら</InlineLink>)
+          最新の記事 (<InlineLink href='/list'>全記事一覧</InlineLink>)
         </p>
         <div className='flex flex-col gap-4 text-left'>
           {posts.map((post) => {

@@ -1,5 +1,5 @@
 import { description, title } from '@/app/layout.config';
-import { getPages } from '@/libs/source';
+import { getPages } from '@/lib/source';
 import { Feed } from 'feed';
 
 export const dynamic = 'force-static';

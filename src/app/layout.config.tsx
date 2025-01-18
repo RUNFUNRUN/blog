@@ -1,6 +1,6 @@
 import type { LinkItemType } from 'fumadocs-ui/layouts/links';
 import type { BaseLayoutProps } from 'fumadocs-ui/layouts/shared';
-import { Rss } from 'lucide-react';
+import { Newspaper, Rss, User } from 'lucide-react';
 
 export const title = 'RUNFUNRUN.dev';
 export const description = 'This is my tech blog.';
@@ -13,6 +13,18 @@ export const baseOptions: BaseLayoutProps = {
 };
 
 export const linkItems: LinkItemType[] = [
+  {
+    icon: <User />,
+    text: 'プロフィール',
+    url: 'https://runfun.run',
+    active: 'url',
+  },
+  {
+    icon: <Newspaper />,
+    text: '記事一覧',
+    url: '/list',
+    active: 'url',
+  },
   {
     type: 'icon',
     label: 'rss',

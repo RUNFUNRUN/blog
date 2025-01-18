@@ -1,4 +1,5 @@
-import { getPage, getPages } from '@/libs/source';
+import { JsonLd } from '@/components/json-ld';
+import { getPage, getPages } from '@/lib/source';
 import { CodeBlock, Pre } from 'fumadocs-ui/components/codeblock';
 import {
   ImageZoom,
@@ -13,7 +14,6 @@ import {
 } from 'fumadocs-ui/page';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { JsonLd } from '../_components/json-ld';
 
 export const dynamicParams = false;
 
