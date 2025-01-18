@@ -18,7 +18,7 @@ const HomePage = () => {
           。
         </p>
         <p>
-          質問等はポートフォリオの
+          問い合わせはプロフィールの
           <InlineLink href='https://runfun.run/contact' blank>
             Contact
           </InlineLink>
