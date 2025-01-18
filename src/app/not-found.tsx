@@ -18,8 +18,8 @@ const NotFound = () => {
         ),
       }}
     >
-      <div className='text-center'>
-        <p className='my-4 text-4xl font-bold'>404 Not Found</p>
+      <div className='my-12 space-y-4 text-center'>
+        <p className='text-4xl font-bold'>404 Not Found</p>
         <p className='text-lg'>
           代わりに吉村家のラーメンの飯テロをお送りします。
         </p>
