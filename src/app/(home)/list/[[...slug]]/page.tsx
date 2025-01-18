@@ -1,13 +1,13 @@
 import { title as homeTitle } from '@/app/layout.config';
 import { Pagination } from '@/components/pagination';
 import { PostCard } from '@/components/post-card';
-import { getPages } from '@/lib/source';
+import { sortedByDatePages } from '@/lib/source';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
 export const dynamicParams = false;
 
-const totalPosts = getPages().length;
+const totalPosts = sortedByDatePages.length;
 const postsPerPage = 5;
 const pageCount = Math.ceil(totalPosts / postsPerPage);
 
@@ -35,9 +35,7 @@ const Page = async (props: { params: Promise<{ slug?: string[] }> }) => {
 
   const startIndex = pageIndex * postsPerPage;
   const endIndex = startIndex + postsPerPage;
-  const posts = getPages()
-    .toSorted((a, b) => b.data.date.getTime() - a.data.date.getTime())
-    .slice(startIndex, endIndex);
+  const posts = sortedByDatePages.slice(startIndex, endIndex);
 
   return (
     <main className='mx-4 my-12 lg:mx-auto lg:w-[992px]'>

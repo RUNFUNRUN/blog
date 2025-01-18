@@ -1,11 +1,9 @@
 import { InlineLink } from '@/components/inline-link';
 import { PostCard } from '@/components/post-card';
-import { getPages } from '@/lib/source';
+import { sortedByDatePages } from '@/lib/source';
 
 const HomePage = () => {
-  const posts = getPages()
-    .toSorted((a, b) => b.data.date.getTime() - a.data.date.getTime())
-    .slice(0, 3);
+  const posts = sortedByDatePages.slice(0, 3);
 
   return (
     <main className='mx-4 my-12 space-y-12 lg:mx-auto lg:w-[992px]'>
