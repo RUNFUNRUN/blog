@@ -9,7 +9,7 @@ export const InlineLink = ({
   return (
     <Link
       href={href}
-      className='text-fd-primary hover:underline mx-1'
+      className='text-fd-primary underline hover:text-fd-primary/70 duration-300'
       target={blank ? '_blank' : undefined}
     >
       {children}
