@@ -27,9 +27,6 @@ vim.keymap.set("n", "dd", function()
 end, { noremap = true, silent = true })
 ```
 
-`local function`にしてはダメです。  
-`DeleteLine`関数をグローバルにしないと動きません。
-
 ## 最後に
 
 簡単な設定ですが、これを設定してからQOLがかなり上がりました。
@@ -40,7 +37,10 @@ end, { noremap = true, silent = true })
 
 ## 追記
 
-visualモードで複数行選択した時の`d`に関しても、関数を追加しました。
+visualモードで複数行選択した時の`d`に関しても、対応しました。
+こちらに関しては動作が不安定なので改良の余地ありです。  
+良い感じになったら修正しておきます。
+こうしたらいいよ、等あれば連絡頂けると幸いです。
 
 ```lua title="init.lua"
 vim.keymap.set("x", "d", function()
