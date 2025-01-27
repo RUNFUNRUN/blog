@@ -27,7 +27,7 @@ export const Navbar = (props: HTMLAttributes<HTMLElement>) => {
           props.className,
         )}
       >
-        <div className='mx-auto h-14 flex size-full flex-row items-center border-b border-fd-foreground/10 px-4 md:gap-1.5 lg:px-8'>
+        <div className='mx-auto h-14 flex size-full flex-row items-center px-4 md:gap-1.5 lg:px-8'>
           {props.children}
         </div>
         <NavigationMenuViewport />
