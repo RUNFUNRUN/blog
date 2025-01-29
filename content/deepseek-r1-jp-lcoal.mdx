@@ -17,22 +17,19 @@ date: 2025-01-30
 
 見てわかる通り、Arch LinuxといってもWSLです。
 
-PythonやDocker等は入ってる前提で行きます。
+AURヘルパーとして、[paru](https://github.com/Morganamilo/paru)を使用しています。
+
+Python等は入ってる前提で行きます。
 
 ## Nvidia関連のセットアップ
 
-パッケージマネージャーはparuを使用してます。
-
-AURヘルパーとして、[paru](https://github.com/Morganamilo/paru)を使用しています。
-
-### パッケージのインストール
+パッケージをインストールします。
 
 ```bash
-paru -S nvidia nvidia-utils nvidia-container-toolkit opencl-nvidia
+paru -S nvidia nvidia-utils opencl-nvidia
 ```
 
-前にNvidia関連のものを入れたのを忘れている可能性があります。
-もしかしたら全部必要ではないかもしれないです。また、足りないパッケージがある可能性があります。
+もしかしたら全部必要ではないかもしれないです。また、足りないパッケージがある可能性もあります。  
 
 GPUがしっかり読み込まれてるか確認します。
 
@@ -624,7 +621,7 @@ Interrupted by user
 
 一旦プロジェクトルートに戻っておきます。(`model/`があるdir)
 
-Modelfileを作成します。(なんかDockerfileみたいですね)  
+Modelfileを作成します。(Dockerfileみたいですね)  
 なんかいろいろ書けるみたいですが、今回はこれで行きます。
 
 ```bash
@@ -637,10 +634,15 @@ FROM ./model/deepseek-jp-Q4_K_M.gguf
 
 このファイルを元にollamaにモデルを作成することになります。
 
-今回、ollamaを直接インストールします。  
+今回、ollamaを直接インストールします。
 
-Docker x Nvidia x WSL2(しかもArch Linux)の環境構築で骨が折れました。
-いろいろググってやってみたんですが、ダメでした。
+```bash
+paru -S ollama
+```
+
+余談ですが、なぜDockerを使わないか念の為言っておきます。  
+正直なところ、Docker x Nvidia x WSL2(しかもArch Linux)の環境構築で骨が折れました。
+いろいろググってやってみたんですが、ダメでした。  
 わかる人、マジで教えてほしいです。
 
 ```bash
@@ -649,11 +651,7 @@ docker: Error response from daemon: failed to create task for container: failed 
 nvidia-container-cli: mount error: failed to add device rules: open /sys/fs/cgroup/devices/devices.allow: no such file or directory: unknown.
 ```
 
-```bash
-paru -S ollama
-```
-
-起動させます。
+Dockerの話は忘れて、早速起動させます。
 
 ```bash
 sudo systemctl start ollama.service
@@ -713,11 +711,16 @@ sudo systemctl start open-webui.service
 ![webui3](https://i.gyazo.com/6149ad6f04f9478b7c6f0c1f3fcef4c2.png)
 
 こんな感じの結果になりました。  
-なぜか実行時間が鬼遅かったです。
+なぜか実行時間(というか生成が始まるまでの時間)が鬼長かったです。
+
+あとOllamaがGPUを使ってくれません。知っている方いたら教えてください。
 
 ## 最後に
 
 4070では遅すぎてとても使えませんでした。誰か[RTX5090](https://www.nvidia.com/ja-jp/geforce/graphics-cards/50-series/rtx-5090/)を買ってください。  
-ちなみに僕のM4 Mac Book Proはメモリが24GBなのでエラーでそもそも動かないです。
+ちなみに僕のM4 Mac Book Proはメモリが24GBで、メモリが足りないみたいなエラーでそもそも動かなかったです。
+
+今度、別のパラメータのDeepSeekでリベンジします。
+日本語追加学習は一旦諦めます。
 
 ではまた。
