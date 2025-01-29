@@ -1,0 +1,723 @@
+---
+title: 日本語対応DeepSeek R1をArch Linux+RTX4070で動かしてみる
+description: サイバーエージェントのDeepSeek日本語追加学習モデルを試してみます。
+date: 2025-01-30
+---
+
+## はじめに
+
+サイバーエージェントが日本語を追加学習させたDeepSeek R1を発表しました。
+さっそく試してみます。
+
+[cyberagent/DeepSeek-R1-Distill-Qwen-32B-Japanese](https://huggingface.co/cyberagent/DeepSeek-R1-Distill-Qwen-32B-Japanese)
+
+今回動かす環境はこちら
+
+![fastfetch](https://i.gyazo.com/68343d8fad9ea6507e215641e75cb5ea.png)
+
+見てわかる通り、Arch LinuxといってもWSLです。
+
+PythonやDocker等は入ってる前提で行きます。
+
+## Nvidia関連のセットアップ
+
+パッケージマネージャーはparuを使用してます。
+
+AURヘルパーとして、[paru](https://github.com/Morganamilo/paru)を使用しています。
+
+### パッケージのインストール
+
+```bash
+paru -S nvidia nvidia-utils nvidia-container-toolkit opencl-nvidia
+```
+
+前にNvidia関連のものを入れたのを忘れている可能性があります。
+もしかしたら全部必要ではないかもしれないです。また、足りないパッケージがある可能性があります。
+
+GPUがしっかり読み込まれてるか確認します。
+
+```bash
+$ nvidia-smi
+Tue Jan 28 23:24:49 2025
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 565.77                 Driver Version: 566.14         CUDA Version: 12.7     |
+|-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA GeForce RTX 4070        On  |   00000000:01:00.0  On |                  N/A |
+| 30%   48C    P0             34W /  200W |    2496MiB /  12282MiB |     14%      Default |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI        PID   Type   Process name                              GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|    0   N/A  N/A        26      G   /Xwayland                                   N/A      |
++-----------------------------------------------------------------------------------------+
+```
+
+## Pythonで動かす
+
+無謀なのはわかっていますが、念のため動かしてみます。
+
+```python title="main.py"
+from transformers import AutoModelForCausalLM, AutoTokenizer, TextStreamer
+
+model = AutoModelForCausalLM.from_pretrained(
+    "cyberagent/DeepSeek-R1-Distill-Qwen-32B-Japanese",
+    device_map="auto",
+    torch_dtype="auto",
+)
+tokenizer = AutoTokenizer.from_pretrained(
+    "cyberagent/DeepSeek-R1-Distill-Qwen-32B-Japanese"
+)
+streamer = TextStreamer(tokenizer, skip_prompt=True, skip_special_tokens=True)
+
+messages = [
+    {"role": "user", "content": "AIによって私たちの暮らしはどのように変わりますか？"}
+]
+
+input_ids = tokenizer.apply_chat_template(
+    messages, add_generation_prompt=True, return_tensors="pt"
+).to(model.device)
+output_ids = model.generate(
+    input_ids, max_new_tokens=4096, temperature=0.7, streamer=streamer
+)
+```
+
+こちらのコードはHuggingFaceのUsageのものです。
+
+```bash
+python -m venv venv
+source venv/bin/activate
+pip install transformers torch
+python main.py
+```
+
+鬼長いダウンロードが始まります。約5GBのモデルを14個ダウンロードします。  
+うちはVDSLなので、めちゃくちゃ遅くて辛いです。。
+
+まあダウンロードしたところで、自分のPCだと実行も遅すぎてとても実用的ではありませんでした。
+
+import { Accordion, Accordions } from 'fumadocs-ui/components/accordion';
+
+<Accordions>
+<Accordion title="実行結果">
+
+```bash
+$ python main.py
+Loading checkpoint shards: 100%|██████████████████████████████████████████████████████████████████████████████████| 14/14 [00:08<00:00,  1.69it/s]
+Some parameters are on the meta device because they were offloaded to the cpu.
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+The attention mask is not set and cannot be inferred from input because pad token is same as eos token. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+<think>
+では、AIが私たちの暮らしをどう変えるかについて考えてみましょう。まず、AIの技術が進歩しているのは知っています。でも、具体的にどんな分野で変化があるのかな？例えば、スマートフォンや家電がAIを搭載して、より便利になるのかな？それとも、仕事の内容が変わったり、社会構造が変わったりするのかもしれない。
+
+まず、日常生活の面から考えると、AIを使った家電やスマートホームが普及するでしょう。例えば、音声アシスタントがさらに進化して、家電の操作や日用品の購入までAIが手伝ってくれるかもしれません。また、健康管理もAIが活用され、スマートウォッチや生体センサーで健康データを分析し、病気の予防や早期発見に役立つ可能性があります。
+
+仕事の面では、AIが人間の仕事の一部を代替するという話があります。特に、単純作業やデータ処理などはAIが担うようになるかもしれません。でも、逆に新しい職種が生まれたり、人間の創造性や判断力を重視する仕事が増えるかもしれません。例えば、AIの開発や管理、倫理的な問題の解決策を考える専門家が必要になるでしょう。
+
+教育の分野でも変化がありそうですね。AIが個々の学習者の能力や進捗に合わせて教材を提供したり、指導をしたりする可能性があります。オンライン教育がさらに発展し、どこにいても質の高い教育を受けられるかもしれません。でも、人間同士の対話や協働学習がどうなるかは気になります。
+
+社会や倫理的な問題も考えないといけません。AIの判断にバイアスが入ったり、個人情報の管理が難しくなったりするリスクもあります。例えば、AIが犯罪予測をすることは個人の権利を侵害する可能性があるかもしれません。また、AIの普及で貧富の差が拡大するのではないかという懸念もあります。
+
+技術の進歩が速いので、倫理や法律の面で追いついていかないといけないですね。国際的な協力や規制の整備が重要になるでしょう。個人として、AIの技術を理解し、自分自身のスキルをアップデートする必要があるかもしれません。AIと人間が共に働き、より良い社会を築いていくために、どのような取り組みが必要なのか、深く考える必要がありそうです。
+</think>
+
+AIが私たちの暮らしを変える影響は多岐にわたり、以下の観点から整理できます。
+
+---
+
+### **1. 日常生活の利便性向上**
+
+- **スマートホームの進化**：AI搭載の家電が環境センサーと連携し、温度・照明・音楽を自動調整。ユーザーの習慣や好みを学習し、予測して対応する。
+- **健康管理**：スマートウォッチやバイオセンサーが心拍・睡眠・食事データを分析し、AIが病気のリスクを予測。薬の服用リマインダーや食事アドバイスを提供。
+- **交通・移動**：自律走行車やデリバリーロボットが普及し、渋滞解消や配送効率化を実現。カーシェアリングとAIの組み合わせで「所有から利用へ」の移行。
+
+---
+
+### **2. 仕事と経済の変革**
+
+- **自動化の進展**：AIがデータ入力・レポート作成・製造ラインの監視を担うことで、人的作業の効率化が進む。一方、クリエイティブ・ケア・コンサルティングなどの人間中心の職種が拡大。
+- **新規産業の創出**：AI開発者、倫理コンサルタント、データサイエンティストなどの需要が急増。ロボット介護士やAIトレーナー（AIの学習データ作成）も新たな職種として登場。
+- **フリーランス経済の拡大**：AIプラットフォームがスキルをマッチングし、個人がプロジェクト単位で働く「タスクエコノミー」が主流化。
+
+---
+
+### **3. 教育と学習の変容**
+
+- **個別最適化教育**：AIが生徒の理解度を分析し、教材や学習方法をカスタマイズ。双方向型オンライン授業が主流になり、地域や経済格差を超えた教育が可能に。
+- **継続的学習の必要性**：AIの進化速度に対応するため、生涯教育が必須に。企業が従業員のスキルアップにAIを活用し、従来の「終身雇用」の概念が変化。
+
+---
+
+### **4. 社会構造と倫理の課題**
+
+- **AIのバイアス問題**：アルゴリズムが過去のデータを継承し、人種・性別・経済格差を固定化するリスク。例：求人AIが特定の属性の応募者を排除。
+- **監視社会の進展**：AIを活用した監視カメラや行動分析が普及し、プライバシー侵害と公共安全のバランスが問われる。
+- **デジタルデバイドの拡大**：AI技術の格差が、教育・雇用・医療機会にまで波及し、社会不安を招く可能性。
+
+---
+
+### **5. 人間性と創造性の再定義**
+
+- **AIとの協働**：AIが「創造的なパートナー」となり、アートやデザインの新たな可能性を拓く。一方、人間の「共感力」「倫理判断」が価値として再評価される。
+- **余暇の多様化**：AIが日常業務を効率化することで、人々は趣味やコミュニティ活動に時間を使い、新しい社会的価値が生まれる。
+
+---
+
+### **まとめ：AI時代の生存戦略**
+
+- **技術的理解の深化**：AIの仕組みやリスクを学び、批判的思考を養う。
+- **人間ならではの価値の強化**：共感力・批判的思考・倫理観を重視した教育。
+- **倫理的AIの設計**：開発段階から人権や公正を考慮したAIガバナンスの構築。
+- **国際協力の重要性**：AIの影響は国境を越えるため、国際基準や規制の共通化が必要。
+
+AIは「ツール」であり、最終的には人間の選択と責任が決定を握ります。技術革新を肯定しつつ、倫理と持続可能性を担保する社会設計が求められています。
+```
+
+</Accordion>
+</Accordions>
+
+こちらの実行結果は2回目の実行です。
+ダウンロード抜きなので、約3時間程でした。
+
+o1みたいに思考してるっぽいですね。(それがR1らしいです)
+
+## llama.cppで動かす
+
+### モデルの変換
+
+Ollamaはsafetensorsには対応していないので、GGUFに変換する必要があります。
+
+llama.cppというツールを使います。
+
+[https://github.com/ggerganov/llama.cpp](https://github.com/ggerganov/llama.cpp)
+
+こちらのリポジトリをクローンします。
+
+```bash
+gh repo clone ggerganov/llama.cpp
+```
+
+ディレクトリを移動したら例のごとく仮想環境を作って
+ライブラリをインストールします。
+
+```bash
+cd llama.cpp
+python -m venv venv
+source venv/bin/activate
+pip install -r requirements/requirements-convert_hf_to_gguf.txt
+```
+
+自分はここでこんなエラーがでました。
+
+```
+ERROR: Could not find a version that satisfies the requirement torch~=2.2.1 (from versions: 2.5.0, 2.5.0+cpu, 2.5.1, 2.5.1+cpu, 2.6.0+cpu)
+ERROR: No matching distribution found for torch~=2.2.1
+```
+
+pyenvで少し古いバージョンを指定したら上手くいきました。
+
+```bash
+$ python --version
+Python 3.13.1
+$ pyenv local 3.10.13
+$ python --version
+Python 3.10.13
+```
+
+早速変換していきます。
+スナップショットのハッシュは適宜置き換えてください。
+
+```bash
+# 作業dir(llama.cppの親dir)にmodel格納用dirを作成しておきます
+mkdir ../model
+
+./convert_hf_to_gguf.py  ~/.cache/huggingface/hub/models--cyberagent--DeepSeek-R1-Distill-Qwen-32B-Japanese/snapshots/32c4a6155dcc093944b58e0a3d5b29ed96907564 --outfile ../model/deepseek-jp.gguf
+
+```
+
+### 量子化する
+
+先ほどの`convert_hf_to_gguf.py`でも`--outtype q8_0`で量子化できますが、
+今回は4bitで量子化したいので、別で行います。
+
+llama.cppを直接ビルドしてもできると思いますが、最新のリポジトリで量子化のファイルが見つかりませんでした。
+(ビルドしてもllama-quantizeファイルが生成されないぞ、、)  
+知っている方いたら教えてください。  
+参照: [https://github.com/ggerganov/llama.cpp/tree/master/examples/quantize](https://github.com/ggerganov/llama.cpp/tree/master/examples/quantize)
+
+なのでllama-cliのllama-quantizeを使います。  
+まずインストールします。
+
+cudaバージョンがあったので、cudaバージョンをを入れておきます。
+
+```bash
+paru -S llama.cpp-cuda
+```
+
+ヘルプを見ると、いろいろな量子化方式があります。  
+今回は一番使われてるぽいQ4_K_Mを使用します。
+
+```bash
+llama-quantize -h
+usage: llama-quantize [--help] [--allow-requantize] [--leave-output-tensor] [--pure] [--imatrix] [--include-weights] [--exclude-weights] [--output-tensor-type] [--token-embedding-type] [--override-kv] model-f32.gguf [model-quant.gguf] type [nthreads]
+
+  --allow-requantize: Allows requantizing tensors that have already been quantized. Warning: This can severely reduce quality compared to quantizing from 16bit or 32bit
+  --leave-output-tensor: Will leave output.weight un(re)quantized. Increases model size but may also increase quality, especially when requantizing
+  --pure: Disable k-quant mixtures and quantize all tensors to the same type
+  --imatrix file_name: use data in file_name as importance matrix for quant optimizations
+  --include-weights tensor_name: use importance matrix for this/these tensor(s)
+  --exclude-weights tensor_name: use importance matrix for this/these tensor(s)
+  --output-tensor-type ggml_type: use this ggml_type for the output.weight tensor
+  --token-embedding-type ggml_type: use this ggml_type for the token embeddings tensor
+  --keep-split: will generate quantized model in the same shards as input
+  --override-kv KEY=TYPE:VALUE
+      Advanced option to override model metadata by key in the quantized model. May be specified multiple times.
+Note: --include-weights and --exclude-weights cannot be used together
+
+Allowed quantization types:
+   2  or  Q4_0    :  4.34G, +0.4685 ppl @ Llama-3-8B
+   3  or  Q4_1    :  4.78G, +0.4511 ppl @ Llama-3-8B
+   8  or  Q5_0    :  5.21G, +0.1316 ppl @ Llama-3-8B
+   9  or  Q5_1    :  5.65G, +0.1062 ppl @ Llama-3-8B
+  19  or  IQ2_XXS :  2.06 bpw quantization
+  20  or  IQ2_XS  :  2.31 bpw quantization
+  28  or  IQ2_S   :  2.5  bpw quantization
+  29  or  IQ2_M   :  2.7  bpw quantization
+  24  or  IQ1_S   :  1.56 bpw quantization
+  31  or  IQ1_M   :  1.75 bpw quantization
+  36  or  TQ1_0   :  1.69 bpw ternarization
+  37  or  TQ2_0   :  2.06 bpw ternarization
+  10  or  Q2_K    :  2.96G, +3.5199 ppl @ Llama-3-8B
+  21  or  Q2_K_S  :  2.96G, +3.1836 ppl @ Llama-3-8B
+  23  or  IQ3_XXS :  3.06 bpw quantization
+  26  or  IQ3_S   :  3.44 bpw quantization
+  27  or  IQ3_M   :  3.66 bpw quantization mix
+  12  or  Q3_K    : alias for Q3_K_M
+  22  or  IQ3_XS  :  3.3 bpw quantization
+  11  or  Q3_K_S  :  3.41G, +1.6321 ppl @ Llama-3-8B
+  12  or  Q3_K_M  :  3.74G, +0.6569 ppl @ Llama-3-8B
+  13  or  Q3_K_L  :  4.03G, +0.5562 ppl @ Llama-3-8B
+  25  or  IQ4_NL  :  4.50 bpw non-linear quantization
+  30  or  IQ4_XS  :  4.25 bpw non-linear quantization
+  15  or  Q4_K    : alias for Q4_K_M
+  14  or  Q4_K_S  :  4.37G, +0.2689 ppl @ Llama-3-8B
+  15  or  Q4_K_M  :  4.58G, +0.1754 ppl @ Llama-3-8B
+  17  or  Q5_K    : alias for Q5_K_M
+  16  or  Q5_K_S  :  5.21G, +0.1049 ppl @ Llama-3-8B
+  17  or  Q5_K_M  :  5.33G, +0.0569 ppl @ Llama-3-8B
+  18  or  Q6_K    :  6.14G, +0.0217 ppl @ Llama-3-8B
+   7  or  Q8_0    :  7.96G, +0.0026 ppl @ Llama-3-8B
+   1  or  F16     : 14.00G, +0.0020 ppl @ Mistral-7B
+  32  or  BF16    : 14.00G, -0.0050 ppl @ Mistral-7B
+   0  or  F32     : 26.00G              @ 7B
+          COPY    : only copy tensors, no quantizing
+```
+
+ということで、先ほどGGUFファイルを生成したディレクトリに移動してください。
+
+移動したら、量子化します。
+
+```bash
+$ llama-quantize deepseek-jp.gguf Q4_K_M
+
+$ ls
+deepseek-jp.gguf  ggml-model-Q4_K_M.gguf
+
+$ mv ggml-model-Q4_K_M.gguf deepseek-jp-Q4_K_M.gguf
+```
+
+普通にCPU全開で動きましたが、約5分くらいで終わりました。  
+わかりやすいように名前を変えておきました。
+
+```bash
+$ ll
+total 80G
+-rw-r--r-- 1 runfunrun runfunrun 62G Jan 29 18:18 deepseek-jp.gguf
+-rw-r--r-- 1 runfunrun runfunrun 19G Jan 29 19:21 deepseek-jp-Q4_K_M.gguf
+```
+
+容量は結構減りました。
+
+### 動かしてみる
+
+CLIのインタラクションモードで動かしてみます。
+
+今回の場合`--n-gpu-layers`を最大65まで設定できます。
+タスクマネージャーを見て、VRAMと相談して決めてください。
+
+何回か試してみて32が良さそうだったので、32でいきます。  
+といってもかなり遅いです。特に思考時間があるので長く感じます。
+
+```bash
+llama-cli -m deepseek-jp-Q4_K_M.gguf --interactive --n-gpu-layers 32
+```
+
+最初にPythonで投げたプロンプトと同じプロンプトを投げてみました。  
+実行時間は約11分でした。
+大幅に短くなったとはいえ、実用はかなり厳しいです。
+
+<Accordions>
+<Accordion title="実行結果">
+
+```bash
+ggml_cuda_init: GGML_CUDA_FORCE_MMQ:    no
+ggml_cuda_init: GGML_CUDA_FORCE_CUBLAS: no
+ggml_cuda_init: found 1 CUDA devices:
+  Device 0: NVIDIA GeForce RTX 4070, compute capability 8.9, VMM: yes
+register_backend: registered backend CUDA (1 devices)
+register_device: registered device CUDA0 (NVIDIA GeForce RTX 4070)
+register_backend: registered backend BLAS (1 devices)
+register_device: registered device BLAS (OpenBLAS)
+register_backend: registered backend RPC (0 devices)
+register_backend: registered backend CPU (1 devices)
+register_device: registered device CPU (12th Gen Intel(R) Core(TM) i7-12700KF)
+build: 4583 (1a0e87d29) with cc (GCC) 14.2.1 20240910 for x86_64-pc-linux-gnu (debug)
+main: llama backend init
+main: load the model and apply lora adapter, if any
+llama_model_load_from_file_impl: using device CUDA0 (NVIDIA GeForce RTX 4070) - 11094 MiB free
+llama_model_loader: loaded meta data with 27 key-value pairs and 771 tensors from deepseek-jp-Q4_K_M.gguf (version GGUF V3 (latest))
+llama_model_loader: Dumping metadata keys/values. Note: KV overrides do not apply in this output.
+llama_model_loader: - kv   0:                       general.architecture str              = qwen2
+llama_model_loader: - kv   1:                               general.type str              = model
+llama_model_loader: - kv   2:                               general.name str              = DeepSeek R1 Distill Qwen 32B Japanese
+llama_model_loader: - kv   3:                           general.finetune str              = Japanese
+llama_model_loader: - kv   4:                           general.basename str              = DeepSeek-R1-Distill-Qwen
+llama_model_loader: - kv   5:                         general.size_label str              = 32B
+llama_model_loader: - kv   6:                          qwen2.block_count u32              = 64
+llama_model_loader: - kv   7:                       qwen2.context_length u32              = 131072
+llama_model_loader: - kv   8:                     qwen2.embedding_length u32              = 5120
+llama_model_loader: - kv   9:                  qwen2.feed_forward_length u32              = 27648
+llama_model_loader: - kv  10:                 qwen2.attention.head_count u32              = 40
+llama_model_loader: - kv  11:              qwen2.attention.head_count_kv u32              = 8
+llama_model_loader: - kv  12:                       qwen2.rope.freq_base f32              = 1000000.000000
+llama_model_loader: - kv  13:     qwen2.attention.layer_norm_rms_epsilon f32              = 0.000010
+llama_model_loader: - kv  14:                       tokenizer.ggml.model str              = gpt2
+llama_model_loader: - kv  15:                         tokenizer.ggml.pre str              = deepseek-r1-qwen
+llama_model_loader: - kv  16:                      tokenizer.ggml.tokens arr[str,152064]  = ["!", "\"", "#", "$", "%", "&", "'", ...
+llama_model_loader: - kv  17:                  tokenizer.ggml.token_type arr[i32,152064]  = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, ...
+llama_model_loader: - kv  18:                      tokenizer.ggml.merges arr[str,151387]  = ["Ġ Ġ", "ĠĠ ĠĠ", "i n", "Ġ t",...
+llama_model_loader: - kv  19:                tokenizer.ggml.bos_token_id u32              = 151646
+llama_model_loader: - kv  20:                tokenizer.ggml.eos_token_id u32              = 151643
+llama_model_loader: - kv  21:            tokenizer.ggml.padding_token_id u32              = 151643
+llama_model_loader: - kv  22:               tokenizer.ggml.add_bos_token bool             = true
+llama_model_loader: - kv  23:               tokenizer.ggml.add_eos_token bool             = false
+llama_model_loader: - kv  24:                    tokenizer.chat_template str              = {% if not add_generation_prompt is de...
+llama_model_loader: - kv  25:               general.quantization_version u32              = 2
+llama_model_loader: - kv  26:                          general.file_type u32              = 15
+llama_model_loader: - type  f32:  321 tensors
+llama_model_loader: - type q4_K:  385 tensors
+llama_model_loader: - type q6_K:   65 tensors
+print_info: file format = GGUF V3 (latest)
+print_info: file type   = Q4_K - Medium
+print_info: file size   = 18.48 GiB (4.85 BPW)
+load: special_eos_id is not in special_eog_ids - the tokenizer config may be incorrect
+load: special tokens cache size = 22
+load: token to piece cache size = 0.9310 MB
+print_info: arch             = qwen2
+print_info: vocab_only       = 0
+print_info: n_ctx_train      = 131072
+print_info: n_embd           = 5120
+print_info: n_layer          = 64
+print_info: n_head           = 40
+print_info: n_head_kv        = 8
+print_info: n_rot            = 128
+print_info: n_swa            = 0
+print_info: n_embd_head_k    = 128
+print_info: n_embd_head_v    = 128
+print_info: n_gqa            = 5
+print_info: n_embd_k_gqa     = 1024
+print_info: n_embd_v_gqa     = 1024
+print_info: f_norm_eps       = 0.0e+00
+print_info: f_norm_rms_eps   = 1.0e-05
+print_info: f_clamp_kqv      = 0.0e+00
+print_info: f_max_alibi_bias = 0.0e+00
+print_info: f_logit_scale    = 0.0e+00
+print_info: n_ff             = 27648
+print_info: n_expert         = 0
+print_info: n_expert_used    = 0
+print_info: causal attn      = 1
+print_info: pooling type     = 0
+print_info: rope type        = 2
+print_info: rope scaling     = linear
+print_info: freq_base_train  = 1000000.0
+print_info: freq_scale_train = 1
+print_info: n_ctx_orig_yarn  = 131072
+print_info: rope_finetuned   = unknown
+print_info: ssm_d_conv       = 0
+print_info: ssm_d_inner      = 0
+print_info: ssm_d_state      = 0
+print_info: ssm_dt_rank      = 0
+print_info: ssm_dt_b_c_rms   = 0
+print_info: model type       = 32B
+print_info: model params     = 32.76 B
+print_info: general.name     = DeepSeek R1 Distill Qwen 32B Japanese
+print_info: vocab type       = BPE
+print_info: n_vocab          = 152064
+print_info: n_merges         = 151387
+print_info: BOS token        = 151646 '<｜begin▁of▁sentence｜>'
+print_info: EOS token        = 151643 '<｜end▁of▁sentence｜>'
+print_info: EOT token        = 151643 '<｜end▁of▁sentence｜>'
+print_info: PAD token        = 151643 '<｜end▁of▁sentence｜>'
+print_info: LF token         = 148848 'ÄĬ'
+print_info: FIM PRE token    = 151659 '<|fim_prefix|>'
+print_info: FIM SUF token    = 151661 '<|fim_suffix|>'
+print_info: FIM MID token    = 151660 '<|fim_middle|>'
+print_info: FIM PAD token    = 151662 '<|fim_pad|>'
+print_info: FIM REP token    = 151663 '<|repo_name|>'
+print_info: FIM SEP token    = 151664 '<|file_sep|>'
+print_info: EOG token        = 151643 '<｜end▁of▁sentence｜>'
+print_info: EOG token        = 151662 '<|fim_pad|>'
+print_info: EOG token        = 151663 '<|repo_name|>'
+print_info: EOG token        = 151664 '<|file_sep|>'
+print_info: max token length = 256
+load_tensors: offloading 32 repeating layers to GPU
+load_tensors: offloaded 32/65 layers to GPU
+load_tensors:        CUDA0 model buffer size =  8949.62 MiB
+load_tensors:   CPU_Mapped model buffer size =  9976.38 MiB
+llama_init_from_model: n_seq_max     = 1
+llama_init_from_model: n_ctx         = 4096
+llama_init_from_model: n_ctx_per_seq = 4096
+llama_init_from_model: n_batch       = 2048
+llama_init_from_model: n_ubatch      = 512
+llama_init_from_model: flash_attn    = 0
+llama_init_from_model: freq_base     = 1000000.0
+llama_init_from_model: freq_scale    = 1
+llama_init_from_model: n_ctx_per_seq (4096) < n_ctx_train (131072) -- the full capacity of the model will not be utilized
+llama_kv_cache_init: kv_size = 4096, offload = 1, type_k = 'f16', type_v = 'f16', n_layer = 64, can_shift = 1
+llama_kv_cache_init:      CUDA0 KV buffer size =   512.00 MiB
+llama_kv_cache_init:        CPU KV buffer size =   512.00 MiB
+llama_init_from_model: KV self size  = 1024.00 MiB, K (f16):  512.00 MiB, V (f16):  512.00 MiB
+llama_init_from_model:        CPU  output buffer size =     0.58 MiB
+llama_init_from_model:      CUDA0 compute buffer size =   368.02 MiB
+llama_init_from_model:        CPU compute buffer size =   307.00 MiB
+llama_init_from_model:  CUDA_Host compute buffer size =   342.01 MiB
+llama_init_from_model: graph nodes  = 2246
+llama_init_from_model: graph splits = 612 (with bs=512), 3 (with bs=1)
+common_init_from_params: setting dry_penalty_last_n to ctx_size = 4096
+common_init_from_params: warming up the model with an empty run - please wait ... (--no-warmup to disable)
+main: llama threadpool init, n_threads = 10
+main: chat template is available, enabling conversation mode (disable it with -no-cnv)
+main: chat template example:
+You are a helpful assistant
+
+<｜User｜>Hello<｜Assistant｜>Hi there<｜end▁of▁sentence｜><｜User｜>How are you?<｜Assistant｜>
+
+system_info: n_threads = 10 (n_threads_batch = 10) / 20 | CUDA : ARCHS = 890 | USE_GRAPHS = 1 | PEER_MAX_BATCH_SIZE = 128 | CPU : SSE3 = 1 | SSSE3 = 1 | LLAMAFILE = 1 | OPENMP = 1 | AARCH64_REPACK = 1 |
+
+main: interactive mode on.
+sampler seed: 2692224542
+sampler params:
+        repeat_last_n = 64, repeat_penalty = 1.000, frequency_penalty = 0.000, presence_penalty = 0.000
+        dry_multiplier = 0.000, dry_base = 1.750, dry_allowed_length = 2, dry_penalty_last_n = 4096
+        top_k = 40, top_p = 0.950, min_p = 0.050, xtc_probability = 0.000, xtc_threshold = 0.100, typical_p = 1.000, temp = 0.800
+        mirostat = 0, mirostat_lr = 0.100, mirostat_ent = 5.000
+sampler chain: logits -> logit-bias -> penalties -> dry -> top-k -> typical -> top-p -> min-p -> xtc -> temp-ext -> dist
+generate: n_ctx = 4096, n_batch = 2048, n_predict = -1, n_keep = 1
+
+== Running in interactive mode. ==
+ - Press Ctrl+C to interject at any time.
+ - Press Return to return control to the AI.
+ - To return control without starting a new line, end your input with '/'.
+ - If you want to submit another line, end your input with '\'.
+ - Using default system message. To change it, set a different value via -p PROMPT or -f FILE argument.
+
+You are a helpful assistant
+
+
+> AIによって私たちの暮らしはどのように変わりますか？
+<think>
+まず、ユーザーがAIによる暮らしの変化について知りたいと思っている。具体的な例を挙げつつ、分かりやすく説明する必要がある。
+
+まず、AIが既に影響を与えている分野を考える。例えば、スマートフォンの音声アシスタントや自動車の運転支援システム、オンラインショッピングでのレコメンデーションなど。これらは日常生活に密着しているので、具体的な例として使える。
+
+次に、将来の可能性について触れる。例えば、AIが家庭内の家事や健康診断を自動化する未来や、教育や医療現場での応用。ただし、これらはまだ現実ではあまり見られていないので、技術的な進歩に依存する点を注意する必要がある。
+
+また、AIの普及がもたらす社会的な影響も考える。プライバシーの問題や職業の変化、人間の関係性への影響など。ここでは、ポジティブな面だけでなく、課題にも触れることでバランスを取る。
+
+ユーザーの関心が技術そのものよりも、実生活への影響にあると推測する。そのため、具体的なシナリオを提示し、AIがどのように生活を便利にしたり、変えるかをイメージしやすくする。
+
+さらに、ユーザーがAIに対して持つ懸念（例えば、AIが人間の仕事を取り上げるなど）に答えられるように、持続可能性や倫理的な側面にも言及する。
+
+最後に、全体として前向きな展望を示しつつ、課題に対処するための努力の必要性を強調する。
+</think>
+
+AIが私たちの暮らしに及ぼす変化は、**「人間の可能性を拡張するツール」としての役割**をさらに深化させつつ、既に現実化している例と将来の展望を組み合わせて考えると、以下のような多面的な影響が想定されます。
+
+---
+
+### **1. 日常生活の自動化と利便性**
+- **スマートホームの進化**：
+  AIが音声や行動パターンを学習し、照明・家電・温度管理を自動調整。例：夜間に帰宅すると既に暖房が入っている、調理中に「料理時間が過ぎた」と通知。
+- **健康管理**：
+  携帯デバイスが心拍・睡眠パターンを分析し、健康リスクを予測。早期の医療介入を促進。
+- **移動手段の革新**：
+  自動運転技術が発展し、渋滞や事故リスクを削減。車内での作業や娯楽が可能に。
+
+---
+
+### **2. 生産性向上と新しい業務形態**
+- **AIアシスタントによる業務効率化**：
+  メール整理・スケジュール管理・データ分析を自動化。人間は創造的思考や感情に富むタスクに集中。
+- **リモートワークの進化**：
+  AIが会議の音声を自動翻訳・要約し、言語障壁を解消。バーチャル会議の没入感を向上させるVR連動技術も登場。
+
+---
+
+### **3. 教育・医療のパーソナライゼーション**
+- **学習プラットフォーム**：
+  AIが生徒の理解度に応じて教材を適応調整。個別指導のコストを大幅に低下。
+- **医療診断**：
+  MRIや血液検査データをAIが分析し、従来より早期に異常を検出。医師の判断を補完。
+
+---
+
+### **4. 社会構造への影響**
+- **労働市場の変化**：
+  簡単な反復作業はAIに代替され、人間は創造性・感情的関与の高い分野（例：アート・ケア）にシフト。
+- **倫理的な課題**：
+  AIの判断がバイアスを含む可能性（例：人事採用アルゴリズムの偏り）に対処するため、透明性確保が課題に。
+
+---
+
+### **5. 人間の進化の加速**
+- **認知拡張**：
+  ARメガネを通じてAIがリアルタイムで情報提供。物理的な学習時間を短縮。
+- **創造性の拡張**：
+  AIが音楽・小説のアイデアを生成し、人間の想像力を刺激。共同制作が一般的に。
+
+---
+
+### **課題と対応策**
+- **プライバシー保護**：
+  データの収集・使用範囲を厳格に規制する法律（例：EUのGDPR）が拡大。
+- **教育格差の是正**：
+  AI技術の普及が低所得者層をさらに分断しないよう、政府や民間企業がアクセス機会を提供。
+
+---
+
+### **結論**
+AIの本質は「人間の限界を乗り越えるための橋」です。技術が発展しても、**「AIに頼らない人間らしさ」**（例：共感・倫理的判断）が価値となる社会を目指すことが重要です。重要なのは、AIを単なるツールではなく、**「未来の可能性を共に描くパートナー」として捉える視点**です。
+
+>
+llama_perf_sampler_print:    sampling time =       2.46 ms /    28 runs   (    0.09 ms per token, 11372.87 tokens per second)
+llama_perf_context_print:        load time =    3326.76 ms
+llama_perf_context_print: prompt eval time =   13148.55 ms /    21 tokens (  626.12 ms per token,     1.60 tokens per second)
+llama_perf_context_print:        eval time =  660593.11 ms /  1251 runs   (  528.05 ms per token,     1.89 tokens per second)
+llama_perf_context_print:       total time =  677545.45 ms /  1272 tokens
+Interrupted by user
+```
+
+</Accordion>
+</Accordions>
+
+## Ollamaで動かしてみる
+
+### Ollamaのセットアップ
+
+一旦プロジェクトルートに戻っておきます。(`model/`があるdir)
+
+Modelfileを作成します。(なんかDockerfileみたいですね)  
+なんかいろいろ書けるみたいですが、今回はこれで行きます。
+
+```bash
+echo "FROM ./model/deepseek-jp-Q4_K_M.gguf" > Modelfile
+```
+
+```text title="Modelfile"
+FROM ./model/deepseek-jp-Q4_K_M.gguf
+```
+
+このファイルを元にollamaにモデルを作成することになります。
+
+今回、ollamaを直接インストールします。  
+
+Docker x Nvidia x WSL2(しかもArch Linux)の環境構築で骨が折れました。
+いろいろググってやってみたんですが、ダメでした。
+わかる人、マジで教えてほしいです。
+
+```bash
+$ docker run --rm --privileged --gpus all nvidia/cuda:12.2.0-base-ubuntu22.04 nvidia-smi
+docker: Error response from daemon: failed to create task for container: failed to create shim task: OCI runtime create failed: runc create failed: unable to start container process: error during container init: error running prestart hook #0: exit status 1, stdout: , stderr: Auto-detected mode as 'legacy'
+nvidia-container-cli: mount error: failed to add device rules: open /sys/fs/cgroup/devices/devices.allow: no such file or directory: unknown.
+```
+
+```bash
+paru -S ollama
+```
+
+起動させます。
+
+```bash
+sudo systemctl start ollama.service
+```
+
+念のため、statusを見てみます。
+
+```bash
+$ systemctl status ollama.service
+● ollama.service - Ollama Service
+     Loaded: loaded (/usr/lib/systemd/system/ollama.service; disabled; preset: disabled)
+     Active: active (running) since Wed 2025-01-29 21:48:52 JST; 2s ago
+ Invocation: a8b59ff35eaa4cb7a2c4473edcf7c0f2
+   Main PID: 207758 (ollama)
+        CPU: 236ms
+     CGroup: /system.slice/ollama.service
+             └─207758 /usr/bin/ollama serve
+```
+
+ばっちりです。
+
+```bash
+ollama create deepseek-jp-Q4_K_M -f Modelfile
+```
+
+これでインタラクティブモードで使えます。  
+思考してないのか、結構早いです。
+
+```bash
+ollama run deepseek-jp-Q4_K_M
+```
+
+### Open WebUIのセットアップ
+
+こちらもAURからいれちゃいます。
+
+```bash
+paru -S open-webui
+```
+
+起動するだけです。
+
+```bash
+sudo systemctl start open-webui.service
+```
+
+### 動かしてみる
+
+[http://localhost:8080](http://localhost:8080)にアクセスして、画面通りにユーザー作るだけです。
+
+同じプロンプトを入れてみます。
+
+![webui1](https://i.gyazo.com/24fb0bd01dceef9a89adcc7289ef76a4.png)
+
+![webui2](https://i.gyazo.com/055da5508e9e49b2b886d3ddab981365.png)
+
+![webui3](https://i.gyazo.com/6149ad6f04f9478b7c6f0c1f3fcef4c2.png)
+
+こんな感じの結果になりました。  
+なぜか実行時間が鬼遅かったです。
+
+## 最後に
+
+4070では遅すぎてとても使えませんでした。誰か[RTX5090](https://www.nvidia.com/ja-jp/geforce/graphics-cards/50-series/rtx-5090/)を買ってください。  
+ちなみに僕のM4 Mac Book Proはメモリが24GBなのでエラーでそもそも動かないです。
+
+ではまた。
