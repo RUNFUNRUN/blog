@@ -1,5 +1,5 @@
 ---
-title: 日本語対応DeepSeek R1をArch Linux+RTX4070で動かしてみる
+title: 日本語追加学習DeepSeek R1をArch Linux+RTX4070で動かしてみる
 description: サイバーエージェントのDeepSeek日本語追加学習モデルを試してみます。
 date: 2025-01-30
 ---
@@ -245,15 +245,10 @@ mkdir ../model
 先ほどの`convert_hf_to_gguf.py`でも`--outtype q8_0`で量子化できますが、
 今回は4bitで量子化したいので、別で行います。
 
-llama.cppを直接ビルドしてもできると思いますが、最新のリポジトリで量子化のファイルが見つかりませんでした。
-(ビルドしてもllama-quantizeファイルが生成されないぞ、、)  
-知っている方いたら教えてください。  
-参照: [https://github.com/ggerganov/llama.cpp/tree/master/examples/quantize](https://github.com/ggerganov/llama.cpp/tree/master/examples/quantize)
+先ほどcloneしたllama.cppを自前ビルドしてもいいです。  
+cliの方が便利なので、今回はAURからいれちゃいます。
 
-なのでllama-cliのllama-quantizeを使います。  
-まずインストールします。
-
-cudaバージョンがあったので、cudaバージョンをを入れておきます。
+cudaバージョンを入れます。
 
 ```bash
 paru -S llama.cpp-cuda
@@ -263,7 +258,7 @@ paru -S llama.cpp-cuda
 今回は一番使われてるぽいQ4_K_Mを使用します。
 
 ```bash
-llama-quantize -h
+$ llama-quantize -h
 usage: llama-quantize [--help] [--allow-requantize] [--leave-output-tensor] [--pure] [--imatrix] [--include-weights] [--exclude-weights] [--output-tensor-type] [--token-embedding-type] [--override-kv] model-f32.gguf [model-quant.gguf] type [nthreads]
 
   --allow-requantize: Allows requantizing tensors that have already been quantized. Warning: This can severely reduce quality compared to quantizing from 16bit or 32bit
@@ -634,10 +629,11 @@ FROM ./model/deepseek-jp-Q4_K_M.gguf
 
 このファイルを元にollamaにモデルを作成することになります。
 
-今回、ollamaを直接インストールします。
+今回、ollamaを直接インストールします。  
+cuda無しバージョンはGPUを使ってくれないので注意してください。
 
 ```bash
-paru -S ollama
+paru -S ollama-cuda
 ```
 
 余談ですが、なぜDockerを使わないか念の為言っておきます。  
@@ -700,7 +696,8 @@ sudo systemctl start open-webui.service
 
 ### 動かしてみる
 
-[http://localhost:8080](http://localhost:8080)にアクセスして、画面通りにユーザー作るだけです。
+[http://localhost:8080](http://localhost:8080)にアクセスします。
+初回は画面の案内通りにユーザーを作ってください。
 
 同じプロンプトを入れてみます。
 
@@ -710,10 +707,7 @@ sudo systemctl start open-webui.service
 
 ![webui3](https://i.gyazo.com/6149ad6f04f9478b7c6f0c1f3fcef4c2.png)
 
-こんな感じの結果になりました。  
-なぜか実行時間(というか生成が始まるまでの時間)が鬼長かったです。
-
-あとOllamaがGPUを使ってくれません。知っている方いたら教えてください。
+こんな感じの結果になりました。
 
 ## 最後に
 
