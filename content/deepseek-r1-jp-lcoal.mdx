@@ -11,6 +11,13 @@ date: 2025-01-30
 
 [cyberagent/DeepSeek-R1-Distill-Qwen-32B-Japanese](https://huggingface.co/cyberagent/DeepSeek-R1-Distill-Qwen-32B-Japanese)
 
+<Callout title='悲報(朗報) [追記]' type='warn'>
+  これのパラメータ数が低いモデルがありました。一通り見た気になってたんですが、気付かなかった、、  
+  最強のGPUを持ってる人意外はこちらを使ってください。
+  量子化するとめっちゃいい感じに動きます。  
+  [cyberagent/DeepSeek-R1-Distill-Qwen-14B-Japanese](https://huggingface.co/cyberagent/DeepSeek-R1-Distill-Qwen-14B-Japanese)
+</Callout>
+
 今回動かす環境はこちら
 
 ![fastfetch](https://i.gyazo.com/68343d8fad9ea6507e215641e75cb5ea.png)
@@ -103,7 +110,7 @@ python main.py
 import { Accordion, Accordions } from 'fumadocs-ui/components/accordion';
 
 <Accordions>
-<Accordion title="実行結果">
+<Accordion title='実行結果'>
 
 ```bash
 $ python main.py
@@ -357,7 +364,7 @@ llama-cli -m deepseek-jp-Q4_K_M.gguf --interactive --n-gpu-layers 32
 大幅に短くなったとはいえ、実用はかなり厳しいです。
 
 <Accordions>
-<Accordion title="実行結果">
+<Accordion title='実行結果'>
 
 ```bash
 ggml_cuda_init: GGML_CUDA_FORCE_MMQ:    no
@@ -711,10 +718,11 @@ sudo systemctl start open-webui.service
 
 ## 最後に
 
-4070では遅すぎてとても使えませんでした。誰か[RTX5090](https://www.nvidia.com/ja-jp/geforce/graphics-cards/50-series/rtx-5090/)を買ってください。  
-ちなみに僕のM4 Mac Book Proはメモリが24GBで、メモリが足りないみたいなエラーでそもそも動かなかったです。
+~遅すぎたので、今度別のパラメータのDeepSeekでリベンジします。~  
+~日本語追加学習モデルは一旦諦めます。~  
+→ 冒頭で言った通りパラメータ数14Bのモデルを量子化するとめっちゃいい感じです。  
+出力や実行時間は変わりますが、14Bのモデルでも使い方は同じなので、良かったら参考にしてください。
 
-今度、別のパラメータのDeepSeekでリベンジします。
-日本語追加学習は一旦諦めます。
+性能はこれから使って確かめたいと思います。  
 
 ではまた。
