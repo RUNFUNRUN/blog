@@ -21,7 +21,7 @@ export const Navbar = (props: HTMLAttributes<HTMLElement>) => {
         {...props}
         className={cn(
           'fixed top-[var(--fd-banner-height)] z-30 box-content w-full border-b border-fd-foreground/10 transition-colors backdrop-blur-lg',
-          value.length > 0 ? 'shadow-lg' : 'shadow-sm',
+          value.length > 0 ? 'shadow-lg' : 'shadow-xs',
           (!isTransparent || value.length > 0) &&
             'bg-fd-background/80 backdrop-blur-lg',
           props.className,
