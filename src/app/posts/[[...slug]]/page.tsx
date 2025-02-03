@@ -1,5 +1,5 @@
 import { JsonLd } from '@/components/json-ld';
-import { getPage, getPages } from '@/lib/source';
+import { getPost, getPosts } from '@/lib/source';
 import { CodeBlock, Pre } from 'fumadocs-ui/components/codeblock';
 import {
   ImageZoom,
@@ -19,7 +19,7 @@ export const dynamicParams = false;
 
 const Page = async (props: { params: Promise<{ slug?: string[] }> }) => {
   const params = await props.params;
-  const post = getPage(params.slug);
+  const post = getPost(params.slug);
 
   if (post === undefined) {
     notFound();
@@ -81,7 +81,7 @@ const Page = async (props: { params: Promise<{ slug?: string[] }> }) => {
 export default Page;
 
 export const generateStaticParams = () => {
-  return getPages().map((page) => ({
+  return getPosts().map((page) => ({
     slug: page.slugs,
   }));
 };
@@ -90,7 +90,7 @@ export const generateMetadata = async (props: {
   params: Promise<{ slug?: string[] }>;
 }) => {
   const params = await props.params;
-  const post = getPage(params.slug);
+  const post = getPost(params.slug);
   if (post === undefined) return;
 
   const title = post.data.title;

@@ -1,5 +1,5 @@
 import { description, title } from '@/app/layout.config';
-import { getPages } from '@/lib/source';
+import { getPosts } from '@/lib/source';
 import { Feed } from 'feed';
 
 export const dynamic = 'force-static';
@@ -30,7 +30,7 @@ export const GET = () => {
     favicon: new URL('/favicon.ico', baseUrl).toString(),
   });
 
-  const posts = getPages();
+  const posts = getPosts();
 
   for (const post of posts) {
     const imageParams = new URLSearchParams();
