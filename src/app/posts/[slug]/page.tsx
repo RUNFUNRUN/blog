@@ -17,9 +17,9 @@ import { notFound } from 'next/navigation';
 
 export const dynamicParams = false;
 
-const Page = async (props: { params: Promise<{ slug?: string[] }> }) => {
+const Page = async (props: { params: Promise<{ slug: string }> }) => {
   const params = await props.params;
-  const post = getPost(params.slug);
+  const post = getPost([params.slug]);
 
   if (post === undefined) {
     notFound();
@@ -82,15 +82,15 @@ export default Page;
 
 export const generateStaticParams = () => {
   return getPosts().map((page) => ({
-    slug: page.slugs,
+    slug: page.slugs[0],
   }));
 };
 
 export const generateMetadata = async (props: {
-  params: Promise<{ slug?: string[] }>;
+  params: Promise<{ slug: string }>;
 }) => {
   const params = await props.params;
-  const post = getPost(params.slug);
+  const post = getPost([params.slug]);
   if (post === undefined) return;
 
   const title = post.data.title;
