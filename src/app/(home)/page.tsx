@@ -6,7 +6,7 @@ const HomePage = () => {
   const posts = getSortedByDatePosts().slice(0, 3);
 
   return (
-    <main className='mx-4 my-12 space-y-12 lg:mx-auto lg:w-[992px]'>
+    <div className='space-y-12'>
       <div className='text-2xl font-bold'>
         <p>
           RUNFUNRUNのブログです。プロフィールは
@@ -47,7 +47,7 @@ const HomePage = () => {
           })}
         </div>
       </div>
-    </main>
+    </div>
   );
 };
 

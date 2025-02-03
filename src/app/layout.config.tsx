@@ -1,6 +1,6 @@
 import type { LinkItemType } from 'fumadocs-ui/layouts/links';
 import type { BaseLayoutProps } from 'fumadocs-ui/layouts/shared';
-import { Newspaper, Rss, User } from 'lucide-react';
+import { Newspaper, Rss, Tags, User } from 'lucide-react';
 
 export const title = 'RUNFUNRUN.dev';
 export const description = 'This is my tech blog.';
@@ -26,6 +26,12 @@ export const linkItems: LinkItemType[] = [
     active: 'url',
   },
   {
+    icon: <Tags />,
+    text: 'タグ一覧',
+    url: '/tags',
+    active: 'url',
+  },
+  {
     type: 'icon',
     label: 'rss',
     icon: <Rss />,
@@ -33,3 +39,5 @@ export const linkItems: LinkItemType[] = [
     url: '/api/rss.xml',
   },
 ];
+
+export const postsPerPage = 5;

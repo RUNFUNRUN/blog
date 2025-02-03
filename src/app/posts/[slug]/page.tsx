@@ -1,4 +1,5 @@
-import { JsonLd } from '@/components/json-ld';
+import { PostJsonLd } from '@/components/json-ld';
+import { TagCard } from '@/components/tag-card';
 import { getPost, getPosts } from '@/lib/source';
 import { CodeBlock, Pre } from 'fumadocs-ui/components/codeblock';
 import {
@@ -31,6 +32,7 @@ const Page = async (props: { params: Promise<{ slug: string }> }) => {
 
   const lastModified = post.data.lastModified;
   const lastUpdate = lastModified ? new Date(lastModified) : undefined;
+  const tags = post.data.tags ?? [];
 
   const path = `content/${post.file.path}`;
 
@@ -54,7 +56,14 @@ const Page = async (props: { params: Promise<{ slug: string }> }) => {
     >
       <p className='text-right'>{date}</p>
       <DocsTitle>{post.data.title}</DocsTitle>
-      <DocsDescription>{post.data.description}</DocsDescription>
+      <DocsDescription className='mb-0'>
+        {post.data.description}
+      </DocsDescription>
+      <div className='flex gap-2 flex-wrap mb-8'>
+        {tags.map((tag) => (
+          <TagCard name={tag} key={tag} />
+        ))}
+      </div>
       <DocsBody>
         <MDX
           components={{
@@ -73,7 +82,7 @@ const Page = async (props: { params: Promise<{ slug: string }> }) => {
           }}
         />
       </DocsBody>
-      <JsonLd post={post} />
+      <PostJsonLd post={post} />
     </DocsPage>
   );
 };

@@ -20,7 +20,7 @@ const Card = ({
 }) => {
   if (disable) {
     return (
-      <div className='rounded-full border bg-card p-2 text-muted-foreground'>
+      <div className='rounded-full border bg-card p-2 text-fd-muted-foreground'>
         {children}
       </div>
     );

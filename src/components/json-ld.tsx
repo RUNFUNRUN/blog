@@ -2,7 +2,7 @@ import { title as homeTitle } from '@/app/layout.config';
 import type { Post } from '@/lib/source';
 import type { BlogPosting, BreadcrumbList, Graph } from 'schema-dts';
 
-export const JsonLd = ({ post }: { post: Post }) => {
+export const PostJsonLd = ({ post }: { post: Post }) => {
   if (!post) {
     return null;
   }
@@ -68,6 +68,49 @@ export const JsonLd = ({ post }: { post: Post }) => {
   const graph: Graph = {
     '@context': 'https://schema.org',
     '@graph': [blogPosting, breadcrumbList],
+  };
+
+  return (
+    <script
+      type='application/ld+json'
+      // biome-ignore lint/security/noDangerouslySetInnerHtml:
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(graph) }}
+    />
+  );
+};
+
+export const TagJsonLd = ({ tag }: { tag: string }) => {
+  const baseUrl = new URL(
+    process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000',
+  ).toString();
+
+  const breadcrumbList: BreadcrumbList = {
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      {
+        '@type': 'ListItem',
+        position: 1,
+        name: homeTitle,
+        item: baseUrl,
+      },
+      {
+        '@type': 'ListItem',
+        position: 2,
+        name: `${homeTitle} | タグ一覧`,
+        item: new URL('/tags', baseUrl).toString(),
+      },
+      {
+        '@type': 'ListItem',
+        position: 3,
+        name: `${homeTitle} ${tag}の記事`,
+        item: new URL(`/tags/${tag}`, baseUrl).toString(),
+      },
+    ],
+  };
+
+  const graph: Graph = {
+    '@context': 'https://schema.org',
+    '@graph': [breadcrumbList],
   };
 
   return (

@@ -27,6 +27,7 @@ export const blog = defineCollections({
           return z.NEVER;
         }
       }),
+    tags: z.array(z.string()).optional(),
   }),
   type: 'doc',
 });
