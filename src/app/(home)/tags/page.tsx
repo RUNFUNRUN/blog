@@ -30,13 +30,8 @@ export const generateMetadata = () => {
       images: '/api/og',
       url: '/tags',
     },
-    robots: {
-      index: false,
-      googleBot: {
-        index: false,
-      },
-    },
     alternates: {
+      canonical: '/tags',
       types: {
         'application/rss+xml': '/api/rss.xml',
       },

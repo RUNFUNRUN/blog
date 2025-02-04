@@ -95,13 +95,8 @@ export const generateMetadata = async (props: {
       title,
       images: '/api/og',
     },
-    robots: {
-      index: false,
-      googleBot: {
-        index: false,
-      },
-    },
     alternates: {
+      canonical: '/list',
       types: {
         'application/rss+xml': '/api/rss.xml',
       },
