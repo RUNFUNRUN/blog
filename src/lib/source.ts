@@ -9,7 +9,7 @@ export const {
   pageTree,
 } = loader({
   baseUrl: '/posts',
-  source: createMDXSource(blog, []),
+  source: createMDXSource(blog),
 });
 
 export type Post = ReturnType<typeof getPost>;

@@ -60,7 +60,8 @@ const Page = async (props: { params: Promise<{ slug: string }> }) => {
         {post.data.description}
       </DocsDescription>
       <div className='flex gap-2 flex-wrap mb-8'>
-        {tags.map((tag) => (
+        {tags.map((tag: string) => (
+          // FIXME: delete tag type definition when fumadocs fix it
           <TagCard name={tag} key={tag} />
         ))}
       </div>
@@ -69,7 +70,7 @@ const Page = async (props: { params: Promise<{ slug: string }> }) => {
           components={{
             ...defaultMdxComponents,
             img: (props: ImageZoomProps) => <ImageZoom {...props} />,
-            pre: ({ ref: _ref, ...props }) => (
+            pre: ({ ...props }) => (
               <CodeBlock
                 {...props}
                 viewportProps={{

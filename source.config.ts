@@ -11,25 +11,12 @@ import remarkMath from 'remark-math';
 import { z } from 'zod';
 
 export const blog = defineCollections({
+  type: 'doc',
   dir: 'content',
   schema: frontmatterSchema.extend({
-    date: z
-      .string()
-      .or(z.date())
-      .transform((value, context) => {
-        try {
-          return new Date(value);
-        } catch {
-          context.addIssue({
-            code: z.ZodIssueCode.custom,
-            message: 'Invalid date',
-          });
-          return z.NEVER;
-        }
-      }),
+    date: z.string().date().or(z.date()),
     tags: z.array(z.string()).optional(),
   }),
-  type: 'doc',
 });
 
 export default defineConfig({
