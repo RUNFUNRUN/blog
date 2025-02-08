@@ -60,8 +60,7 @@ const Page = async (props: { params: Promise<{ slug: string }> }) => {
         {post.data.description}
       </DocsDescription>
       <div className='flex gap-2 flex-wrap mb-8'>
-        {tags.map((tag: string) => (
-          // FIXME: delete tag type definition when fumadocs fix it
+        {tags.map((tag) => (
           <TagCard name={tag} key={tag} />
         ))}
       </div>
