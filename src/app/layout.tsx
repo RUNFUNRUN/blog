@@ -18,7 +18,10 @@ const jetbrains = JetBrains_Mono({
 
 const RootLayout = ({ children }: { children: ReactNode }) => {
   return (
-    <html lang='ja' className={`${geist.className} ${jetbrains.variable}`}>
+    <html
+      lang='ja'
+      className={`${geist.className} ${jetbrains.variable} antialiased`}
+    >
       <body className='flex min-h-dvh flex-col'>
         <RootProvider>
           {children}
