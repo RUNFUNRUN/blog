@@ -8,4 +8,7 @@
   a {
     @apply [overflow-wrap:anywhere];
   }
+  code {
+    font-family: var(--font-jetbrains-mono);
+  }
 }
