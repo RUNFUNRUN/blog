@@ -11,7 +11,7 @@ const inter = Inter({
   subsets: ['latin'],
 });
 
-const Layout = ({ children }: { children: ReactNode }) => {
+const RootLayout = ({ children }: { children: ReactNode }) => {
   return (
     <html lang='ja' className={inter.className}>
       <body className='flex min-h-dvh flex-col'>
@@ -24,7 +24,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
   );
 };
 
-export default Layout;
+export default RootLayout;
 
 export const metadata: Metadata = {
   metadataBase: new URL(

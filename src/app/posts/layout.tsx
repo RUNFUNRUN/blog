@@ -3,7 +3,7 @@ import { sortedByDatePageTree } from '@/lib/source';
 import type { ReactNode } from 'react';
 import { baseOptions, linkItems } from '../layout.config';
 
-const RootDocsLayout = ({ children }: { children: ReactNode }) => {
+const Layout = ({ children }: { children: ReactNode }) => {
   return (
     <DocsLayout {...baseOptions} tree={sortedByDatePageTree} links={linkItems}>
       {children}
@@ -11,4 +11,4 @@ const RootDocsLayout = ({ children }: { children: ReactNode }) => {
   );
 };
 
-export default RootDocsLayout;
+export default Layout;
