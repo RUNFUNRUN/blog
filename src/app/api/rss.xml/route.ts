@@ -21,13 +21,13 @@ export const GET = () => {
   const feed = new Feed({
     title,
     description,
-    id: baseUrl.toString(),
+    id: baseUrl.href,
     copyright: 'RUNFUNRUN',
-    link: baseUrl.toString(),
-    feed: new URL('/api/rss.xml', baseUrl).toString(),
+    link: baseUrl.href,
+    feed: new URL('/api/rss.xml', baseUrl).href,
     language: 'ja',
     updated: new Date(),
-    favicon: new URL('/favicon.ico', baseUrl).toString(),
+    favicon: new URL('/favicon.ico', baseUrl).href,
   });
 
   const posts = getPosts();
@@ -40,13 +40,11 @@ export const GET = () => {
     feed.addItem({
       title: post.data.title,
       description: post.data.description,
-      link: new URL(post.url, baseUrl).toString(),
+      link: new URL(post.url, baseUrl).href,
       image: {
         title: post.data.title,
         type: 'image/png',
-        url: escapeForXML(
-          new URL(`/api/og?${imageParams}`, baseUrl).toString(),
-        ),
+        url: escapeForXML(new URL(`/api/og?${imageParams}`, baseUrl).href),
       },
       date: post.data.date,
       author: [

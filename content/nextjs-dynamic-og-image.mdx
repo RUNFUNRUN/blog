@@ -314,13 +314,13 @@ export const generateMetadata = ({ params }: { params: { slug?: string[] } }) =>
     openGraph: {
       title,
       description,
-      images: '/api/og?' + imageParams.toString(),
+      images: `/api/og?${imageParams}`,
       url: post.url,
     },
     twitter: {
       title,
       description,
-      images: '/api/og?' + imageParams.toString(),
+      images: `/api/og?${imageParams}`,
     },
   } satisfies Metadata;
 };

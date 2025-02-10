@@ -9,9 +9,9 @@ export const PostJsonLd = ({ post }: { post: Post }) => {
 
   const baseUrl = new URL(
     process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000',
-  ).toString();
+  ).href;
 
-  const url = new URL(post.url, baseUrl).toString();
+  const url = new URL(post.url, baseUrl).href;
 
   const imageParams = new URLSearchParams();
   imageParams.set('title', post.data.title);
@@ -21,7 +21,7 @@ export const PostJsonLd = ({ post }: { post: Post }) => {
     '@type': 'BlogPosting',
     headline: post.data.title,
     description: post.data.description,
-    image: new URL(`/api/og?${imageParams}`, baseUrl).toString(),
+    image: new URL(`/api/og?${imageParams}`, baseUrl).href,
     datePublished: new Date(post.data.date).toISOString(),
     dateModified: post.data.lastModified
       ? new Date(post.data.lastModified).toISOString()
@@ -54,7 +54,7 @@ export const PostJsonLd = ({ post }: { post: Post }) => {
         '@type': 'ListItem',
         position: 2,
         name: `${homeTitle} | 記事一覧`,
-        item: new URL('/list', baseUrl).toString(),
+        item: new URL('/list', baseUrl).href,
       },
       {
         '@type': 'ListItem',
@@ -82,7 +82,7 @@ export const PostJsonLd = ({ post }: { post: Post }) => {
 export const TagJsonLd = ({ tag }: { tag: string }) => {
   const baseUrl = new URL(
     process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000',
-  ).toString();
+  ).href;
 
   const breadcrumbList: BreadcrumbList = {
     '@type': 'BreadcrumbList',
@@ -97,13 +97,13 @@ export const TagJsonLd = ({ tag }: { tag: string }) => {
         '@type': 'ListItem',
         position: 2,
         name: `${homeTitle} | タグ一覧`,
-        item: new URL('/tags', baseUrl).toString(),
+        item: new URL('/tags', baseUrl).href,
       },
       {
         '@type': 'ListItem',
         position: 3,
         name: `${homeTitle} ${tag}の記事`,
-        item: new URL(`/tags/${tag}`, baseUrl).toString(),
+        item: new URL(`/tags/${tag}`, baseUrl).href,
       },
     ],
   };
