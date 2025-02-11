@@ -1,0 +1,101 @@
+---
+title: Neovimオススメ設定③ Windows or WSLでも快適に日本語入力がしたい
+description: Neovimのオススメ設定シリーズ第3弾。
+date: 2025-02-12
+tags: ['Neovim']
+---
+
+## はじめに
+
+前回の記事の続きになります。読んでない方はぜひお読みください。
+
+<Card
+  title='Neovimオススメ設定② 日本語入力を快適にするim-select.nvimのすすめ'
+  description='Neovimのオススメ設定シリーズ第2弾。'
+  href='/posts/nvim-japanese'
+/>
+
+Macではかなり理想な状態でした。  
+この記事でわかるように、WindowsまたはWSLでの日本語入力には大きな課題があります。
+
+今回の記事はそれに立ち向かってみたという内容になります。
+
+## 前回の課題
+
+IMEが無効になることで、英語入力になることが最大の課題でした。
+なので、一度IMEを有効にしてあげるという処理が必要になりました。
+
+## 今回何をするのか
+
+正直、IME内で全角半角切り替えしたいと思っていました。
+im-select.nvimではそれが出来なかったので、自分で作れるかどうか奮闘してみました。
+
+## 一番の障壁
+
+IMEの切り替えは、`ImmSetConversionStatus`等のWindows APIを使う必要があります。
+しかし、それが動作しませんでした。
+
+Chat GPTからの引用です。(情報が不正確で申し訳ありません。)
+
+> Windows Terminal（および一般的なコンソールウィンドウ）は、IME の入力コンテキスト（HIMC）を正しく持っていません。つまり、Windows Terminal をフォアグラウンドウィンドウとして扱うと、ImmGetContext や ImmGetConversionStatus で有効な値が得られず、結果として変換モードの切り替え処理が行われません。
+>
+> Windows Terminal 内で半角/全角の切り替えができるように見えるのは、実際の IME の切り替え動作が Windows Terminal の内部で別の仕組みによって実現されているためです。
+
+これが本当かどうかはさておき、今まで誰も実現できていないという事実はあります。
+
+## 疑似的に再現してみる
+
+im-select.nvimには、インサートモード時の入力メソッドを保持し、
+ノーマルモードから再度インサートモードにするときに保持した入力メソッドに切り替える機能があります。  
+今回の手法では実装できないので、ご注意ください。
+
+**要は、インサートモードからエスケープした時に半角入力になれば良い訳です。**
+
+ところで皆さん、半角全角切り替えを変換無変換キーに割り当てることができるのをご存知でしょうか。  
+自分は日本語配列キーボードを使用しているときはとてもお世話になっていた機能です。
+
+この機能を利用すれば、インサートモードをエスケープした時に無変換キーを押せば強制的に半角入力にできそうじゃないですか？
+
+ということで、実装しました。リポジトリは以下です。
+
+[https://github.com/RUNFUNRUN/ime-toggle](https://github.com/RUNFUNRUN/ime-toggle)
+
+インストール方法は[README](https://github.com/RUNFUNRUN/ime-toggle/blob/main/README.md)に書いてあります。  
+やってることは簡単で、実行したら引数に応じて変換キー・無変換キーを押すだけの簡単なコードです。
+
+インストールできたら、これをNeovimから実行するだけです。
+
+```lua title="autocmds.lua"
+if vim.env.DISPLAY and (vim.fn.has("wsl") or vim.fn.has("win32")) then
+  autocmd("InsertLeave", {
+    pattern = "*",
+    callback = function()
+      vim.fn.system("ime_toggle.exe en")
+    end,
+  })
+end
+```
+
+余談ですが、im-selectはMacのみから呼び出すようにしました。
+
+```lua title="im-select.lua"
+if vim.fn.has("macunix") ~= 1 then
+  return {}
+end
+
+return {
+  {
+    "keaising/im-select.nvim",
+    init = function()
+      require("im_select").setup()
+    end,
+  },
+}
+```
+
+## 最後に
+
+前回の設定よりも使いやすい設定になったのではないでしょうか。
+皆さんもぜひ試してみてください。
+
+ではまた。
