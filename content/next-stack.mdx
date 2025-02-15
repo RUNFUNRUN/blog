@@ -1,0 +1,263 @@
+---
+title: Next.jsとCloudflareで個人開発最強スタックを夢見る
+description: Next.jsを中心に出来るだけお金をかけずに開発したい向けの構成です。
+date: 2025-02-15
+tags: ['Next.js', 'Cloudflare', 'Hono', '個人開発']
+---
+
+## はじめに
+
+個人開発してみたいけど、どの構成でしようか迷っている人向けの記事になります。  
+また、D1を使いたいけど実際にNext.jsからどう使えばいいかわからない人も見ていただけたらと思います。
+
+皆大好きNext.jsを中心に、Cloudflare D1を使うケチケチ構成を紹介します。
+また、Cloudflare Workersを使うことで収益化も狙える形になっています。
+
+正直、楽さで言ったらVercelにデプロイするのがいいと思います。
+ただ、Vercelの無料プランでは営利目的で使えないという弱点があります。  
+収益化の予定がないまたはDBを使わないプロジェクトは全然Vercelで良いと思います。  
+ちなみに、このブログもVercelにデプロイしています。(DBは使用していません。)
+
+Cloudflare Workersにデプロイするとしても、要件によってはSupabase等を選択するのも全然良いと思います。
+
+この記事を読むにあたって、今回の構成のサンプルプロジェクトがあるので実際のコードと照らし合わせながら見るとわかりやすいと思います。
+
+Webサイト: [https://next-stack.runfunrun.workers.dev](https://next-stack.runfunrun.workers.dev/)
+
+リポジトリ: [https://github.com/RUNFUNRUN/next-stack](https://github.com/RUNFUNRUN/next-stack)
+
+<Callout title='初心者の方へ'>
+  この記事ではかなり簡略化して説明しています。
+  ハンズオン的なこともしていないです。  
+  特に、wranglerについての説明を全くしていないです。  
+  実際にやってみたいけどよくわからない場合は[Twitter](https://x.com/GRAPH_fps)のDMかDiscord(ID: runfunrun)のDMで聞いてくれたら丁寧に説明します。
+</Callout>
+
+## PaaS
+
+[Cloudflare Workers · Cloudflare Workers docs](https://developers.cloudflare.com/workers/)
+
+冒頭でも紹介した通り、Cloudflare Workersを使用します。
+
+どうせCloudflare Workersにデプロイするならドメインの管理もCloudflareで一緒にやるといいと思います。  
+(※ 私はお名前ドットコム撲滅委員会に所属しています。)
+
+## フレームワーク
+
+[Next.js by Vercel - The React Framework](https://nextjs.org/)
+
+タイトルにある通り、Next.jsを使います。バックエンドも含めたフルスタックな使い方をする前提です。
+
+Next.jsをVercel以外にデプロイする場合は様々な制約があります。  
+それを解決するために[OpenNext](https://opennext.js.org/)というプロジェクトがあります。
+現在はAWS、Cloudflare、Netlifyで使うことができます。
+今回はその中のCloudflareを使用する形になります。
+
+CloudflareでNext.jsをデプロイするとなると今までは[next-on-pages](https://github.com/cloudflare/next-on-pages)が主流でしたが、
+今はOpenNextがかなり来ています。開発もかなり活発です。
+
+具体的なセットアップの仕方は[ドキュメント](https://opennext.js.org/cloudflare/get-started)をご覧ください。
+
+今回のサンプルプロジェクトではCloudflare KVでのキャッシュの機能を使っていないので、ご留意ください。
+
+CloudflareのBindings(DBやKV等)を取得するために`getCloudflareContext`という関数が用意されています。  
+next-on-pagesで言う`getRequestContext`相当になります。
+
+### バックエンド
+
+[Hono - Web framework built on Web Standards](https://hono.dev/)
+
+Next.jsのフルスタック構成ですが、API RoutesでHonoを使用します。
+
+フルスタックフレームワークと言ってもNext.jsのバックエンドはまだ弱いので、Honoの力を借ります。  
+Hono RPCを使えるのが大きなメリットになります。
+加えてビルトインミドルウェアが多く、カスタムミドルウェアが作りやすいこともメリットになってきます。
+
+最小構成だと、以下のような形で使用できます。
+
+```ts title="src/app/api/[[...hono]]/route.ts"
+import { Hono } from 'hono';
+import { handle } from 'hono/vercel';
+
+const app = new Hono()
+  .basePath('/api')
+  .get('/', (c) => {
+    return c.json({ message: 'Hello, World!' });
+  });
+
+export type AppType = typeof app;
+
+export const GET = handle(app);
+export const POST = handle(app);
+export const PATCH = handle(app);
+export const DELETE = handle(app);
+```
+
+```ts
+export type AppType = typeof app;
+```
+
+こちらをクライアントから呼び出すこので型安全に開発することできます。
+
+```ts
+import type { AppType } from '@/app/api/[[...hono]]/route';
+import { hc } from 'hono/client';
+
+const client = hc<AppType>('/');
+
+const fetchMessage = async () => {
+  const res = await client.api.$get();
+  return (await res.json()).message;
+};
+```
+
+Hono RPCの詳細は[ドキュメント](https://hono.dev/docs/guides/rpc)をご覧ください。
+
+注意点としては、Bindingsを取得する際に`getCloudflareContext`を使用する必要があることです。
+[HonoのBindings](https://hono.dev/docs/getting-started/cloudflare-workers#bindings)だと正常に取得できませんでした。
+
+## ORM
+
+[Drizzle ORM - next gen TypeScript ORM.](https://orm.drizzle.team/)
+
+今回はDrizzleを使用します。容量が小さいのでWorkersと相性が良いです。
+
+migrationは後述するwranglerのコマンドで行うので、generateだけできるように設定しておきます。
+
+```ts title="drizzle.config.ts"
+import { defineConfig } from 'drizzle-kit';
+
+export default defineConfig({
+  schema: './src/lib/schema.ts',
+  out: './drizzle/migrations',
+  dialect: 'sqlite',
+});
+```
+
+## DB
+
+[Cloudflare D1 · Cloudflare D1 docs](https://developers.cloudflare.com/d1/)
+
+こちらも冒頭でも話しましたが、Cloudflare D1を使用します。
+
+マイグレーションは以下のコマンドで行います。  
+Drizzleのマイグレーションファイルのパスがwranglerコマンドのデフォルトパスと違うため少し面倒になっています。
+
+サンプルプロジェクトの例です。d1名とマイグレーションファイルのパスはご自身のものに変えてください。
+
+```bash
+# ローカル(dev環境)
+bunx wrangler d1 execute next-stack --file=./drizzle/migrations/0000_calm_shocker.sql
+# リモート(本番環境)
+bunx wrangler d1 execute next-stack --file=./drizzle/migrations/0000_calm_shocker.sql --remote
+```
+
+## 認証
+
+[Better Auth](https://www.better-auth.com/)
+
+個人的に今TypeScriptで一番アツい認証ライブラリです。
+
+Auth.jsでもいいと思いますが、Better Authの方が簡単に実装できます。  
+Auth.jsからBetter-Authに移行する際の[ガイド](https://www.better-auth.com/docs/guides/next-auth-migration-guide)もあったりします。
+
+プラグインが多いのが特徴で、認証に関わる大体の機能を簡単に実装できます。
+
+基本的にドキュメント通り実装すれば問題ないですが、1つ注意点があります。  
+D1インスタンスは毎回`getCloudflareContext`から取得する必要があるということです。
+
+なので、以下のようにする必要があります。([ドキュメントのセットアップ](https://www.better-auth.com/docs/integrations/next)と比較してください。)
+
+```ts title="src/lib/db.ts"
+import { drizzle } from 'drizzle-orm/d1';
+import { schema } from './schema';
+
+export const getDB = (db: D1Database) => {
+  return drizzle(db, { schema });
+};
+```
+
+```ts title="src/lib/auth.ts"
+export const getAuth = (db: D1Database) => {
+  return betterAuth({
+    baseURL: process.env.BETTER_AUTH_URL,
+    database: drizzleAdapter(getDB(db), {
+      provider: 'sqlite',
+    }),
+    socialProviders: {
+      discord: {
+        clientId: process.env.DISCORD_CLIENT_ID as string,
+        clientSecret: process.env.DISCORD_CLIENT_SECRET as string,
+      },
+    },
+  });
+};
+```
+
+```ts title="src/app/api/[[...hono]]/route.ts"
+import { getAuth } from '@/lib/auth';
+import { getCloudflareContext } from '@opennextjs/cloudflare';
+import { Hono } from 'hono';
+import { handle } from 'hono/vercel';
+
+const app = new Hono()
+  .basePath('/api')
+  .on(['GET', 'POST'], '/auth/**', (c) => {
+    const { env } = getCloudflareContext();
+    const auth = getAuth(env.DB);
+    return auth.handler(c.req.raw);
+  })
+
+export type AppType = typeof app;
+
+export const GET = handle(app);
+export const POST = handle(app);
+export const PATCH = handle(app);
+export const DELETE = handle(app);
+```
+
+もしバックエンドにHonoを使わない場合はBindings取得の関係で`toNextJsHandler`は使用できないので、自前でhandlerを実装する必要があります。
+(自前といってもD1インスタンス取得してheader突っ込むくらいですが。。)
+
+Honoを使えばAPI Routesのミドルウェアの実装もめっちゃ簡単にできます。
+
+```ts title="middleware.ts"
+import { getAuth } from '@/lib/auth';
+import { getCloudflareContext } from '@opennextjs/cloudflare';
+import type { Session, User } from 'better-auth';
+import { createMiddleware } from 'hono/factory';
+
+export const authMiddleware = createMiddleware<{
+  Variables: {
+    session: Session;
+    user: User;
+  };
+}>(async (c, next) => {
+  try {
+    const { env } = getCloudflareContext();
+    const auth = getAuth(env.DB);
+
+    const session = await auth.api.getSession({ headers: c.req.raw.headers });
+    if (!session) {
+      return c.json({}, 401);
+    }
+
+    c.set('session', session.session);
+    c.set('user', session.user);
+    await next();
+  } catch {
+    return c.json({}, 500);
+  }
+});
+```
+
+## 最後に
+
+実際のコード例を出しつつ紹介しました。  
+サンプルプロジェクトに全てコードはあるので、そちらを見てもらうとわかりやすいとは思います。
+
+また、決済に関してはOpenNextのドキュメントに[Stripeについての記述](https://opennext.js.org/cloudflare/howtos/stripeAPI)があるので、そちらをご覧ください。
+
+もしよろしければ、この構成を試してみてください。
+
+ではまた。
