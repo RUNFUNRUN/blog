@@ -97,7 +97,7 @@ export const DELETE = handle(app);
 export type AppType = typeof app;
 ```
 
-こちらをクライアントから呼び出すこので型安全に開発することできます。
+こちらをクライアントから呼び出すことで型安全に開発することできます。
 
 ```ts
 import type { AppType } from '@/app/api/[[...hono]]/route';
