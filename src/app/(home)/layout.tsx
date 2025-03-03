@@ -18,7 +18,6 @@ const Layout = ({ children }: { children: ReactNode }) => {
           />
         ),
       }}
-      className=''
     >
       <main className='mx-4 my-12 lg:mx-auto lg:w-[992px]'>{children}</main>
     </HomeLayout>
