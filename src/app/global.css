@@ -1,8 +1,53 @@
 @import "tailwindcss";
-@import "fumadocs-ui/css/vitepress.css";
 @import "fumadocs-ui/css/preset.css";
 
 @source '../../node_modules/fumadocs-ui/dist/**/*.js';
+
+@theme {
+  --color-fd-background: #f5f9ff;
+  --color-fd-foreground: #1e2030;
+  --color-fd-border: #e1e2e7;
+  --color-fd-ring: #3760bf;
+  --color-fd-primary: #3760bf;
+  --color-fd-primary-foreground: #1e2030;
+  --color-fd-secondary: #f5f9ff;
+  --color-fd-secondary-foreground: #1e2030;
+  --color-fd-accent: #e1e2e7;
+  --color-fd-accent-foreground: #1e2030;
+  --color-fd-muted: #f5f9ff;
+  --color-fd-muted-foreground: #1e2030;
+  --color-fd-card: #f5f9ff;
+  --color-fd-card-foreground: #1e2030;
+  --color-fd-popover: #f5f9ff;
+  --color-fd-popover-foreground: #1e2030;
+}
+
+.dark {
+  --color-fd-background: #1e2030;
+  --color-fd-foreground: #c8d3f5;
+  --color-fd-border: #2f334d;
+  --color-fd-ring: #5b90ff;
+  --color-fd-primary: #5b90ff;
+  --color-fd-primary-foreground: #1e2030;
+  --color-fd-secondary: #1e2030;
+  --color-fd-secondary-foreground: #c8d3f5;
+  --color-fd-accent: #2f334d;
+  --color-fd-accent-foreground: #c8d3f5;
+  --color-fd-muted: #222436;
+  --color-fd-muted-foreground: #c8d3f5;
+  --color-fd-card: #1e2030;
+  --color-fd-card-foreground: #c8d3f5;
+  --color-fd-popover: #1e2030;
+  --color-fd-popover-foreground: #c8d3f5;
+}
+
+.prose {
+  --tw-prose-links: var(--color-fd-primary);
+}
+
+.dark .prose pre {
+  background-color: #1a1b26;
+}
 
 @layer base {
   a {
