@@ -22,14 +22,13 @@ export const GET = async (req: NextRequest) => {
           display: 'flex',
           height: '100%',
           width: '100%',
-          backgroundColor: '#ffffff',
-          background: 'linear-gradient(to bottom, blue, cyan)',
+          background: 'linear-gradient(to bottom, #5b90ff, #86e1fc)',
         }}
       >
         <div
           style={{
-            backgroundColor: '#000000',
-            color: '#ffffff',
+            backgroundColor: '#1e2030',
+            color: '#c8d3f5',
             fontWeight: 600,
             display: 'flex',
             flexDirection: 'column',
@@ -68,14 +67,13 @@ export const GET = async (req: NextRequest) => {
         display: 'flex',
         height: '100%',
         width: '100%',
-        backgroundColor: '#ffffff',
-        background: 'linear-gradient(to bottom, blue, cyan)',
+        background: 'linear-gradient(to bottom, #5b90ff, #86e1fc)',
       }}
     >
       <div
         style={{
-          backgroundColor: '#000000',
-          color: '#ffffff',
+          backgroundColor: '#1e2030',
+          color: '#c8d3f5',
           fontWeight: 600,
           display: 'flex',
           flexDirection: 'column',
