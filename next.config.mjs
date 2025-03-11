@@ -10,6 +10,10 @@ const config = {
         protocol: 'https',
         hostname: 'i.gyazo.com',
       },
+      {
+        protocol: 'https',
+        hostname: 't1.gstatic.com',
+      },
     ],
   },
   reactStrictMode: true,

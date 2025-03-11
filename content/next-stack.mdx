@@ -22,9 +22,11 @@ Cloudflare Workersにデプロイするとしても、要件によってはSupab
 
 この記事を読むにあたって、今回の構成のサンプルプロジェクトがあるので実際のコードと照らし合わせながら見るとわかりやすいと思います。
 
-Webサイト: [https://next-stack.runfunrun.workers.dev](https://next-stack.runfunrun.workers.dev/)
+- Webサイト  
+  [https://next-stack.runfunrun.workers.dev](https://next-stack.runfunrun.workers.dev/)
 
-リポジトリ: [https://github.com/RUNFUNRUN/next-stack](https://github.com/RUNFUNRUN/next-stack)
+- リポジトリ
+<LinkPreview url='https://github.com/RUNFUNRUN/next-stack'/>
 
 <Callout title='初心者の方へ'>
   この記事ではかなり簡略化して説明しています。
@@ -35,7 +37,7 @@ Webサイト: [https://next-stack.runfunrun.workers.dev](https://next-stack.runf
 
 ## PaaS
 
-[Cloudflare Workers · Cloudflare Workers docs](https://developers.cloudflare.com/workers/)
+<LinkPreview url='https://developers.cloudflare.com/workers/'/>
 
 冒頭でも紹介した通り、Cloudflare Workersを使用します。
 
@@ -44,7 +46,7 @@ Webサイト: [https://next-stack.runfunrun.workers.dev](https://next-stack.runf
 
 ## フレームワーク
 
-[Next.js by Vercel - The React Framework](https://nextjs.org/)
+<LinkPreview url='https://nextjs.org/'/>
 
 タイトルにある通り、Next.jsを使います。バックエンドも含めたフルスタックな使い方をする前提です。
 
@@ -65,7 +67,7 @@ next-on-pagesで言う`getRequestContext`相当になります。
 
 ### バックエンド
 
-[Hono - Web framework built on Web Standards](https://hono.dev/)
+<LinkPreview url='https://hono.dev/'/>
 
 Next.jsのフルスタック構成ですが、API RoutesでHonoを使用します。
 
@@ -118,7 +120,7 @@ Hono RPCの詳細は[ドキュメント](https://hono.dev/docs/guides/rpc)をご
 
 ## ORM
 
-[Drizzle ORM - next gen TypeScript ORM.](https://orm.drizzle.team/)
+<LinkPreview url='https://orm.drizzle.team/'/>
 
 今回はDrizzleを使用します。容量が小さいのでWorkersと相性が良いです。
 
@@ -136,7 +138,7 @@ export default defineConfig({
 
 ## DB
 
-[Cloudflare D1 · Cloudflare D1 docs](https://developers.cloudflare.com/d1/)
+<LinkPreview url='https://developers.cloudflare.com/d1/'/>
 
 こちらも冒頭でも話しましたが、Cloudflare D1を使用します。
 
@@ -154,7 +156,7 @@ bunx wrangler d1 execute next-stack --file=./drizzle/migrations/0000_calm_shocke
 
 ## 認証
 
-[Better Auth](https://www.better-auth.com/)
+<LinkPreview url='https://www.better-auth.com/'/>
 
 個人的に今TypeScriptで一番アツい認証ライブラリです。
 
@@ -256,7 +258,11 @@ export const authMiddleware = createMiddleware<{
 実際のコード例を出しつつ紹介しました。  
 サンプルプロジェクトに全てコードはあるので、そちらを見てもらうとわかりやすいとは思います。
 
-また、決済に関してはOpenNextのドキュメントに[Stripeについての記述](https://opennext.js.org/cloudflare/howtos/stripeAPI)があるので、そちらをご覧ください。
+また、決済に関してはOpenNextやBetter AuthドキュメントにStripeについての記述があるので、そちらをご覧ください。
+
+<LinkPreview url='https://www.better-auth.com/docs/plugins/stripe' />
+
+<LinkPreview url='https://opennext.js.org/cloudflare/howtos/stripeAPI' />
 
 もしよろしければ、この構成を試してみてください。
 

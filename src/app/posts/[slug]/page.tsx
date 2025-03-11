@@ -1,4 +1,5 @@
 import { PostJsonLd } from '@/components/json-ld';
+import { LinkPreview } from '@/components/link-preview';
 import { TagCard } from '@/components/tag-card';
 import { getPost, getPosts } from '@/lib/source';
 import { CodeBlock, Pre } from 'fumadocs-ui/components/codeblock';
@@ -79,6 +80,7 @@ const Page = async (props: { params: Promise<{ slug: string }> }) => {
                 <Pre>{props.children}</Pre>
               </CodeBlock>
             ),
+            LinkPreview,
           }}
         />
       </DocsBody>
