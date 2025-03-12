@@ -1,6 +1,7 @@
 'use client';
 
 import { cn } from 'fumadocs-ui/components/api';
+import { LinkIcon } from 'lucide-react';
 import Image from 'next/image';
 import { useState } from 'react';
 
@@ -18,7 +19,7 @@ export const ImageWithFallback = ({
   if (!src || error) {
     return (
       <div className='flex h-full w-full items-center justify-center bg-fd-card'>
-        <span className='text-4xl text-fd-card-foreground'>🔗</span>
+        <LinkIcon size={32} className='text-fd-card-foreground' />
       </div>
     );
   }

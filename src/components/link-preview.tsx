@@ -1,8 +1,8 @@
-import { getOGData } from '@/actions/fetch-og-metadata';
+import { fetchOGMetadata } from '@/actions/fetch-og-metadata';
 import { title as homeTitle } from '@/app/layout.config';
 import { getPost } from '@/lib/source';
 import { cn } from 'fumadocs-ui/components/api';
-import { ExternalLinkIcon } from 'lucide-react';
+import { ExternalLinkIcon, LinkIcon, NewspaperIcon } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Suspense } from 'react';
@@ -109,9 +109,11 @@ export const LinkCard = ({
       ) : (
         <div className='hidden w-[240px] shrink-0 sm:block'>
           <div className='flex h-full w-full items-center justify-center'>
-            <span className='text-4xl text-fd-card-foreground'>
-              {isExternal ? '🔗' : '📝'}
-            </span>
+            {isExternal ? (
+              <LinkIcon size={32} className='text-fd-card-foreground' />
+            ) : (
+              <NewspaperIcon size={32} className='text-fd-card-foreground' />
+            )}
           </div>
         </div>
       )}
@@ -179,7 +181,7 @@ const ExternalLinkCard = async ({
   className?: string;
 }) => {
   try {
-    const ogData = await getOGData(url);
+    const ogData = await fetchOGMetadata(url);
 
     if (!ogData.title) {
       return <LinkCard url={url} error={true} className={className} />;
