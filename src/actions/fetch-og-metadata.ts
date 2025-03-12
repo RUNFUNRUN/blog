@@ -2,15 +2,42 @@
 
 import { cache } from 'react';
 
-type OGData = {
+type OGMetadata = {
   title: string;
   description: string;
   image: string;
   url: string;
 };
 
+const decodeHTMLEntities = (input: string): string => {
+  const entities: { [key: string]: string } = {
+    amp: '&',
+    lt: '<',
+    gt: '>',
+    quot: '"',
+    '#39': "'",
+    apos: "'",
+    nbsp: ' ',
+  };
+
+  return input.replace(/&([^;]+);/g, (match, entity) => {
+    if (Object.prototype.hasOwnProperty.call(entities, entity)) {
+      return entities[entity];
+    }
+    if (entity.startsWith('#x')) {
+      const code = Number.parseInt(entity.slice(2), 16);
+      return String.fromCharCode(code);
+    }
+    if (entity.startsWith('#')) {
+      const code = Number.parseInt(entity.slice(1), 10);
+      return String.fromCharCode(code);
+    }
+    return match;
+  });
+};
+
 export const fetchOGMetadata = cache(
-  async (url: string): Promise<Partial<OGData>> => {
+  async (url: string): Promise<Partial<OGMetadata>> => {
     try {
       const response = await fetch(url, {
         headers: {
@@ -25,7 +52,11 @@ export const fetchOGMetadata = cache(
           `<meta[^>]+(?:property|name)="${property}"[^>]+content="([^"]+)"`,
           'i',
         );
-        return regex.exec(html)?.[1].replaceAll('amp;', '');
+
+        const metaContentMatch = regex.exec(html)?.[1];
+        return metaContentMatch
+          ? decodeHTMLEntities(metaContentMatch)
+          : undefined;
       };
 
       const titleMatch = /<title>(.*?)<\/title>/i.exec(html);

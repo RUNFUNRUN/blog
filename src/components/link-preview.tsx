@@ -48,7 +48,7 @@ export const LinkCard = ({
 
   const CardContent = (
     <>
-      <div className='flex flex-1 flex-col gap-2 p-4 h-[126px]'>
+      <div className='flex flex-1 flex-col gap-1 p-3 h-[126px]'>
         <div className='flex items-center gap-1'>
           <div className='flex items-center gap-1.5 text-xs font-medium text-fd-card-foreground'>
             {isExternal ? (
@@ -83,20 +83,13 @@ export const LinkCard = ({
             )}
           </div>
         </div>
-
         <div className='flex-1'>
-          <p className='not-prose font-semibold leading-tight text-foreground transition-colors'>
-            {error ? 'Page Not Found' : title || 'Untitled'}{' '}
+          <p className='not-prose line-clamp-2 font-semibold text-md leading-tight text-foreground transition-colors'>
+            {error ? 'Page Not Found' : (title ?? 'Untitled')}
           </p>
-          {error ? (
-            <p className='not-prose mt-1.5 line-clamp-2 text-sm text-fd-card-foreground'>
-              This page may have been moved or deleted.
-            </p>
-          ) : description ? (
-            <p className='not-prose mt-1.5 line-clamp-2 text-sm text-fd-card-foreground'>
-              {description}
-            </p>
-          ) : null}
+          <p className='not-prose line-clamp-2 mt-1 text-sm text-fd-card-foreground'>
+            {error ? 'This page may have been moved or deleted.' : description}
+          </p>
         </div>
       </div>
 
@@ -121,7 +114,7 @@ export const LinkCard = ({
   );
 
   const cardClasses = cn(
-    'not-prose group my-4 flex overflow-hidden rounded-lg border bg-fd-card transition-all duration-200 hover:bg-fd-accent/80 hover:shadow-md',
+    'not-prose group my-4 flex overflow-hidden rounded-lg border bg-fd-card transition-all duration-200 hover:bg-fd-accent/80 shadow-md',
     className,
   );
 
