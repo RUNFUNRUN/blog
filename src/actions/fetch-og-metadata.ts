@@ -20,7 +20,7 @@ const decodeHTMLEntities = (input: string): string => {
     nbsp: ' ',
   };
 
-  return input.replace(/&([^;]+);/g, (match, entity) => {
+  const decoded = input.replace(/&([^;]+);/g, (match, entity) => {
     if (Object.prototype.hasOwnProperty.call(entities, entity)) {
       return entities[entity];
     }
@@ -34,6 +34,7 @@ const decodeHTMLEntities = (input: string): string => {
     }
     return match;
   });
+  return decoded === input ? decoded : decodeHTMLEntities(decoded);
 };
 
 export const fetchOGMetadata = cache(
