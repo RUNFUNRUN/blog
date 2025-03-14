@@ -40,11 +40,7 @@ const decodeHTMLEntities = (input: string): string => {
 export const fetchOGMetadata = cache(
   async (url: string): Promise<Partial<OGMetadata>> => {
     try {
-      const response = await fetch(url, {
-        headers: {
-          'User-Agent': 'RUNFUNRUN.dev',
-        },
-      });
+      const response = await fetch(url);
 
       const html = await response.text();
 
