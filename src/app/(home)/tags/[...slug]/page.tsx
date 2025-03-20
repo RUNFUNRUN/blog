@@ -33,7 +33,7 @@ const DisplayCurrentPosts = ({
 
 const Page = async (props: { params: Promise<{ slug: string[] }> }) => {
   const params = await props.params;
-  const tag = params.slug[0];
+  const tag = decodeURIComponent(params.slug[0]);
   const pageIndex =
     params.slug.length > 1 ? Number.parseInt(params.slug[1], 10) - 1 : 0;
 
