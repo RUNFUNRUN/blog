@@ -9,26 +9,24 @@ const HomePage = () => {
     <div className='space-y-12'>
       <div className='text-2xl font-bold'>
         <p>
-          RUNFUNRUNのブログです。プロフィールは
+          RUNFUNRUNのブログです。私については
           <InlineLink href='https://runfun.run' blank>
-            こちら
+            runfun.run
           </InlineLink>
-          。
+          をご覧ください。
         </p>
         <p>
-          問い合わせはプロフィールの
+          問い合わせは
           <InlineLink href='https://runfun.run/contact' blank>
-            Contact
+            runfun.run/contact
           </InlineLink>
           かDiscord(ID: runfunrun)のDMからお願いします。
         </p>
-        <p>
-          また、記事には誤りがある可能性があります。もし見つけた場合は連絡またはIssue頂けると幸いです。
-        </p>
+        <p>また、記事に誤りを見つけた場合は連絡またはIssue頂けると幸いです。</p>
       </div>
       <div className='space-y-4'>
         <p className='text-2xl sm:text-3xl font-bold'>
-          最新の記事 (<InlineLink href='/list'>全記事一覧</InlineLink>)
+          最新の記事 (<InlineLink href='/list'>記事一覧</InlineLink>)
         </p>
         <div className='flex flex-col gap-4 text-left'>
           {posts.map((post) => {

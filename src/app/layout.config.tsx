@@ -14,22 +14,23 @@ export const baseOptions: BaseLayoutProps = {
 
 export const linkItems: LinkItemType[] = [
   {
-    icon: <User />,
-    text: 'プロフィール',
-    url: 'https://runfun.run',
-    active: 'url',
-  },
-  {
     icon: <Newspaper />,
-    text: '記事一覧',
+    text: 'Posts',
     url: '/list',
     active: 'url',
   },
   {
     icon: <Tags />,
-    text: 'タグ一覧',
+    text: 'Tags',
     url: '/tags',
     active: 'url',
+  },
+  {
+    type: 'icon',
+    label: 'About me',
+    icon: <User />,
+    text: 'About Me',
+    url: 'https://runfun.run',
   },
   {
     type: 'icon',

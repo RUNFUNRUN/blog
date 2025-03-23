@@ -45,7 +45,7 @@ export const Header = ({
         {nav.title}
       </Link>
       {nav.children}
-      <NavigationMenuList className='flex flex-row items-center gap-2 max-sm:hidden'>
+      <NavigationMenuList className='flex flex-row items-center gap-2 max-sm:hidden mx-4'>
         {navItems
           .filter((item) => !isSecondary(item))
           .map((item, i) => (
