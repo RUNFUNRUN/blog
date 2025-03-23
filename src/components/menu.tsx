@@ -88,18 +88,11 @@ export const MenuLinkItem = ({
 export const Menu = NavigationMenuItem;
 
 export const MenuTrigger = ({
-  enableHover = false,
   ...props
-}: ComponentPropsWithoutRef<typeof NavigationMenuTrigger> & {
-  /**
-   * Enable hover to trigger
-   */
-  enableHover?: boolean;
-}) => {
+}: ComponentPropsWithoutRef<typeof NavigationMenuTrigger> & {}) => {
   return (
     <NavigationMenuTrigger
       {...props}
-      onPointerMove={enableHover ? undefined : (e) => e.preventDefault()}
       className={cn(
         buttonVariants({
           size: 'icon',

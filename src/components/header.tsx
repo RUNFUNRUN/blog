@@ -3,7 +3,6 @@ import {
   LanguageToggle,
   LanguageToggleText,
 } from 'fumadocs-ui/components/layout/language-toggle';
-import { Title } from 'fumadocs-ui/components/layout/nav';
 import {
   LargeSearchToggle,
   SearchToggle,
@@ -27,7 +26,6 @@ export const Header = ({
   nav: { enableSearch = true, ...nav } = {},
   i18n = false,
   finalLinks,
-  disableThemeSwitch,
 }: HomeLayoutProps & {
   finalLinks: LinkItemType[];
 }) => {
@@ -40,7 +38,12 @@ export const Header = ({
 
   return (
     <Navbar>
-      <Title title={nav.title} url={nav.url} />
+      <Link
+        href={nav.url ?? '/'}
+        className='inline-flex items-center gap-2.5 font-semibold'
+      >
+        {nav.title}
+      </Link>
       {nav.children}
       <NavigationMenuList className='flex flex-row items-center gap-2 max-sm:hidden'>
         {navItems
@@ -60,7 +63,7 @@ export const Header = ({
             <LargeSearchToggle className='w-full max-w-[240px] max-lg:hidden' />
           </SearchOnly>
         ) : null}
-        {!disableThemeSwitch ? <ThemeToggle className='max-lg:hidden' /> : null}
+        <ThemeToggle className='max-lg:hidden' />
         {navItems.filter(isSecondary).map((item, i) => (
           <NavbarLinkItem
             key={i.toString()}
@@ -98,7 +101,7 @@ export const Header = ({
                   <ChevronDown className='size-3 text-fd-muted-foreground' />
                 </LanguageToggle>
               ) : null}
-              {!disableThemeSwitch ? <ThemeToggle /> : null}
+              <ThemeToggle />
             </div>
           </MenuContent>
         </Menu>

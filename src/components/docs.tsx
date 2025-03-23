@@ -1,6 +1,5 @@
 import type { PageTree } from 'fumadocs-core/server';
 import { cn } from 'fumadocs-ui/components/api';
-import { NavProvider } from 'fumadocs-ui/components/layout/nav';
 import {
   type SidebarOptions,
   checkPageTree,
@@ -17,14 +16,12 @@ import { Header } from './header';
 
 export interface DocsLayoutProps extends BaseLayoutProps {
   tree: PageTree.Root;
-
   sidebar?: Omit<Partial<SidebarOptions>, 'component' | 'enabled'>;
-
   containerProps?: HTMLAttributes<HTMLDivElement>;
 }
 
 export const DocsLayout = ({
-  nav: { transparentMode, ...nav } = {},
+  nav = {},
   i18n = false,
   ...props
 }: DocsLayoutProps): ReactNode => {
@@ -44,24 +41,22 @@ export const DocsLayout = ({
 
   return (
     <TreeContextProvider tree={props.tree}>
-      <NavProvider transparentMode={transparentMode}>
-        <main
-          id='nd-docs-layout'
-          {...props.containerProps}
-          className={cn(
-            'flex w-full flex-1 flex-row pe-[var(--fd-layout-offset)]',
-            variables,
-            props.containerProps?.className,
-          )}
-          style={{
-            ...layoutVariables,
-            ...props.containerProps?.style,
-          }}
-        >
-          <Header finalLinks={links} nav={nav} />
-          <StylesProvider {...pageStyles}>{props.children}</StylesProvider>
-        </main>
-      </NavProvider>
+      <main
+        id='nd-docs-layout'
+        {...props.containerProps}
+        className={cn(
+          'flex w-full flex-1 flex-row pe-[var(--fd-layout-offset)]',
+          variables,
+          props.containerProps?.className,
+        )}
+        style={{
+          ...layoutVariables,
+          ...props.containerProps?.style,
+        }}
+      >
+        <Header finalLinks={links} nav={nav} />
+        <StylesProvider {...pageStyles}>{props.children}</StylesProvider>
+      </main>
     </TreeContextProvider>
   );
 };

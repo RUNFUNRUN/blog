@@ -2,7 +2,6 @@
 
 import Link, { type LinkProps } from 'fumadocs-core/link';
 import { cn } from 'fumadocs-ui/components/api';
-import { useNav } from 'fumadocs-ui/components/layout/nav';
 import {
   NavigationMenu,
   NavigationMenuLink,
@@ -12,7 +11,6 @@ import { type HTMLAttributes, useState } from 'react';
 
 export const Navbar = (props: HTMLAttributes<HTMLElement>) => {
   const [value, setValue] = useState('');
-  const { isTransparent } = useNav();
 
   return (
     <NavigationMenu value={value} onValueChange={setValue} asChild>
@@ -20,10 +18,8 @@ export const Navbar = (props: HTMLAttributes<HTMLElement>) => {
         id='nd-nav'
         {...props}
         className={cn(
-          'fixed top-[var(--fd-banner-height)] z-30 box-content w-full border-b border-fd-foreground/10 transition-colors backdrop-blur-lg',
+          'fixed top-[var(--fd-banner-height)] z-30 box-content w-full border-b border-fd-foreground/10 transition-colors backdrop-blur-lg bg-fd-background/80 backdrop-blur-lg',
           value.length > 0 ? 'shadow-lg' : 'shadow-xs',
-          (!isTransparent || value.length > 0) &&
-            'bg-fd-background/80 backdrop-blur-lg',
           props.className,
         )}
       >
