@@ -1,0 +1,145 @@
+---
+title: shadcn/uiのレジストリを試してみる
+description: 実際にレジストリを公開しながら見てみます。
+date: 2025-04-01
+tags: ['Next.js', 'React', 'catchup']
+---
+
+## はじめに
+
+<LinkPreview url='https://ui.shadcn.com/docs/registry'/>
+
+ついこの間、実験機能としてリリースされました。  
+shadcn/uiのレジストリを自分でホストすることで、自作のコンポーネントをshadcn CLI経由でインストールすることが
+できるようになります。
+
+v0で使えるのもいいですね。
+
+実際にshadcn CLI経由でインストールできるコンポーネントライブラリをいくつか紹介します。
+
+<LinkPreview url='https://www.diceui.com/'/>
+
+<LinkPreview url='https://ved-ui.vercel.app/'/>
+
+<LinkPreview url='https://karrix.dev/'/>
+
+(diceuiとved-uiのドキュメントはfumadocsを使ってるヨ)
+
+## 要件
+
+> You are free to design and host your custom registry as you see fit. The only requirement is that your registry items must be valid JSON files that conform to the [registry-item schema specification](https://ui.shadcn.com/docs/registry/registry-item-json).
+
+ドキュメントにこのような記述がある通り、各コンポーネントに対して`registry-item.json`のスキーマに準拠したJSONが必要になります。
+
+<LinkPreview url='https://ui.shadcn.com/docs/registry/registry-item-json' />
+
+公式がテンプレートを用意してくれています。
+
+<LinkPreview url='https://github.com/shadcn-ui/registry-template'/>
+
+## `registry-item.json`の作成について
+
+要件にある通り、各コンポーネントに対して`registry-item.json`が必要になります。
+
+ただ、一々このJSONを書くのも面倒ですよね。
+自動生成してくれるスクリプトを用意してくれています。
+
+```sh
+bun add shadcn@canary
+```
+
+```json title="package.json"
+{
+  "scripts": {
+    "registry:build": "shadcn build"
+  }
+}
+```
+
+```sh
+bun registry:build
+```
+
+こちらを利用するには、`registry.json`が必要になります。
+
+<LinkPreview url='https://ui.shadcn.com/docs/registry/registry-json' />
+
+ただし、`registry-item.json`のスキーマに準拠したJSONのビルドシステムがあるなら`registry.json`はいらないです。
+
+実際に、例として紹介したdiceuiでは以下のようなスクリプトで自動生成しています。
+
+<LinkPreview url='https://github.com/sadmann7/diceui/blob/main/docs/scripts/build-registry.mts'/>
+
+## レジストリの種類について
+
+実はUIコンポーネントに付随して、色々ホストすることができます。
+
+ドキュメントを和訳したものですが、載せておきます。
+
+|レジストリ|説明|
+|--|--|
+|`registry:block`|複数のファイルを含む複雑なコンポーネントに使用|
+|`registry:component`|単純なコンポーネントに使用|
+|`registry:lib`|ライブラリやユーティリティ用に使用|
+|`registry:hook`|フックに使用|
+|`registry:ui`|UIコンポーネントおよび単一ファイルのプリミティブに使用|
+|`registry:page`|ページやファイルベースのルートに使用|
+|`registry:file`|雑多なファイルに使用|
+|`registry:style`|レジストリスタイル用に使用(例：new-york)|
+|`registry:theme`|テーマに使用|
+
+## レジストリをホストしてみる
+
+一旦テンプレートリポジトリをそのまま使ってリポジトリを作りました。
+
+Vercelでホストしていて、ドメインを割り当てました。  
+v0で開けるように環境変数に`NEXT_PUBLIC_BASE_URL`を設定しました。
+
+<LinkPreview url='https://github.com/RUNFUNRUN/ui-sample' />
+
+## 実際にCLI経由でインストールしてみる
+
+早速Next.jsのプロジェクトを作成します。
+
+```sh
+bun create next-app@latest
+```
+
+次にshadcn/uiを初期化します。
+
+```sh
+bunx --bun shadcn@latest init
+```
+
+shadcn CLIからコンポーネントを追加します。
+
+```sh
+$ bunx --bun shadcn@latest add https://ui-sample.runfunrun.xyz/r/hello-world.json
+✔ Checking registry.
+✔ Installing dependencies.
+✔ Created 2 files:
+  - src/components/hello-world.tsx
+  - src/components/ui/button.tsx
+```
+
+しっかり追加できたことが確認できます。
+
+```sh
+$ tree src/components
+src/components
+├── hello-world.tsx
+└── ui
+    └── button.tsx
+
+2 directories, 2 files
+```
+
+## 最後に
+
+今回はテーマやスタイル等はあまり触れませんでしたが、今後試してみたいです。
+
+現在かなり勢いがあるshadcn/uiですが、レジストリを自分でホストできるとなるとエコシステムとしてかなり大きくなりそうです。  
+もう少し安定したら企業で使うための共有コンポーネントでも使うことができそうです。  
+個人開発者の方も自分のコンポーネントを共有する良い選択肢ではないでしょうか。
+
+ではまた。
