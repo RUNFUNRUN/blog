@@ -33,9 +33,9 @@ const DisplayCurrentPosts = ({
 
 const Page = async (props: { params: Promise<{ slug: string[] }> }) => {
   const params = await props.params;
-  const tag = decodeURIComponent(params.slug[0]);
-  const pageIndex =
-    params.slug.length > 1 ? Number.parseInt(params.slug[1], 10) - 1 : 0;
+  const slug = params.slug;
+  const tag = decodeURIComponent(slug[0]);
+  const pageIndex = slug.length > 1 ? Number.parseInt(slug[1], 10) - 1 : 0;
 
   if (pageIndex < 0 || pageIndex >= pageCount(tag)) notFound();
 
@@ -101,7 +101,7 @@ export const generateMetadata = async (props: {
   const params = await props.params;
   const slug = params.slug;
 
-  const tag = slug[0];
+  const tag = decodeURIComponent(slug[0]);
   const index = slug.length > 1 ? ` - ${slug[1]}ページ` : '';
   const title = `${homeTitle} ${tag}の記事${index}`;
 
