@@ -2,7 +2,6 @@ import type { PageTree } from 'fumadocs-core/server';
 import { cn } from 'fumadocs-ui/components/api';
 import {
   type SidebarOptions,
-  checkPageTree,
   layoutVariables,
 } from 'fumadocs-ui/layouts/docs/shared';
 import { type BaseLayoutProps, getLinks } from 'fumadocs-ui/layouts/shared';
@@ -25,7 +24,6 @@ export const DocsLayout = ({
   i18n = false,
   ...props
 }: DocsLayoutProps): ReactNode => {
-  checkPageTree(props.tree);
   const links = getLinks(props.links ?? [], props.githubUrl);
 
   const variables = cn(
