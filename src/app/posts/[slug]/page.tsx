@@ -9,10 +9,10 @@ import {
 } from 'fumadocs-ui/components/image-zoom';
 import defaultMdxComponents from 'fumadocs-ui/mdx';
 import {
-  DocsBody,
-  DocsDescription,
-  DocsPage,
-  DocsTitle,
+  DocsBody as PostsBody,
+  DocsDescription as PostsDescription,
+  DocsPage as PostsPage,
+  DocsTitle as PostsTitle,
 } from 'fumadocs-ui/page';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
@@ -40,7 +40,7 @@ const Page = async (props: { params: Promise<{ slug: string }> }) => {
   const MDX = post.data.body;
 
   return (
-    <DocsPage
+    <PostsPage
       toc={post.data.toc}
       full={post.data.full}
       lastUpdate={lastUpdate}
@@ -56,16 +56,16 @@ const Page = async (props: { params: Promise<{ slug: string }> }) => {
       }}
     >
       <p className='text-right'>{date}</p>
-      <DocsTitle>{post.data.title}</DocsTitle>
-      <DocsDescription className='mb-0'>
+      <PostsTitle>{post.data.title}</PostsTitle>
+      <PostsDescription className='mb-0'>
         {post.data.description}
-      </DocsDescription>
+      </PostsDescription>
       <div className='flex gap-2 flex-wrap mb-8'>
         {tags.map((tag) => (
           <TagCard name={tag} key={tag} />
         ))}
       </div>
-      <DocsBody>
+      <PostsBody>
         <MDX
           components={{
             ...defaultMdxComponents,
@@ -83,9 +83,9 @@ const Page = async (props: { params: Promise<{ slug: string }> }) => {
             LinkPreview,
           }}
         />
-      </DocsBody>
+      </PostsBody>
       <PostJsonLd post={post} />
-    </DocsPage>
+    </PostsPage>
   );
 };
 

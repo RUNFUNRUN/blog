@@ -13,17 +13,17 @@ import {
 import type { HTMLAttributes, ReactNode } from 'react';
 import { Header } from './header';
 
-export interface DocsLayoutProps extends BaseLayoutProps {
+export interface PostsLayoutProps extends BaseLayoutProps {
   tree: PageTree.Root;
   sidebar?: Omit<Partial<SidebarOptions>, 'component' | 'enabled'>;
   containerProps?: HTMLAttributes<HTMLDivElement>;
 }
 
-export const DocsLayout = ({
+export const PostsLayout = ({
   nav = {},
   i18n = false,
   ...props
-}: DocsLayoutProps): ReactNode => {
+}: PostsLayoutProps): ReactNode => {
   const links = getLinks(props.links ?? [], props.githubUrl);
 
   const variables = cn(
