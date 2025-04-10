@@ -1,7 +1,7 @@
 import { fetchOGMetadata } from '@/actions/fetch-og-metadata';
 import { title as homeTitle } from '@/app/layout.config';
 import { getPost } from '@/lib/source';
-import { cn } from 'fumadocs-ui/components/api';
+import { cn } from 'fumadocs-ui/utils/cn';
 import { ExternalLinkIcon, LinkIcon, NewspaperIcon } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';

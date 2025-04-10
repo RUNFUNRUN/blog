@@ -2,7 +2,6 @@
 
 import { cva } from 'class-variance-authority';
 import Link from 'fumadocs-core/link';
-import { cn } from 'fumadocs-ui/components/api';
 import { buttonVariants } from 'fumadocs-ui/components/ui/button';
 import {
   NavigationMenuContent,
@@ -11,6 +10,7 @@ import {
   NavigationMenuTrigger,
 } from 'fumadocs-ui/components/ui/navigation-menu';
 import { BaseLinkItem, type LinkItemType } from 'fumadocs-ui/layouts/links';
+import { cn } from 'fumadocs-ui/utils/cn';
 import type { ComponentPropsWithoutRef } from 'react';
 
 const menuItemVariants = cva('', {

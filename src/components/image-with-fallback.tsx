@@ -1,6 +1,6 @@
 'use client';
 
-import { cn } from 'fumadocs-ui/components/api';
+import { cn } from 'fumadocs-ui/utils/cn';
 import { LinkIcon } from 'lucide-react';
 import Image from 'next/image';
 import { useState } from 'react';

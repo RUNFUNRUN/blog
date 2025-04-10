@@ -1,5 +1,4 @@
 import type { PageTree } from 'fumadocs-core/server';
-import { cn } from 'fumadocs-ui/components/api';
 import {
   type SidebarOptions,
   layoutVariables,
@@ -10,6 +9,7 @@ import {
   StylesProvider,
   TreeContextProvider,
 } from 'fumadocs-ui/provider';
+import { cn } from 'fumadocs-ui/utils/cn';
 import type { HTMLAttributes, ReactNode } from 'react';
 import { Header } from './header';
 
