@@ -46,7 +46,7 @@ export const fetchOGMetadata = cache(
 
       const getMetaContent = (property: string) => {
         const regex = new RegExp(
-          `<meta[^>]+(?:property|name)="${property}"[^>]+content="([^"]+)"`,
+          `<meta[^>]*?(?:property|name)=['"]?${property}['"]?[^>]*?content=['"]?([^"'>]+)['"]?[^>]*?>`,
           'i',
         );
 
