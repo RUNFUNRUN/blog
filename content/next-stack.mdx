@@ -28,25 +28,18 @@ Cloudflare Workersにデプロイするとしても、要件によってはSupab
 - リポジトリ
 <LinkPreview url='https://github.com/RUNFUNRUN/next-stack'/>
 
-<Callout title='初心者の方へ'>
-  この記事ではかなり簡略化して説明しています。
-  ハンズオン的なこともしていないです。  
-  特に、wranglerについての説明を全くしていないです。  
-  実際にやってみたいけどよくわからない場合は[Twitter](https://x.com/GRAPH_fps)のDMかDiscord(ID: runfunrun)のDMで聞いてくれたら丁寧に説明します。
-</Callout>
-
 ## PaaS
 
 <LinkPreview url='https://developers.cloudflare.com/workers/'/>
 
-冒頭でも紹介した通り、Cloudflare Workersを使用します。
-
-どうせCloudflare Workersにデプロイするならドメインの管理もCloudflareで一緒にやるといいと思います。  
-(※ 私はお名前ドットコム撲滅委員会に所属しています。)
+冒頭でも紹介した通り、Cloudflare Workersを使用します。  
+どうせCloudflare Workersにデプロイするならドメインの管理もCloudflareで一緒にやるといいと思います。
 
 ## フレームワーク
 
 <LinkPreview url='https://nextjs.org/'/>
+
+<LinkPreview url='https://opennext.js.org/'/>
 
 タイトルにある通り、Next.jsを使います。バックエンドも含めたフルスタックな使い方をする前提です。
 
@@ -131,9 +124,14 @@ import { defineConfig } from 'drizzle-kit';
 
 export default defineConfig({
   schema: './src/lib/schema.ts',
-  out: './drizzle/migrations',
   dialect: 'sqlite',
 });
+```
+
+migrationsファイルの生成は以下のコマンドで行ます。`--name`は適宜変えてください。
+
+```bash
+bunx drizzle-kit generate --name=init
 ```
 
 ## DB
@@ -142,17 +140,39 @@ export default defineConfig({
 
 こちらも冒頭でも話しましたが、Cloudflare D1を使用します。
 
-マイグレーションは以下のコマンドで行います。  
-Drizzleのマイグレーションファイルのパスがwranglerコマンドのデフォルトパスと違うため少し面倒になっています。
+まずwranglerでd1を作成します。
 
-サンプルプロジェクトの例です。d1名とマイグレーションファイルのパスはご自身のものに変えてください。
+```bash
+bunx wrangler d1 create next-stack
+```
+
+ここで、`migrations_dir`というプロパティを増やして、`wrangler.jsoc`に追加します。
+
+```jsonc
+{
+  ...
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "next-stack",
+      "database_id": "e3271ec8-b866-4811-a035-f087cf3f0b1a",
+      // 追加
+      "migrations_dir": "drizzle"
+    }
+  ]
+}
+```
+
+マイグレーションは以下のコマンドで行います。
 
 ```bash
 # ローカル(dev環境)
-bunx wrangler d1 execute next-stack --file=./drizzle/migrations/0000_calm_shocker.sql
+bunx wrangler d1 migrations apply next-stack --local
 # リモート(本番環境)
-bunx wrangler d1 execute next-stack --file=./drizzle/migrations/0000_calm_shocker.sql --remote
+bunx wrangler d1 migrations apply next-stack --remote
 ```
+
+これで、先ほど作成したmigrationsファイルが適用されます。
 
 ## 認証
 
@@ -256,7 +276,12 @@ export const authMiddleware = createMiddleware<{
 ## 最後に
 
 実際のコード例を出しつつ紹介しました。  
-サンプルプロジェクトに全てコードはあるので、そちらを見てもらうとわかりやすいとは思います。
+サンプルプロジェクトに全てコードはあるので、そちらを見てもらうとわかりやすいとは思います。  
+特に、Better AuthをCloudflare D1で使うとなると、
+ドキュメントのままセットアップしても動かないので、良かったらパクってください。
+
+注意点としては、FreeプランだとWorker sizeの上限が3MBなので、かなりギリギリです。このサンプルコードで2547.45 KiBです。  
+ただ、Paidプランにすると上限10MBで$5+従量課金なので、Vercelよりは安くなるかなと思います。
 
 また、決済に関してはOpenNextやBetter AuthドキュメントにStripeについての記述があるので、そちらをご覧ください。
 
