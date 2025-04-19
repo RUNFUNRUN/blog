@@ -23,7 +23,7 @@ import { Menu, MenuContent, MenuLinkItem, MenuTrigger } from './menu';
 import { Navbar, NavbarMenuLink } from './navbar';
 
 export const Header = ({
-  nav: { enableSearch = true, ...nav } = {},
+  nav = {},
   i18n = false,
   finalLinks,
 }: HomeLayoutProps & {
@@ -57,12 +57,10 @@ export const Header = ({
           ))}
       </NavigationMenuList>
       <div className='flex flex-1 flex-row items-center justify-end lg:gap-1.5'>
-        {enableSearch ? (
-          <SearchOnly>
-            <SearchToggle className='lg:hidden' />
-            <LargeSearchToggle className='w-full max-w-[240px] max-lg:hidden' />
-          </SearchOnly>
-        ) : null}
+        <SearchOnly>
+          <SearchToggle className='lg:hidden' />
+          <LargeSearchToggle className='w-full max-w-[240px] max-lg:hidden' />
+        </SearchOnly>
         <ThemeToggle className='max-lg:hidden' />
         {navItems.filter(isSecondary).map((item, i) => (
           <NavbarLinkItem
