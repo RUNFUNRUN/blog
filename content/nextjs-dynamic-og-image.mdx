@@ -75,6 +75,11 @@ export async function GET() {
 ただ、edge runtimeなので、ここではNodeのAPIは使えないことに注意が必要です。
 これはapiルートを使わなくても同じです。
 
+<Callout title='edge runtimeで動かなくなっています。' type='warn'>
+  2025/04/20時点nextjs 15.3.1 Vercelの環境ででedge runtimeだと逆に動かなくなっています。
+  この記事では一旦edge runtimeの設定は残しておきますが、正常に動作しない場合は消してみてください。
+</Callout>
+
 自分の場合はsearchParamsに文字の情報を渡して実装しました。
 
 また、画像についてはVercelがプレイグラウンドを提供しているので、
@@ -279,7 +284,7 @@ searchParamsを設定してないので、先ほど実装したようにタイ�
 {/*Do not use Markdown’s built-in image syntax when working with images using relative paths.*/}
 import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
 
-<ImageZoom src='/api/og' width={1300} height={630} alt='home og image' />
+<LinkPreview url='https://www.runfunrun.dev' />
 
 ### 記事ページ
 
@@ -330,12 +335,7 @@ export const generateMetadata = ({ params }: { params: { slug?: string[] } }) =>
 
 記事のページはこんな感じです。
 
-<ImageZoom
-  src='/api/og?title=Fumadocs%E3%81%A7%E3%83%96%E3%83%AD%E3%82%B0%E4%BD%9C%E3%81%A3%E3%81%A6%E3%81%BF%E3%81%9F%E3%80%82&description=Next.js%E3%81%AEApp+Router%E3%81%A7%E4%BD%9C%E3%82%89%E3%82%8C%E3%81%A6%E3%82%8B%E3%83%89%E3%82%AD%E3%83%A5%E3%83%A1%E3%83%B3%E3%83%88%E3%83%93%E3%83%AB%E3%83%89%E3%83%A9%E3%82%A4%E3%83%96%E3%83%A9%E3%83%AA%E3%82%92%E4%BD%BF%E3%81%A3%E3%81%A6%E3%81%BF%E3%81%9F%E3%80%82'
-  width={1300}
-  height={630}
-  alt='home og image'
-/>
+<LinkPreview url='https://www.runfunrun.dev/posts/first-blog' />
 
 ## 最後に
 
