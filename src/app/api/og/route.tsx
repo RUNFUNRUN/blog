@@ -1,8 +1,6 @@
 import { ImageResponse } from 'next/og';
 import type { NextRequest } from 'next/server';
 
-export const runtime = 'edge';
-
 const notoSansJP = fetch(
   new URL(
     './NotoSansJP-Bold.ttf',
