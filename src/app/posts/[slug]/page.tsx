@@ -1,3 +1,4 @@
+import { title as homeTitle } from '@/app/layout.config';
 import { PostJsonLd } from '@/components/json-ld';
 import { LinkPreview } from '@/components/link-preview';
 import { TagCard } from '@/components/tag-card';
@@ -121,6 +122,7 @@ export const generateMetadata = async (props: {
       description,
       images: `/api/og?${imageParams}`,
       url: post.url,
+      siteName: homeTitle,
     },
     twitter: {
       title,

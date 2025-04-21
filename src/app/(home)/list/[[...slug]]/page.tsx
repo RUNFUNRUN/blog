@@ -90,6 +90,7 @@ export const generateMetadata = async (props: {
       title,
       images: '/api/og',
       url: `/list/${slug ? slug[0] : ''}`,
+      siteName: homeTitle,
     },
     twitter: {
       title,

@@ -3,7 +3,7 @@ import { HomeLayout } from 'fumadocs-ui/layouts/home';
 import { getLinks } from 'fumadocs-ui/layouts/shared';
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
-import { baseOptions, linkItems } from '../layout.config';
+import { baseOptions, linkItems, title } from '../layout.config';
 
 const Layout = ({ children }: { children: ReactNode }) => {
   return (
@@ -30,6 +30,7 @@ export const metadata: Metadata = {
   openGraph: {
     images: '/api/og',
     url: '/',
+    siteName: title,
   },
   alternates: {
     canonical: '/',
