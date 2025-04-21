@@ -1,8 +1,6 @@
 @import "tailwindcss";
 @import "fumadocs-ui/css/preset.css";
 
-@source '../../node_modules/fumadocs-ui/dist/**/*.js';
-
 @theme {
   --color-fd-background: #f5f9ff;
   --color-fd-foreground: #1e2030;
