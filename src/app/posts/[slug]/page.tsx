@@ -93,8 +93,8 @@ const Page = async (props: { params: Promise<{ slug: string }> }) => {
 export default Page;
 
 export const generateStaticParams = () => {
-  return getPosts().map((page) => ({
-    slug: page.slugs[0],
+  return getPosts().map((post) => ({
+    slug: post.slugs[0],
   }));
 };
 

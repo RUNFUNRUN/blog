@@ -1,9 +1,9 @@
 import { InlineLink } from '@/components/inline-link';
 import { PostCard } from '@/components/post-card';
-import { getSortedByDatePosts } from '@/lib/source';
+import { getPostsSortedByDate } from '@/lib/source';
 
 const HomePage = () => {
-  const posts = getSortedByDatePosts().slice(0, 3);
+  const posts = getPostsSortedByDate().slice(0, 3);
 
   return (
     <div className='space-y-12'>

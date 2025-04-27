@@ -1,14 +1,14 @@
 import { title as homeTitle, postsPerPage } from '@/app/layout.config';
 import { Pagination } from '@/components/pagination';
 import { PostCard } from '@/components/post-card';
-import { getSortedByDatePosts } from '@/lib/source';
+import { getPostsSortedByDate } from '@/lib/source';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
 export const dynamicParams = false;
 
-const totalPosts = getSortedByDatePosts().length;
-const pageCount = Math.ceil(totalPosts / postsPerPage);
+const totalPosts = getPostsSortedByDate().length;
+const postCount = Math.ceil(totalPosts / postsPerPage);
 
 const DisplayCurrentPosts = ({
   startIndex,
@@ -30,11 +30,11 @@ const DisplayCurrentPosts = ({
 const Page = async (props: { params: Promise<{ slug?: string[] }> }) => {
   const params = await props.params;
   const pageIndex = params.slug ? Number.parseInt(params.slug[0], 10) - 1 : 0;
-  if (pageIndex < 0 || pageIndex >= pageCount) notFound();
+  if (pageIndex < 0 || pageIndex >= postCount) notFound();
 
   const startIndex = pageIndex * postsPerPage;
   const endIndex = startIndex + postsPerPage;
-  const posts = getSortedByDatePosts().slice(startIndex, endIndex);
+  const posts = getPostsSortedByDate().slice(startIndex, endIndex);
 
   return (
     <>
@@ -59,7 +59,7 @@ const Page = async (props: { params: Promise<{ slug?: string[] }> }) => {
         })}
       </div>
       <div className='mt-6'>
-        <Pagination current={pageIndex + 1} end={pageCount} path='/list' />
+        <Pagination current={pageIndex + 1} end={postCount} path='/list' />
       </div>
     </>
   );
@@ -68,7 +68,7 @@ const Page = async (props: { params: Promise<{ slug?: string[] }> }) => {
 export default Page;
 
 export const generateStaticParams = () => {
-  const slugs = Array.from({ length: pageCount }, (_, index) => ({
+  const slugs = Array.from({ length: postCount }, (_, index) => ({
     slug: [(index + 1).toString()],
   }));
 

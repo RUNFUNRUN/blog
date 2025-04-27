@@ -21,7 +21,7 @@ const getDate = (url: string) => {
   return post.data.date.getTime();
 };
 
-export const sortedByDatePageTree: PageTree.Root = {
+export const postTreeSortedByDate: PageTree.Root = {
   name: 'Posts',
   children: pageTree.children
     .filter((node) => node.type === 'page')
@@ -30,7 +30,7 @@ export const sortedByDatePageTree: PageTree.Root = {
 
 const posts = getPosts();
 
-export const getSortedByDatePosts = () =>
+export const getPostsSortedByDate = () =>
   posts.toSorted((a, b) => b.data.date.getTime() - a.data.date.getTime());
 
 export const getTags = () => {
