@@ -43,7 +43,7 @@
   --tw-prose-links: var(--color-fd-primary);
 }
 
-.dark .prose pre {
+.dark .fd-scroll-container {
   background-color: #1a1b26;
 }
 
