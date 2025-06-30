@@ -1,7 +1,6 @@
 import type { PageTree } from 'fumadocs-core/server';
 import {
   type SidebarOptions,
-  layoutVariables,
 } from 'fumadocs-ui/layouts/docs/shared';
 import { type BaseLayoutProps, getLinks } from 'fumadocs-ui/layouts/shared';
 import {
@@ -48,7 +47,6 @@ export const PostsLayout = ({
           props.containerProps?.className,
         )}
         style={{
-          ...layoutVariables,
           ...props.containerProps?.style,
         }}
       >
