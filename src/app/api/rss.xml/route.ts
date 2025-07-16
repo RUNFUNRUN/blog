@@ -1,6 +1,6 @@
+import { Feed } from 'feed';
 import { description, title } from '@/app/layout.config';
 import { getPosts } from '@/lib/source';
-import { Feed } from 'feed';
 
 export const dynamic = 'force-static';
 

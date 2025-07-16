@@ -1,11 +1,11 @@
-import { fetchOGMetadata } from '@/actions/fetch-og-metadata';
-import { title as homeTitle } from '@/app/layout.config';
-import { getPost } from '@/lib/source';
 import { cn } from 'fumadocs-ui/utils/cn';
 import { ExternalLinkIcon, LinkIcon, NewspaperIcon } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Suspense } from 'react';
+import { fetchOGMetadata } from '@/actions/fetch-og-metadata';
+import { title as homeTitle } from '@/app/layout.config';
+import { getPost } from '@/lib/source';
 import { ImageWithFallback } from './image-with-fallback';
 
 const isInternalBlogLink = (url: string) => {
@@ -189,7 +189,7 @@ const ExternalLinkCard = async ({
         className={className}
       />
     );
-  } catch (error) {
+  } catch (_error) {
     return <LinkCard url={url} error={true} className={className} />;
   }
 };

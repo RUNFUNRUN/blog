@@ -1,6 +1,6 @@
+import type { ReactNode } from 'react';
 import { PostsLayout } from '@/components/posts';
 import { postTreeSortedByDate } from '@/lib/source';
-import type { ReactNode } from 'react';
 import { baseOptions, linkItems } from '../layout.config';
 
 const Layout = ({ children }: { children: ReactNode }) => {

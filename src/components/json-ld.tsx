@@ -1,6 +1,6 @@
+import type { BlogPosting, BreadcrumbList, Graph } from 'schema-dts';
 import { title as homeTitle } from '@/app/layout.config';
 import type { Post } from '@/lib/source';
-import type { BlogPosting, BreadcrumbList, Graph } from 'schema-dts';
 
 export const PostJsonLd = ({ post }: { post: Post }) => {
   if (!post) {
@@ -73,7 +73,7 @@ export const PostJsonLd = ({ post }: { post: Post }) => {
   return (
     <script
       type='application/ld+json'
-      // biome-ignore lint/security/noDangerouslySetInnerHtml:
+      // biome-ignore lint/security/noDangerouslySetInnerHtml: The content is safely serialized using JSON.stringify
       dangerouslySetInnerHTML={{ __html: JSON.stringify(graph) }}
     />
   );
@@ -116,7 +116,7 @@ export const TagJsonLd = ({ tag }: { tag: string }) => {
   return (
     <script
       type='application/ld+json'
-      // biome-ignore lint/security/noDangerouslySetInnerHtml:
+      // biome-ignore lint/security/noDangerouslySetInnerHtml: The content is safely serialized using JSON.stringify
       dangerouslySetInnerHTML={{ __html: JSON.stringify(graph) }}
     />
   );

@@ -1,7 +1,5 @@
 import type { PageTree } from 'fumadocs-core/server';
-import {
-  type SidebarOptions,
-} from 'fumadocs-ui/layouts/docs/shared';
+import type { SidebarOptions } from 'fumadocs-ui/layouts/docs/shared';
 import { type BaseLayoutProps, getLinks } from 'fumadocs-ui/layouts/shared';
 import {
   type PageStyles,
@@ -39,7 +37,6 @@ export const PostsLayout = ({
   return (
     <TreeContextProvider tree={props.tree}>
       <main
-        id='nd-docs-layout'
         {...props.containerProps}
         className={cn(
           'flex w-full flex-1 flex-row pe-[var(--fd-layout-offset)]',

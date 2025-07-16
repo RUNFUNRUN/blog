@@ -15,7 +15,6 @@ export const Navbar = (props: HTMLAttributes<HTMLElement>) => {
   return (
     <NavigationMenu value={value} onValueChange={setValue} asChild>
       <header
-        id='nd-nav'
         {...props}
         className={cn(
           'fixed top-[var(--fd-banner-height)] z-30 box-content w-full border-b border-fd-foreground/10 transition-colors backdrop-blur-lg bg-fd-background/80',

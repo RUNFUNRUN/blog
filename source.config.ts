@@ -21,9 +21,10 @@ export const blog = defineCollections({
         try {
           return new Date(value);
         } catch {
-          context.addIssue({
-            code: z.ZodIssueCode.custom,
-            message: 'Invalid date',
+          context.issues.push({
+            code: 'custom',
+            message: 'The value could not be transformed to Date type.',
+            input: value,
           });
           return z.NEVER;
         }

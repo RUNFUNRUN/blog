@@ -1,10 +1,10 @@
+import type { Metadata } from 'next';
+import { notFound } from 'next/navigation';
 import { title as homeTitle, postsPerPage } from '@/app/layout.config';
 import { TagJsonLd } from '@/components/json-ld';
 import { Pagination } from '@/components/pagination';
 import { PostCard } from '@/components/post-card';
 import { getPostsByTag, getTags } from '@/lib/source';
-import type { Metadata } from 'next';
-import { notFound } from 'next/navigation';
 
 export const dynamicParams = false;
 
@@ -97,7 +97,7 @@ export const generateStaticParams = () => {
 
 export const generateMetadata = async (props: {
   params: Promise<{ slug: string[] }>;
-}) => {
+}): Promise<Metadata> => {
   const params = await props.params;
   const slug = params.slug;
 
@@ -126,5 +126,5 @@ export const generateMetadata = async (props: {
         'application/rss+xml': '/api/rss.xml',
       },
     },
-  } satisfies Metadata;
+  };
 };

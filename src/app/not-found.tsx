@@ -1,8 +1,8 @@
-import { Header } from '@/components/header';
-import { InlineLink } from '@/components/inline-link';
 import { HomeLayout } from 'fumadocs-ui/layouts/home';
 import { getLinks } from 'fumadocs-ui/layouts/shared';
 import Image from 'next/image';
+import { Header } from '@/components/header';
+import { InlineLink } from '@/components/inline-link';
 import { baseOptions, linkItems } from './layout.config';
 
 const NotFound = () => {

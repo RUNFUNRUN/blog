@@ -5,7 +5,11 @@ export const InlineLink = ({
   href,
   children,
   blank = false,
-}: { href: string; children: ReactNode; blank?: boolean }) => {
+}: {
+  href: string;
+  children: ReactNode;
+  blank?: boolean;
+}) => {
   return (
     <Link
       href={href}

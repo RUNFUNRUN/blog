@@ -1,7 +1,7 @@
+import type { Metadata } from 'next';
 import { title as homeTitle } from '@/app/layout.config';
 import { TagCard } from '@/components/tag-card';
 import { getTags } from '@/lib/source';
-import type { Metadata } from 'next';
 
 const Page = () => {
   const tags = getTags();
@@ -20,7 +20,7 @@ const Page = () => {
 
 export default Page;
 
-export const generateMetadata = () => {
+export const generateMetadata = (): Metadata => {
   const title = `${homeTitle} | タグ一覧`;
 
   return {
@@ -36,5 +36,5 @@ export const generateMetadata = () => {
         'application/rss+xml': '/api/rss.xml',
       },
     },
-  } satisfies Metadata;
+  };
 };

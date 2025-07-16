@@ -1,11 +1,14 @@
-import { getPostsByTag } from '@/lib/source';
 import { TagIcon } from 'lucide-react';
 import Link from 'next/link';
+import { getPostsByTag } from '@/lib/source';
 
 export const TagCard = ({
   name,
   displayCount = false,
-}: { name: string; displayCount?: boolean }) => {
+}: {
+  name: string;
+  displayCount?: boolean;
+}) => {
   const numOfPosts = getPostsByTag(name);
 
   return (

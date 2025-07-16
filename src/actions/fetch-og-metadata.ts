@@ -21,7 +21,7 @@ const decodeHTMLEntities = (input: string): string => {
   };
 
   const decoded = input.replace(/&([^;]+);/g, (match, entity) => {
-    if (Object.prototype.hasOwnProperty.call(entities, entity)) {
+    if (Object.hasOwn(entities, entity)) {
       return entities[entity];
     }
     if (entity.startsWith('#x')) {
@@ -75,7 +75,7 @@ export const fetchOGMetadata = cache(
         image,
         url,
       };
-    } catch (error) {
+    } catch (_error) {
       return { url };
     }
   },

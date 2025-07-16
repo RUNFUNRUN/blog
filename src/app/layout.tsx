@@ -1,8 +1,8 @@
-import { Footer } from '@/components/footer';
 import { RootProvider } from 'fumadocs-ui/provider';
 import type { Metadata } from 'next';
 import { Geist, JetBrains_Mono } from 'next/font/google';
 import type { ReactNode } from 'react';
+import { Footer } from '@/components/footer';
 import { description, title } from './layout.config';
 import './global.css';
 import 'katex/dist/katex.css';
