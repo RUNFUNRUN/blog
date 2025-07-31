@@ -1,9 +1,5 @@
 import Link from 'fumadocs-core/link';
 import {
-  LanguageToggle,
-  LanguageToggleText,
-} from 'fumadocs-ui/components/layout/language-toggle';
-import {
   LargeSearchToggle,
   SearchToggle,
 } from 'fumadocs-ui/components/layout/search-toggle';
@@ -18,13 +14,12 @@ import {
 } from 'fumadocs-ui/layouts/home/navbar';
 import type { LinkItemType } from 'fumadocs-ui/layouts/links';
 import { SearchOnly } from 'fumadocs-ui/provider';
-import { ChevronDown, Languages } from 'lucide-react';
+import { ChevronDown } from 'lucide-react';
 import { Menu, MenuContent, MenuLinkItem, MenuTrigger } from './menu';
 import { Navbar, NavbarMenuLink } from './navbar';
 
 export const Header = ({
   nav = {},
-  i18n = false,
   finalLinks,
 }: HomeLayoutProps & {
   finalLinks: LinkItemType[];
@@ -59,7 +54,7 @@ export const Header = ({
       <div className='flex flex-1 flex-row items-center justify-end lg:gap-1.5'>
         <SearchOnly>
           <SearchToggle className='lg:hidden' />
-          <LargeSearchToggle className='w-full max-w-[240px] max-lg:hidden' />
+          <LargeSearchToggle className='w-full max-w-[240px] max-lg:hidden rounded-full' />
         </SearchOnly>
         <ThemeToggle className='max-lg:hidden' />
         {navItems.filter(isSecondary).map((item, i) => (
@@ -92,13 +87,6 @@ export const Header = ({
                 />
               ))}
               <div className='flex-1' />
-              {i18n ? (
-                <LanguageToggle>
-                  <Languages className='size-5' />
-                  <LanguageToggleText />
-                  <ChevronDown className='size-3 text-fd-muted-foreground' />
-                </LanguageToggle>
-              ) : null}
               <ThemeToggle />
             </div>
           </MenuContent>

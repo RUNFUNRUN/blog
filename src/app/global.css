@@ -44,7 +44,7 @@
 }
 
 .dark .fd-scroll-container {
-  background-color: #1a1b26;
+  background-color: transparent;
 }
 
 @layer base {

@@ -100,6 +100,7 @@ export const MenuTrigger = ({
         }),
         props.className,
       )}
+      onPointerMove={(e) => e.preventDefault()}
     >
       {props.children}
     </NavigationMenuTrigger>
