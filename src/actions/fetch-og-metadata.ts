@@ -75,7 +75,7 @@ export const fetchOGMetadata = cache(
         image,
         url,
       };
-    } catch (_error) {
+    } catch {
       return { url };
     }
   },

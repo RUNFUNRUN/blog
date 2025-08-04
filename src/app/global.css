@@ -43,10 +43,6 @@
   --tw-prose-links: var(--color-fd-primary);
 }
 
-.dark .fd-scroll-container {
-  background-color: transparent;
-}
-
 @layer base {
   a {
     @apply [overflow-wrap:anywhere];
