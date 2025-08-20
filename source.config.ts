@@ -1,5 +1,8 @@
 import { transformerRemoveNotationEscape } from '@shikijs/transformers';
-import { rehypeCodeDefaultOptions } from 'fumadocs-core/mdx-plugins';
+import {
+  rehypeCodeDefaultOptions,
+  remarkImage,
+} from 'fumadocs-core/mdx-plugins';
 import {
   defineCollections,
   defineConfig,
@@ -48,7 +51,7 @@ export default defineConfig({
         transformerRemoveNotationEscape(),
       ],
     },
-    remarkPlugins: [remarkMath],
+    remarkPlugins: [remarkImage, remarkMath],
     rehypePlugins: (v) => [rehypeKatex, ...v],
   },
 });
