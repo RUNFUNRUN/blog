@@ -189,7 +189,7 @@ const ExternalLinkCard = async ({
         className={className}
       />
     );
-  } catch (_error) {
+  } catch {
     return <LinkCard url={url} error={true} className={className} />;
   }
 };
