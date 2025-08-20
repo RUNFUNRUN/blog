@@ -28,6 +28,15 @@
     "enabled": true,
     "rules": {
       "recommended": true
+    },
+    "domains": {
+      "next": "recommended",
+      "react": "recommended"
     }
+  },
+  "vcs": {
+    "enabled": true,
+    "clientKind": "git",
+    "useIgnoreFile": true
   }
 }

@@ -1,5 +1,4 @@
 import type { PageTree } from 'fumadocs-core/server';
-import type { SidebarOptions } from 'fumadocs-ui/layouts/docs/shared';
 import { type BaseLayoutProps, getLinks } from 'fumadocs-ui/layouts/shared';
 import {
   type PageStyles,
@@ -12,7 +11,6 @@ import { Header } from './header';
 
 export interface PostsLayoutProps extends BaseLayoutProps {
   tree: PageTree.Root;
-  sidebar?: Omit<Partial<SidebarOptions>, 'component' | 'enabled'>;
   containerProps?: HTMLAttributes<HTMLDivElement>;
 }
 
@@ -39,7 +37,7 @@ export const PostsLayout = ({
       <main
         {...props.containerProps}
         className={cn(
-          'flex w-full flex-1 flex-row pe-[var(--fd-layout-offset)]',
+          'flex w-full flex-1 flex-row pt-(--fd-nav-height)',
           variables,
           props.containerProps?.className,
         )}
