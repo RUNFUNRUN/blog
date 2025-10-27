@@ -26,7 +26,6 @@
   },
   "linter": {
     "enabled": true,
-    "includes": ["!**/global.css"],
     "rules": {
       "recommended": true
     },
