@@ -6,7 +6,7 @@ import {
 } from 'fumadocs-ui/provider';
 import { cn } from 'fumadocs-ui/utils/cn';
 import type { HTMLAttributes, ReactNode } from 'react';
-import { PageTree } from '@/lib/source';
+import type { PageTree } from '@/lib/source';
 import { Header } from './header';
 
 export interface PostsLayoutProps extends BaseLayoutProps {

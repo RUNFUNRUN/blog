@@ -24,20 +24,6 @@ export const ImageWithFallback = ({
     );
   }
 
-  const isLocal = src.startsWith('http');
-
-  if (isLocal) {
-    return (
-      <img
-        src={src}
-        alt={alt}
-        className={cn('object-cover', className)}
-        sizes='240px'
-        onError={() => setError(true)}
-      />
-    );
-  }
-
   return (
     <Image
       src={src}

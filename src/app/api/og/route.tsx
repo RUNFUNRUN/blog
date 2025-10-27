@@ -12,7 +12,7 @@ const loadGoogleFont = async (font: string, text: string) => {
 
   if (resource) {
     const response = await fetch(resource[1]);
-    if (response.status == 200) {
+    if (response.status === 200) {
       return await response.arrayBuffer();
     }
   }
@@ -142,7 +142,7 @@ export const GET = async (req: NextRequest) => {
           name: 'notoSansJP',
           data: await loadGoogleFont(
             'Noto+Sans+JP:wght@600',
-            'RUNFUNRUN.dev' + title + description,
+            `RUNFUNRUN.dev${title}${description}`,
           ),
           style: 'normal',
         },
