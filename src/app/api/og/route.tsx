@@ -3,12 +3,22 @@ import type { NextRequest } from 'next/server';
 
 export const runtime = 'edge';
 
-const notoSansJP = fetch(
-  new URL(
-    './NotoSansJP-Bold.ttf',
-    process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000',
-  ),
-).then((res) => res.arrayBuffer());
+const loadGoogleFont = async (font: string, text: string) => {
+  const url = `https://fonts.googleapis.com/css2?family=${font}&text=${encodeURIComponent(text)}`;
+  const css = await (await fetch(url)).text();
+  const resource = css.match(
+    /src: url\((.+)\) format\('(opentype|truetype)'\)/,
+  );
+
+  if (resource) {
+    const response = await fetch(resource[1]);
+    if (response.status == 200) {
+      return await response.arrayBuffer();
+    }
+  }
+
+  throw new Error('failed to load font data');
+};
 
 export const GET = async (req: NextRequest) => {
   const searchParams = req.nextUrl.searchParams;
@@ -56,7 +66,13 @@ export const GET = async (req: NextRequest) => {
       {
         width: 1200,
         height: 630,
-        fonts: [{ name: 'notoSansJP', data: await notoSansJP }],
+        fonts: [
+          {
+            name: 'notoSansJP',
+            data: await loadGoogleFont('Noto+Sans+JP', 'RUNFUNRUN.dev'),
+            style: 'normal',
+          },
+        ],
       },
     );
   }
@@ -121,7 +137,16 @@ export const GET = async (req: NextRequest) => {
     {
       width: 1200,
       height: 630,
-      fonts: [{ name: 'notoSansJP', data: await notoSansJP }],
+      fonts: [
+        {
+          name: 'notoSansJP',
+          data: await loadGoogleFont(
+            'Noto+Sans+JP:wght@600',
+            'RUNFUNRUN.dev' + title + description,
+          ),
+          style: 'normal',
+        },
+      ],
     },
   );
 };

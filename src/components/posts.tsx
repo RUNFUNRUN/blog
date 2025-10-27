@@ -1,4 +1,3 @@
-import type { PageTree } from 'fumadocs-core/server';
 import { type BaseLayoutProps, getLinks } from 'fumadocs-ui/layouts/shared';
 import {
   type PageStyles,
@@ -7,10 +6,11 @@ import {
 } from 'fumadocs-ui/provider';
 import { cn } from 'fumadocs-ui/utils/cn';
 import type { HTMLAttributes, ReactNode } from 'react';
+import { PageTree } from '@/lib/source';
 import { Header } from './header';
 
 export interface PostsLayoutProps extends BaseLayoutProps {
-  tree: PageTree.Root;
+  tree: PageTree;
   containerProps?: HTMLAttributes<HTMLDivElement>;
 }
 

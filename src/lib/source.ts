@@ -1,7 +1,6 @@
 import { blog } from '.source';
-import type { PageTree } from 'fumadocs-core/server';
 import { loader } from 'fumadocs-core/source';
-import { createMDXSource } from 'fumadocs-mdx';
+import { createMDXSource } from 'fumadocs-mdx/runtime/next';
 
 export const {
   getPage: getPost,
@@ -14,6 +13,8 @@ export const {
 
 export type Post = ReturnType<typeof getPost>;
 
+export type PageTree = typeof pageTree;
+
 const getDate = (url: string) => {
   const slugs = url.replace(/^\/posts\//, '').split('/');
   const post = getPost(slugs);
@@ -21,7 +22,7 @@ const getDate = (url: string) => {
   return post.data.date.getTime();
 };
 
-export const postTreeSortedByDate: PageTree.Root = {
+export const postTreeSortedByDate = {
   name: 'Posts',
   children: pageTree.children
     .filter((node) => node.type === 'page')
