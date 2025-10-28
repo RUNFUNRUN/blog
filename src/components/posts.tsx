@@ -1,9 +1,6 @@
+import { type PageStyles, StylesProvider } from 'fumadocs-ui/contexts/layout';
+import { TreeContextProvider } from 'fumadocs-ui/contexts/tree';
 import { type BaseLayoutProps, getLinks } from 'fumadocs-ui/layouts/shared';
-import {
-  type PageStyles,
-  StylesProvider,
-  TreeContextProvider,
-} from 'fumadocs-ui/provider';
 import { cn } from 'fumadocs-ui/utils/cn';
 import type { HTMLAttributes, ReactNode } from 'react';
 import type { PageTree } from '@/lib/source';
