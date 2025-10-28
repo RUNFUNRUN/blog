@@ -4,9 +4,9 @@
   "private": true,
   "scripts": {
     "postinstall": "fumadocs-mdx",
-    "build": "next build --turbo",
+    "build": "next build",
     "postbuild": "next-sitemap",
-    "dev": "next dev --turbo",
+    "dev": "next dev",
     "start": "next start",
     "format": "biome format --write .",
     "lint": "biome lint .",
