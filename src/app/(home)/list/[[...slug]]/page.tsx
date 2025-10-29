@@ -27,7 +27,7 @@ const DisplayCurrentPosts = ({
   );
 };
 
-const Page = async (props: { params: Promise<{ slug?: string[] }> }) => {
+const Page = async (props: PageProps<'/list/[[...slug]]'>) => {
   const params = await props.params;
   const pageIndex = params.slug ? Number.parseInt(params.slug[0], 10) - 1 : 0;
   if (pageIndex < 0 || pageIndex >= postCount) notFound();

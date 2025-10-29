@@ -31,7 +31,7 @@ const DisplayCurrentPosts = ({
   );
 };
 
-const Page = async (props: { params: Promise<{ slug: string[] }> }) => {
+const Page = async (props: PageProps<'/tags/[...slug]'>) => {
   const params = await props.params;
   const slug = params.slug;
   const tag = decodeURIComponent(slug[0]);

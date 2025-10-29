@@ -20,7 +20,7 @@ import { getPost, getPosts } from '@/lib/source';
 
 export const dynamicParams = false;
 
-const Page = async (props: { params: Promise<{ slug: string }> }) => {
+const Page = async (props: PageProps<'/posts/[slug]'>) => {
   const params = await props.params;
   const post = getPost([params.slug]);
 

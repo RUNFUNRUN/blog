@@ -2,7 +2,7 @@ import { InlineLink } from '@/components/inline-link';
 import { PostCard } from '@/components/post-card';
 import { getPostsSortedByDate } from '@/lib/source';
 
-const HomePage = () => {
+const Page = () => {
   const posts = getPostsSortedByDate().slice(0, 3);
 
   return (
@@ -49,4 +49,4 @@ const HomePage = () => {
   );
 };
 
-export default HomePage;
+export default Page;

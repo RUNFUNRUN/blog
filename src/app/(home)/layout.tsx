@@ -1,11 +1,10 @@
 import { HomeLayout } from 'fumadocs-ui/layouts/home';
 import { getLinks } from 'fumadocs-ui/layouts/shared';
 import type { Metadata } from 'next';
-import type { ReactNode } from 'react';
 import { Header } from '@/components/header';
 import { baseOptions, linkItems, title } from '../layout.config';
 
-const Layout = ({ children }: { children: ReactNode }) => {
+const Layout = ({ children }: LayoutProps<'/'>) => {
   return (
     <HomeLayout
       {...baseOptions}

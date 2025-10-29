@@ -1,6 +1,5 @@
 import type { Metadata } from 'next';
 import { Geist, JetBrains_Mono } from 'next/font/google';
-import type { ReactNode } from 'react';
 import { Footer } from '@/components/footer';
 import { description, title } from './layout.config';
 import './global.css';
@@ -16,7 +15,7 @@ const jetbrains = JetBrains_Mono({
   variable: '--font-jetbrains-mono',
 });
 
-const RootLayout = ({ children }: { children: ReactNode }) => {
+const Layout = ({ children }: LayoutProps<'/'>) => {
   return (
     <html
       lang='ja'
@@ -32,7 +31,7 @@ const RootLayout = ({ children }: { children: ReactNode }) => {
   );
 };
 
-export default RootLayout;
+export default Layout;
 
 export const metadata: Metadata = {
   metadataBase: new URL(
