@@ -9,20 +9,20 @@ const HomePage = () => {
     <div className='space-y-12'>
       <div className='text-2xl font-bold'>
         <p>
-          RUNFUNRUNのブログです。私については
+          RUNFUNRUNのテックブログです。私については
           <InlineLink href='https://runfun.run' blank>
             runfun.run
           </InlineLink>
           をご覧ください。
         </p>
         <p>
-          問い合わせは
+          ご連絡は
           <InlineLink href='https://runfun.run/contact' blank>
             runfun.run/contact
           </InlineLink>
           かDiscord(ID: runfunrun)のDMからお願いします。
         </p>
-        <p>また、記事に誤りを見つけた場合は連絡またはIssue頂けると幸いです。</p>
+        <p>Issueもお気軽に立ててください。</p>
       </div>
       <div className='space-y-4'>
         <p className='text-2xl sm:text-3xl font-bold'>
