@@ -14,9 +14,9 @@ QiitaやZennなどはページのタイトルが画像に入っていると思�
 
 ## やり方
 
-やり方としては、普通のルートで生成する方法と、apiルートを使う方法があります。
+やり方としては、`opengraph-image`で生成する方法と、`route.tsx`を使う方法があります。
 
-今回はapiルートを使う方法を紹介します。
+今回は`route.tsx`を使う方法を紹介します。
 普通のルートで生成する方法は、
 [Next.js公式ドキュメントのこちら](https://nextjs.org/docs/app/api-reference/file-conventions/metadata/opengraph-image)
 を参照してください。
@@ -73,12 +73,7 @@ export async function GET() {
 めっちゃ簡単ですね。
 
 ただ、edge runtimeなので、ここではNodeのAPIは使えないことに注意が必要です。
-これはapiルートを使わなくても同じです。
-
-<Callout title='edge runtimeで動かなくなっています。' type='warn'>
-  2025/04/20時点nextjs 15.3.1 Vercelの環境ででedge runtimeだと逆に動かなくなっています。
-  この記事では一旦edge runtimeの設定は残しておきますが、正常に動作しない場合は消してみてください。
-</Callout>
+これは`route.tsx`を使わなくても同じです。
 
 自分の場合はsearchParamsに文字の情報を渡して実装しました。
 
@@ -93,158 +88,14 @@ export async function GET() {
 
 自分の実装はこんな感じです。
 
-```tsx title="src/app/api/og/route.tsx"
-import { ImageResponse } from 'next/og';
-import { NextRequest } from 'next/server';
+<LinkPreview url='https://github.com/RUNFUNRUN/blog/blob/main/src/app/api/og/route.tsx' />
 
-export const runtime = 'edge';
+~`public`ディレクトリにフォントファイルを置いて、それをfetchしています。~
 
-const notoSansJP = fetch(
-  new URL('./NotoSansJP-Bold.ttf', process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'),
-).then((res) => res.arrayBuffer());
+Next.js v16に上げた段階でエラーがでてしまい確認したところ、
+公式ドキュメントでGoogle Fontsをfetchする形に変わっていました。
 
-export const GET = async (req: NextRequest) => {
-  const searchParams = req.nextUrl.searchParams;
-  const title = searchParams.get('title');
-  const description = searchParams.get('description');
-
-  if (title === null && description === null) {
-    return new ImageResponse(
-      (
-        <div
-          style={{
-            display: 'flex',
-            height: '100%',
-            width: '100%',
-            backgroundColor: '#ffffff',
-            background: 'linear-gradient(to bottom, blue, cyan)',
-          }}
-        >
-          <div
-            style={{
-              backgroundColor: '#000000',
-              color: '#ffffff',
-              fontWeight: 600,
-              display: 'flex',
-              flexDirection: 'column',
-              marginTop: '2rem',
-              marginBottom: '2rem',
-              marginLeft: '2rem',
-              marginRight: '2rem',
-              flexGrow: '1',
-              borderRadius: '1rem',
-            }}
-          >
-            <p
-              style={{
-                fontSize: 100,
-                marginTop: 'auto',
-                marginBottom: 'auto',
-                marginLeft: 'auto',
-                marginRight: 'auto',
-              }}
-            >
-              RUNFUNRUN.dev
-            </p>
-          </div>
-        </div>
-      ),
-      {
-        width: 1200,
-        height: 630,
-        fonts: [{ name: 'Inter', data: await notoSansJP }],
-      },
-    );
-  }
-
-  return new ImageResponse(
-    (
-      <div
-        style={{
-          display: 'flex',
-          height: '100%',
-          width: '100%',
-          backgroundColor: '#ffffff',
-          background: 'linear-gradient(to bottom, blue, cyan)',
-        }}
-      >
-        <div
-          style={{
-            backgroundColor: '#000000',
-            color: '#ffffff',
-            fontWeight: 600,
-            display: 'flex',
-            flexDirection: 'column',
-            marginTop: '2rem',
-            marginBottom: '2rem',
-            marginLeft: '2rem',
-            marginRight: '2rem',
-            flexGrow: '1',
-            borderRadius: '1rem',
-          }}
-        >
-          <p
-            style={{
-              fontSize: 50,
-              marginTop: '2rem',
-              marginBottom: 'auto',
-              marginLeft: '4rem',
-              marginRight: '4rem',
-            }}
-          >
-            RUNFUNRUN.dev
-          </p>
-          <div
-            style={{
-              fontSize: 70,
-              marginLeft: '4rem',
-              marginRight: '4rem',
-            }}
-          >
-            {title}
-          </div>
-          <div
-            style={{
-              fontSize: 30,
-              marginTop: 'auto',
-              marginBottom: '2rem',
-              marginLeft: '4rem',
-              marginRight: '4rem',
-            }}
-          >
-            {description}
-          </div>
-        </div>
-      </div>
-    ),
-    {
-      width: 1200,
-      height: 630,
-      fonts: [{ name: 'Inter', data: await notoSansJP }],
-    },
-  );
-};
-```
-
-`public`ディレクトリにフォントファイルを置いて、それをfetchしています。
-
-apiルートの中にフォントを置くことも可能ですが、
-Vercelにデプロイする際にエラーになってしまいました。
-
-```text
-Error: The Edge Function "api/og" size is 3.93 MB and your plan size limit is 1 MB.
-       Learn More: https://vercel.link/edge-function-size
-```
-
-サイズが大きすぎたみたいです。
-`public`ディレクトリに置くことで解決できました。
-
-フォントは日本語対応してたらなんでもいいです。
-自分はGoogle FontsからNoto Sans JPをダウンロードして、
-その中の`NotoSansJP-Bold.ttf`を使っています。
-
-[こちら](https://fonts.google.com/noto/specimen/Noto+Sans+JP?subset=japanese&noto.script=Hira)
-からダウンロードできます。
+<LinkPreview url='https://vercel.com/docs/og-image-generation/examples#custom-font' />
 
 ### 呼び出し側の実装
 
@@ -280,9 +131,6 @@ export const metadata: Metadata = {
 
 searchParamsを設定してないので、先ほど実装したようにタイトルが
 ドデカくなります。
-
-{/*Do not use Markdown’s built-in image syntax when working with images using relative paths.*/}
-import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
 
 <LinkPreview url='https://www.runfunrun.dev' />
 
