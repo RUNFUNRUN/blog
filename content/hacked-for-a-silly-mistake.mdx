@@ -38,7 +38,7 @@ xorgで検索してみたところ、どうやらマイニングツールでし�
 
 ## 調査
 
-prometheusのログから発生時刻が大体絞れるので、一旦journalctlで確認してみました。(発覚時は発生から3日程度だした)
+prometheusのログから発生時刻が大体絞れるので、一旦journalctlで確認してみました。(発覚時は発生から3日程度でした)
 
 ```bash
 $ journalctl --since "3 day ago" | grep "xorg"                                                                                                     
