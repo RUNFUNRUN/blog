@@ -94,13 +94,13 @@ export const LinkCard = ({
       </div>
 
       {image ? (
-        <div className='hidden w-[240px] shrink-0 sm:block'>
+        <div className='hidden w-60 shrink-0 sm:block'>
           <div className='relative h-full w-full'>
             <ImageWithFallback src={image} alt={title || 'Link preview'} />
           </div>
         </div>
       ) : (
-        <div className='hidden w-[240px] shrink-0 sm:block'>
+        <div className='hidden w-60 shrink-0 sm:block'>
           <div className='flex h-full w-full items-center justify-center'>
             {isExternal ? (
               <LinkIcon size={32} className='text-fd-card-foreground' />
