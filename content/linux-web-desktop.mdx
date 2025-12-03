@@ -1,0 +1,372 @@
+---
+title: LinuxサーバーのデスクトップをWeb経由で利用する
+description: Arch LinuxにXfceとKasmVNCを導入し、Cloudflareで公開します。
+date: 2025-12-03
+tags: ['Linux', 'Cloudflare', 'desktop']
+---
+
+## はじめに
+
+今回はArch Linuxオンプレサーバーにブラウザからデスクトップを使えるようにしようと思います。
+
+使う環境・ツールは以下の通りです。
+
+- ディストリビューション  
+  Arch Linux
+
+- パッケージマネージャー  
+  paru
+
+- デスクトップ環境  
+  Xfce
+
+- VNCサーバー  
+  KasmVNC
+
+今回は多機能なKasmVNCを中心にX11で軽量に動くXfceをデスクトップに採用しながら、
+Cloudflare Accessコントロールでセキュアにブラウザで使えるデスクトップ環境を作っていきます。
+
+## 事前準備
+
+任意のユーザーでログインしておいてください。
+Cloudflareのアカウントも作成している前提で進めます。
+
+まずはパッケージを最新化します。
+
+```bash
+paru -Sy
+```
+
+## デスクトップに必要なパッケージのインストール
+
+```bash
+paru -S xfce4 xfce4-goodies
+```
+
+## KasmVNCのセットアップ
+
+### インストール
+
+まずはインストールします。
+
+```bash
+paru -S kasmvncserver-bin
+```
+
+こちらで成功する場合はそのまま進めてください。
+
+今回はエラーが出て失敗してしまったので、自前でビルドしたいと思います。
+
+原因としてはこのパッケージ（kasmvncserver-bin）はUbuntu 20.04 (Focal) 用のファイルを流用していますが、
+Focal時代のファイル圧縮形式は通常 .xz です。
+しかし、PKGBUILDのその行は、より新しい形式である .zst だと決め打ちしてしまっているため、
+「そんなファイルはない」とエラーになっています。
+
+```bash
+git clone https://aur.archlinux.org/kasmvncserver-bin.git
+cd kasmvncserver-bin
+nvim PKGBUILD
+```
+
+22行目の
+
+```bash
+tar -xI unzstd -f data.tar.zst -C "${pkgdir}"
+```
+
+を
+
+```bash
+tar -xf data.tar.xz -C "${pkgdir}"
+```
+
+に修正してください。
+
+あとはビルドするだけです。
+
+```bash
+makepkg -si
+```
+
+インストールできたことを確認します。
+
+```bash
+$ paru -Q kasmvncserver-bin
+kasmvncserver-bin 1.4.0-1
+```
+
+インストールできたらcloneしたソースは消してしまいましょう。
+
+```bash
+cd ..
+rm -rf kasmvncserver-bin
+```
+
+### パスワードの設定
+
+普通にパスワードを2回入力するだけです。
+
+```bash
+vncpasswd -u $USER -w
+```
+
+### 起動スクリプトの作成
+
+エディタは何でも良いです。
+
+```bash
+nvim ~/.vnc/xstartup
+```
+
+```bash title="~/.vnc/xstartup"
+#!/bin/sh
+unset SESSION_MANAGER
+unset DBUS_SESSION_BUS_ADDRESS
+
+exec dbus-run-session startxfce4
+```
+
+次に実行権限の付与をします。
+
+```bash
+chmod +x ~/.vnc/xstartup
+```
+
+このままではまだ起動できないので、一手間加えます。
+
+```bash
+$ kasmvncserver :1 -interface 127.0.0.1 -websocketPort 8444
+Please choose Desktop Environment to run:
+/etc/ssl/certs/ssl-cert-snakeoil.pem: certificate file doesn't exist or isn't a file
+/etc/ssl/private/ssl-cert-snakeoil.key: certificate file doesn't exist or isn't a file
+```
+
+```bash
+# ダミー用の鍵を作成
+sudo mkdir -p /etc/ssl/private
+sudo chmod 755 /etc/ssl/private
+sudo openssl req -x509 -nodes -days 3650 -newkey rsa:2048 \
+  -keyout /etc/ssl/private/ssl-cert-snakeoil.key \
+  -out /etc/ssl/certs/ssl-cert-snakeoil.pem \
+  -subj "/CN=localhost"
+sudo chmod 644 /etc/ssl/private/ssl-cert-snakeoil.key
+
+# 対応しているopensslをインストール
+paru -S openssl-1.1
+```
+
+そしたらこんな感じで起動出来ます。
+
+```bash
+$ kasmvncserver :1 -interface 127.0.0.1 -websocketPort 8444
+
+New 'badcompany.tokyo:1 (common)' desktop is badcompany.tokyo:1
+
+Users configured:
+common (can use keyboard and mouse)
+
+Log file is /home/common/.vnc/badcompany.tokyo:1.log
+
+Starting applications specified in /home/common/.vnc/xstartup
+
+Paste this url in your browser:
+https://127.0.0.1:8444
+```
+
+毎回やるのも面倒なので、systemd化します。
+
+```bash
+sudo -i
+nvim /etc/systemd/system/kasmvnc.service
+```
+
+```txt title="/etc/systemd/system/kasmvnc.service"
+[Unit]
+Description=KasmVNC
+After=network.target
+
+[Service]
+Type=forking
+User=common
+ExecStartPre=-/usr/bin/kasmvncserver -kill :1
+ExecStart=/usr/bin/kasmvncserver :1 -interface 127.0.0.1 -websocketPort 8444
+ExecStop=/usr/bin/kasmvncserver -kill :1
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+```
+
+```bash
+sudo systemctl daemon-reload
+sudo systemctl enable kasmvnc
+sudo systemctl start kasmvnc.service
+```
+
+良い感じです。
+
+```bash
+$ systemctl status kasmvnc
+● kasmvnc.service - KasmVNC
+     Loaded: loaded (/etc/systemd/system/kasmvnc.service; enabled; preset: disabled)
+     Active: active (running) since Wed 2025-12-03 20:20:08 JST; 1min 22s ago
+ Invocation: 04c3472adbb145278c76bdc26e7754f0
+    Process: 395350 ExecStartPre=/bin/sh -c rm -f /tmp/.X1-lock /tmp/.X11-unix/X1 (code=exited, status=0/SUCCESS)
+    Process: 395352 ExecStartPre=/usr/bin/kasmvncserver -kill :1 (code=exited, status=2)
+    Process: 395358 ExecStart=/usr/bin/kasmvncserver :1 -interface 127.0.0.1 -websocketPort 8444 (code=exited, status=0/SUCCESS)
+      Tasks: 131 (limit: 57477)
+     Memory: 176.6M (peak: 217M)
+        CPU: 6.510s
+     CGroup: /system.slice/kasmvnc.service
+             ├─395371 /usr/bin/Xvnc :1 -interface 127.0.0.1 -websocketPort 8444 -IgnoreClientSettingsKasm 0 -TreatLossless 10 -MaxConnectionTime 0 -RawKeyboard 0 -drinode>
+             ├─395440 sh -c "{ echo 'Running /home/common/.vnc/xstartup'; /home/common/.vnc/xstartup; } >> '/home/common/.vnc/badcompany.tokyo:1.log' 2>&1 &"
+             ├─395441 dbus-run-session startxfce4
+             ├─395442 dbus-daemon --nofork --print-address 4 --session
+             ├─395443 xfce4-session
+             ├─395466 /usr/lib/at-spi-bus-launcher
+             ├─395472 /usr/bin/dbus-daemon --config-file=/usr/share/defaults/at-spi2/accessibility.conf --nofork --print-address 11 --address=unix:path=/home/common/.cach>
+             ├─395477 /usr/lib/xfce4/xfconf/xfconfd
+             ├─395484 /usr/lib/at-spi2-registryd --use-gnome-session
+             ├─395491 /usr/bin/ssh-agent -s
+             ├─395496 /usr/bin/gpg-agent --sh --daemon
+             ├─395497 xfwm4
+             ├─395516 xfsettingsd
+             ├─395523 /usr/lib/dconf-service
+             ├─395527 xfce4-panel
+             ├─395533 Thunar --daemon
+             ├─395540 xfdesktop
+             ├─395615 xfce4-screensaver
+             ├─395616 /usr/lib/xfce4/notifyd/xfce4-notifyd
+             ├─395617 xfce4-power-manager
+             ├─395621 /usr/lib/xfce4/panel/wrapper-2.0 /usr/lib/xfce4/panel/plugins/libsystray.so 6 12582924 systray "Status Tray Plugin" "Provides status notifier items >
+             ├─395636 /usr/lib/tumbler-1/tumblerd
+             ├─395750 /usr/lib/xfce4/panel/wrapper-2.0 /usr/lib/xfce4/panel/plugins/libactions.so 10 12582925 actions "Action Buttons" "Log out, lock or other system acti>
+             ├─396932 bwrap --unshare-all --die-with-parent --chdir / --ro-bind /usr /usr --dev /dev --ro-bind-try /etc/ld.so.cache /etc/ld.so.cache --ro-bind-try /nix/st>
+             └─396934 bwrap --unshare-all --die-with-parent --chdir / --ro-bind /usr /usr --dev /dev --ro-bind-try /etc/ld.so.cache /etc/ld.so.cache --ro-bind-try /nix/st>
+
+Dec 03 20:20:05 badcompany.tokyo kasmvncserver[395352]: Can't find file /home/common/.vnc/badcompany.tokyo:1.pid
+Dec 03 20:20:05 badcompany.tokyo kasmvncserver[395352]: You'll have to kill the Xvnc process manually
+Dec 03 20:20:08 badcompany.tokyo kasmvncserver[395358]: New 'badcompany.tokyo:1 (common)' desktop is badcompany.tokyo:1
+Dec 03 20:20:08 badcompany.tokyo kasmvncserver[395358]: Users configured:
+Dec 03 20:20:08 badcompany.tokyo kasmvncserver[395358]: common (can use keyboard and mouse)
+Dec 03 20:20:08 badcompany.tokyo kasmvncserver[395358]: Log file is /home/common/.vnc/badcompany.tokyo:1.log
+Dec 03 20:20:08 badcompany.tokyo kasmvncserver[395358]: Starting applications specified in /home/common/.vnc/xstartup
+Dec 03 20:20:08 badcompany.tokyo kasmvncserver[395358]: Paste this url in your browser:
+Dec 03 20:20:08 badcompany.tokyo kasmvncserver[395358]: https://127.0.0.1:8444
+Dec 03 20:20:08 badcompany.tokyo systemd[1]: Started KasmVNC.
+```
+
+この時点でローカルIPからアクセスできる人はしてみてください。
+
+## Cloudflareのセットアップ
+
+最初にCloudflareのアクセスコントロールで認証を追加しておいてください。
+Cloudflareの操作方法は長くなってしまうので、今回割愛させて頂きます。
+先に認証を追加しないと、誰でもアクセスできてしまいます。
+
+cloudflaredをインストールします。
+
+```bash
+paru -S cloudflared
+```
+
+トンネルを許可するドメインを選択し、ログインします。
+
+```bash
+cloudflared tunnel login
+```
+
+トンネルを作成します。
+
+```bash
+cloudflared tunnel create badcompany-server
+```
+
+そしたら作成されたトンネルidを控えてcloudflaredの設定をします。
+ここのhostnameは先ほどアクセスコントロールで追加したドメインにしてください。
+
+```bash
+sudo nvim /etc/cloudflared/config.yml
+```
+
+```yaml title="/etc/cloudflared/config.yml"
+tunnel: <作成されたトンネルid>
+credentials-file: /home/common/.cloudflared/<作成されたトンネルid>.json
+
+ingress:
+  - hostname: desktop.example.com
+    service: https://localhost:8444
+    originRequest:
+      noTLSVerify: true
+
+  - service: http_status:404
+```
+
+こちらもsystemdファイルを作成しましょう。
+
+```bash
+sudo -i
+nvim /etc/systemd/system/cloudflared-kasm.service
+```
+
+```txt title="/etc/systemd/system/cloudflared-kasm.service"
+[Unit]
+Description=KasmVNC
+After=network.target
+
+[Service]
+Type=forking
+User=common
+ExecStartPre=/bin/sh -c 'rm -f /tmp/.X1-lock /tmp/.X11-unix/X1'
+ExecStartPre=-/usr/bin/kasmvncserver -kill :1
+ExecStart=/usr/bin/kasmvncserver :1 -interface 127.0.0.1 -websocketPort 8444
+ExecStop=/usr/bin/kasmvncserver -kill :1
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+```
+
+あとは起動するだけです。
+
+```bash
+sudo systemctl daemon-reload
+sudo systemctl enable cloudflared-kasm
+sudo systemctl start cloudflared-kasm
+```
+
+```bash
+$ sudo systemctl status cloudflared-kasm.service
+● cloudflared-kasm.service - Cloudflare Tunnel for KasmVNC
+     Loaded: loaded (/etc/systemd/system/cloudflared-kasm.service; enabled; preset: disabled)
+     Active: active (running) since Wed 2025-12-03 20:27:02 JST; 15s ago
+ Invocation: 8a28fb4256724cf5911bbb3dd079859d
+   Main PID: 399084 (cloudflared)
+      Tasks: 17 (limit: 57477)
+     Memory: 27.8M (peak: 29.5M)
+        CPU: 217ms
+     CGroup: /system.slice/cloudflared-kasm.service
+             └─399084 /usr/bin/cloudflared tunnel --config /etc/cloudflared/config.yml run
+
+Dec 03 20:27:01 badcompany.tokyo cloudflared[399084]: 2025-12-03T11:27:01Z INF Starting metrics server on 127.0.0.1:20241/metrics
+Dec 03 20:27:01 badcompany.tokyo cloudflared[399084]: 2025-12-03T11:27:01Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveP256] connIndex=0 event=0 ip=198.>
+Dec 03 20:27:02 badcompany.tokyo cloudflared[399084]: 2025-12-03T11:27:02Z INF Registered tunnel connection connIndex=0 connection=8f2a0be6-4a65-47df-b6fd-1335ac35d5c0 ev>
+Dec 03 20:27:02 badcompany.tokyo cloudflared[399084]: 2025-12-03T11:27:02Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveP256] connIndex=1 event=0 ip=198.>
+Dec 03 20:27:02 badcompany.tokyo systemd[1]: Started Cloudflare Tunnel for KasmVNC.
+Dec 03 20:27:02 badcompany.tokyo cloudflared[399084]: 2025-12-03T11:27:02Z INF Registered tunnel connection connIndex=1 connection=e4cd2bdf-3934-4db6-b41d-55cc97cc7fa5 ev>
+Dec 03 20:27:03 badcompany.tokyo cloudflared[399084]: 2025-12-03T11:27:03Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveP256] connIndex=2 event=0 ip=198.>
+Dec 03 20:27:03 badcompany.tokyo cloudflared[399084]: 2025-12-03T11:27:03Z INF Registered tunnel connection connIndex=2 connection=12316e1f-db66-417a-8ec3-eca3eb2feaa9 ev>
+Dec 03 20:27:04 badcompany.tokyo cloudflared[399084]: 2025-12-03T11:27:04Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveP256] connIndex=3 event=0 ip=198.>
+Dec 03 20:27:04 badcompany.tokyo cloudflared[399084]: 2025-12-03T11:27:04Z INF Registered tunnel connection connIndex=3 connection=27294066-1c77-472b-a65f-2b8b7547363c ev>
+```
+
+## 完成
+
+![desktop](https://i.gyazo.com/36b45c6055e363022095d0899cac5f10.png)
+
+遂に完成しました。KasmVNCはセットアップがとても簡単で、使い勝手も良いのでオススメです。
+ただ、X11にしか対応していないので注意が必要です。  
+今度Waylandと別のVNCも使用してみたいですね。  
+とりあえずXfceを良い感じに弄っていきたいと思います。
+
+ではまた。
