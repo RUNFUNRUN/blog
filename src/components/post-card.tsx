@@ -12,7 +12,7 @@ export const PostCard = ({
   date: string;
 }) => {
   return (
-    <article className='rounded-lg border bg-fd-card text-fd-card-foreground shadow-md transition-colors hover:bg-fd-accent/80 w-full'>
+    <article className='rounded-lg border bg-fd-card text-fd-card-foreground shadow-md transition-colors hover:bg-fd-accent/80'>
       <Link href={url} className='block p-4'>
         <h2 className='mt-2 text-xl font-medium'>{title}</h2>
         <p className='overflow-hidden text-ellipsis whitespace-nowrap text-medium text-fd-muted-foreground'>

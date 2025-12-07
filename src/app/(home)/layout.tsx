@@ -1,5 +1,4 @@
 import { HomeLayout } from 'fumadocs-ui/layouts/home';
-import { getLinks } from 'fumadocs-ui/layouts/shared';
 import type { Metadata } from 'next';
 import { Header } from '@/components/header';
 import { baseOptions, linkItems, title } from '../layout.config';
@@ -12,13 +11,15 @@ const Layout = ({ children }: LayoutProps<'/'>) => {
       nav={{
         component: (
           <Header
-            finalLinks={getLinks(linkItems, baseOptions.githubUrl)}
-            {...baseOptions}
+            links={linkItems}
+            githubUrl={baseOptions.githubUrl}
+            nav={baseOptions.nav}
+            className='[--fd-layout-width:1200px]'
           />
         ),
       }}
     >
-      <main className='mx-4 my-12 lg:mx-auto lg:w-[992px]'>{children}</main>
+      <main className='px-4 my-12 xl:mx-auto xl:w-[1200px]'>{children}</main>
     </HomeLayout>
   );
 };

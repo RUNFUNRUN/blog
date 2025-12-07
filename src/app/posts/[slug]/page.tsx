@@ -3,13 +3,13 @@ import {
   ImageZoom,
   type ImageZoomProps,
 } from 'fumadocs-ui/components/image-zoom';
-import defaultMdxComponents from 'fumadocs-ui/mdx';
 import {
   DocsBody as PostsBody,
   DocsDescription as PostsDescription,
   DocsPage as PostsPage,
   DocsTitle as PostsTitle,
-} from 'fumadocs-ui/page';
+} from 'fumadocs-ui/layouts/docs/page';
+import defaultMdxComponents from 'fumadocs-ui/mdx';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { title as homeTitle } from '@/app/layout.config';
@@ -32,11 +32,7 @@ const Page = async (props: PageProps<'/posts/[slug]'>) => {
     timeZone: 'Asia/Tokyo',
   });
 
-  const lastModified = post.data.lastModified;
-  const lastUpdate = lastModified ? new Date(lastModified) : undefined;
   const tags = post.data.tags ?? [];
-
-  const path = `content/${post.path}`;
 
   const MDX = post.data.body;
 
@@ -44,13 +40,6 @@ const Page = async (props: PageProps<'/posts/[slug]'>) => {
     <PostsPage
       toc={post.data.toc}
       full={post.data.full}
-      lastUpdate={lastUpdate}
-      editOnGithub={{
-        repo: 'blog',
-        owner: 'RUNFUNRUN',
-        sha: 'main',
-        path,
-      }}
       tableOfContent={{
         style: 'clerk',
         single: false,

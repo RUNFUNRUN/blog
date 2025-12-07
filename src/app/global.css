@@ -46,7 +46,7 @@
 
 @layer base {
   a {
-    @apply [overflow-wrap:anywhere];
+    @apply wrap-anywhere;
   }
   code {
     font-family: var(--font-jetbrains-mono);

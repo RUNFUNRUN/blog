@@ -1,14 +1,13 @@
-import { blog } from '.source';
+import { blog } from 'fumadocs-mdx:collections/server';
 import { loader } from 'fumadocs-core/source';
-import { createMDXSource } from 'fumadocs-mdx/runtime/next';
+import { toFumadocsSource } from 'fumadocs-mdx/runtime/server';
 
 export const {
   getPage: getPost,
   getPages: getPosts,
   pageTree,
-} = loader({
+} = loader(toFumadocsSource(blog, []), {
   baseUrl: '/posts',
-  source: createMDXSource(blog),
 });
 
 export type Post = ReturnType<typeof getPost>;

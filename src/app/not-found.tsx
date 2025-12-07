@@ -1,5 +1,4 @@
 import { HomeLayout } from 'fumadocs-ui/layouts/home';
-import { getLinks } from 'fumadocs-ui/layouts/shared';
 import Image from 'next/image';
 import { Header } from '@/components/header';
 import { InlineLink } from '@/components/inline-link';
@@ -12,10 +11,7 @@ const NotFound = () => {
       links={linkItems}
       nav={{
         component: (
-          <Header
-            finalLinks={getLinks(linkItems, baseOptions.githubUrl)}
-            {...baseOptions}
-          />
+          <Header links={linkItems} githubUrl={baseOptions.githubUrl} />
         ),
       }}
     >

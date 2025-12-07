@@ -1,5 +1,4 @@
-import type { LinkItemType } from 'fumadocs-ui/layouts/links';
-import type { BaseLayoutProps } from 'fumadocs-ui/layouts/shared';
+import type { BaseLayoutProps, LinkItemType } from 'fumadocs-ui/layouts/shared';
 import { Newspaper, Rss, Tags, User } from 'lucide-react';
 
 export const title = 'RUNFUNRUN.dev';
@@ -17,13 +16,11 @@ export const linkItems: LinkItemType[] = [
     icon: <Newspaper />,
     text: 'Posts',
     url: '/list',
-    active: 'url',
   },
   {
     icon: <Tags />,
     text: 'Tags',
     url: '/tags',
-    active: 'url',
   },
   {
     type: 'icon',

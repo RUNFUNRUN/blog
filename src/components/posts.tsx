@@ -1,7 +1,5 @@
-import { type PageStyles, StylesProvider } from 'fumadocs-ui/contexts/layout';
-import { TreeContextProvider } from 'fumadocs-ui/contexts/tree';
-import { type BaseLayoutProps, getLinks } from 'fumadocs-ui/layouts/shared';
-import { cn } from 'fumadocs-ui/utils/cn';
+import { DocsLayout } from 'fumadocs-ui/layouts/docs';
+import type { BaseLayoutProps } from 'fumadocs-ui/layouts/shared';
 import type { HTMLAttributes, ReactNode } from 'react';
 import type { PageTree } from '@/lib/source';
 import { Header } from './header';
@@ -16,35 +14,19 @@ export const PostsLayout = ({
   i18n = false,
   ...props
 }: PostsLayoutProps): ReactNode => {
-  const links = getLinks(props.links ?? [], props.githubUrl);
-
-  const variables = cn(
-    '[--fd-nav-height:3.5rem] [--fd-tocnav-height:36px] xl:[--fd-toc-width:268px] xl:[--fd-tocnav-height:0px]',
-  );
-
-  const pageStyles: PageStyles = {
-    tocNav: cn('xl:hidden'),
-    toc: cn('max-xl:hidden'),
-    page: cn('mt-[var(--fd-nav-height)]'),
-    article: cn('mx-auto'),
-  };
-
   return (
-    <TreeContextProvider tree={props.tree}>
-      <main
-        {...props.containerProps}
-        className={cn(
-          'flex w-full flex-1 flex-row pt-(--fd-nav-height)',
-          variables,
-          props.containerProps?.className,
-        )}
-        style={{
-          ...props.containerProps?.style,
+    <div className='[--fd-layout-width:1200px]'>
+      <Header links={props.links} githubUrl={props.githubUrl} nav={nav} />
+      <DocsLayout
+        tree={props.tree}
+        sidebar={{ enabled: false }}
+        containerProps={{
+          className:
+            'mx-auto max-w-(--fd-layout-width) w-full [--fd-banner-height:3.5rem]',
         }}
       >
-        <Header finalLinks={links} nav={nav} />
-        <StylesProvider {...pageStyles}>{props.children}</StylesProvider>
-      </main>
-    </TreeContextProvider>
+        {props.children}
+      </DocsLayout>
+    </div>
   );
 };
