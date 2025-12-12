@@ -20,6 +20,7 @@ export const PostsLayout = ({
       <DocsLayout
         tree={props.tree}
         sidebar={{ enabled: false }}
+        nav={{ enabled: false }}
         containerProps={{
           className:
             'mx-auto max-w-(--fd-layout-width) w-full [--fd-banner-height:3.5rem]',
