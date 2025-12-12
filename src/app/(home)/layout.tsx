@@ -14,12 +14,12 @@ const Layout = ({ children }: LayoutProps<'/'>) => {
             links={linkItems}
             githubUrl={baseOptions.githubUrl}
             nav={baseOptions.nav}
-            className='[--fd-layout-width:1200px]'
+            className='[--fd-layout-width:1280px]'
           />
         ),
       }}
     >
-      <main className='px-4 my-12 xl:mx-auto xl:w-[1200px]'>{children}</main>
+      <main className='px-4 my-12 xl:mx-auto xl:w-7xl'>{children}</main>
     </HomeLayout>
   );
 };

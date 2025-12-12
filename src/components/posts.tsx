@@ -15,7 +15,7 @@ export const PostsLayout = ({
   ...props
 }: PostsLayoutProps): ReactNode => {
   return (
-    <div className='[--fd-layout-width:1200px]'>
+    <div className='[--fd-layout-width:1280px]'>
       <Header links={props.links} githubUrl={props.githubUrl} nav={nav} />
       <DocsLayout
         tree={props.tree}
