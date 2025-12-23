@@ -180,7 +180,7 @@ sudo -i
 nvim /etc/systemd/system/kasmvnc.service
 ```
 
-```txt title="/etc/systemd/system/kasmvnc.service"
+```systemd title="/etc/systemd/system/kasmvnc.service"
 [Unit]
 Description=KasmVNC
 After=network.target
@@ -309,7 +309,7 @@ sudo -i
 nvim /etc/systemd/system/cloudflared-kasm.service
 ```
 
-```txt title="/etc/systemd/system/cloudflared-kasm.service"
+```systemd title="/etc/systemd/system/cloudflared-kasm.service"
 [Unit]
 Description=KasmVNC
 After=network.target
