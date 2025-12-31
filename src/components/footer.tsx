@@ -1,7 +1,7 @@
 export const Footer = () => {
   return (
     <footer className='mt-auto border-t bg-card py-12 text-secondary-foreground text-center'>
-      <p>&copy; 2025 RUNFUNRUN</p>
+      <p>&copy; 2026 RUNFUNRUN</p>
     </footer>
   );
 };
