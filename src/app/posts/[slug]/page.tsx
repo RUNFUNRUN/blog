@@ -75,6 +75,16 @@ const Page = async (props: PageProps<'/posts/[slug]'>) => {
             LinkPreview,
           }}
         />
+        {post.data.lastModified && (
+          <p className='text-right text-sm'>
+            最終更新日:
+            {post.data.lastModified.toLocaleDateString('ja-JP', {
+              year: 'numeric',
+              month: '2-digit',
+              day: '2-digit',
+            })}
+          </p>
+        )}
       </PostsBody>
       <PostJsonLd post={post} />
     </PostsPage>
