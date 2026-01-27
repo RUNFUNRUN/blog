@@ -14,10 +14,6 @@ const config = {
         protocol: 'https',
         hostname: 't1.gstatic.com',
       },
-      {
-        protocol: 'https',
-        hostname: 'www.runfunrun.dev',
-      },
     ],
   },
   reactStrictMode: true,
