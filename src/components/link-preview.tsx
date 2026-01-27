@@ -1,4 +1,3 @@
-import { cn } from 'fumadocs-ui/utils/cn';
 import { ExternalLinkIcon, LinkIcon, NewspaperIcon } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -6,6 +5,7 @@ import { Suspense } from 'react';
 import { fetchOGMetadata } from '@/actions/fetch-og-metadata';
 import { title as homeTitle } from '@/app/layout.config';
 import { getPost } from '@/lib/source';
+import { cn } from '@/lib/utils';
 import { ImageWithFallback } from './image-with-fallback';
 
 const isInternalBlogLink = (url: string) => {

@@ -18,10 +18,10 @@ import {
   type NavOptions,
   resolveLinkItems,
 } from 'fumadocs-ui/layouts/shared';
-import { cn } from 'fumadocs-ui/utils/cn';
 import { useIsScrollTop } from 'fumadocs-ui/utils/use-is-scroll-top';
 import { ChevronDown } from 'lucide-react';
 import { type ComponentProps, Fragment, useMemo, useState } from 'react';
+import { cn } from '@/lib/utils';
 import { LinkItem } from './link-item';
 import { LargeSearchToggle, SearchToggle } from './search-toggle';
 import { ThemeToggle } from './theme-toggle';
@@ -83,7 +83,7 @@ export const Header = ({
         href={nav.url ?? '/'}
         className='inline-flex items-center gap-2.5 font-semibold'
       >
-        {nav.title}
+        {nav.title?.toString()}
       </Link>
       {nav.children}
       <ul className='flex flex-row items-center gap-2 px-6 max-sm:hidden'>

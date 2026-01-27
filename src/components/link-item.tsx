@@ -2,8 +2,23 @@
 
 import { usePathname } from 'fumadocs-core/framework';
 import Link from 'fumadocs-core/link';
-import { isActive } from 'fumadocs-ui/utils/is-active';
 import type { ComponentProps, ReactNode } from 'react';
+
+const normalize = (urlOrPath: string) => {
+  if (urlOrPath.length > 1 && urlOrPath.endsWith('/'))
+    return urlOrPath.slice(0, -1);
+  return urlOrPath;
+};
+
+/**
+ * @returns if `href` is matching the given pathname
+ */
+const isActive = (href: string, pathname: string, nested = true): boolean => {
+  href = normalize(href);
+  pathname = normalize(pathname);
+
+  return href === pathname || (nested && pathname.startsWith(`${href}/`));
+};
 
 interface Filterable {
   /**

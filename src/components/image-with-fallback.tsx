@@ -1,9 +1,9 @@
 'use client';
 
-import { cn } from 'fumadocs-ui/utils/cn';
 import { LinkIcon } from 'lucide-react';
 import Image from 'next/image';
 import { useState } from 'react';
+import { cn } from '@/lib/utils';
 
 export const ImageWithFallback = ({
   src,

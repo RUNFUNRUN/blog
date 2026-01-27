@@ -29,17 +29,15 @@ const Page = () => {
           最新の記事 (<InlineLink href='/list'>記事一覧</InlineLink>)
         </p>
         <div className='flex flex-col gap-4 text-left'>
-          {posts.map((post) => {
-            return (
-              <PostCard
-                title={post.data.title}
-                description={post.data.description ?? ''}
-                url={post.url}
-                date={post.data.date}
-                key={post.url}
-              />
-            );
-          })}
+          {posts.map((post) => (
+            <PostCard
+              title={post.data.title}
+              description={post.data.description ?? ''}
+              url={post.url}
+              date={post.data.date}
+              key={post.url}
+            />
+          ))}
         </div>
       </div>
     </div>

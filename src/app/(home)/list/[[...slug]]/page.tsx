@@ -43,20 +43,15 @@ const Page = async (props: PageProps<'/list/[[...slug]]'>) => {
         <DisplayCurrentPosts startIndex={startIndex} endIndex={endIndex} />
       </h1>
       <div className='flex flex-col gap-4 text-left'>
-        {posts.map((post) => {
-          const date = new Date(post.data.date).toLocaleDateString('ja-JP', {
-            timeZone: 'Asia/Tokyo',
-          });
-          return (
-            <PostCard
-              title={post.data.title}
-              description={post.data.description ?? ''}
-              url={post.url}
-              date={date}
-              key={post.url}
-            />
-          );
-        })}
+        {posts.map((post) => (
+          <PostCard
+            title={post.data.title}
+            description={post.data.description ?? ''}
+            url={post.url}
+            date={post.data.date}
+            key={post.url}
+          />
+        ))}
       </div>
       <div className='mt-6'>
         <Pagination current={pageIndex + 1} end={postCount} path='/list' />
