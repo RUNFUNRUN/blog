@@ -28,10 +28,6 @@ const Page = async (props: PageProps<'/posts/[slug]'>) => {
     notFound();
   }
 
-  const date = new Date(post.data.date).toLocaleDateString('ja-JP', {
-    timeZone: 'Asia/Tokyo',
-  });
-
   const tags = post.data.tags ?? [];
 
   const MDX = post.data.body;
@@ -45,7 +41,13 @@ const Page = async (props: PageProps<'/posts/[slug]'>) => {
         single: false,
       }}
     >
-      <p className='text-right'>{date}</p>
+      <p className='text-right'>
+        {post.data.date.toLocaleDateString('ja-JP', {
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit',
+        })}
+      </p>
       <PostsTitle>{post.data.title}</PostsTitle>
       <PostsDescription className='mb-0'>
         {post.data.description}
