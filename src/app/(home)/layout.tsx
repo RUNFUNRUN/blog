@@ -1,5 +1,5 @@
-import { HomeLayout } from 'fumadocs-ui/layouts/home';
 import type { Metadata } from 'next';
+import { HomeLayout } from '@/components/fumadocs/layouts/home';
 import { Header } from '@/components/header';
 import { baseOptions, linkItems, title } from '../layout.config';
 

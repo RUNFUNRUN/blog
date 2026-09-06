@@ -1,13 +1,13 @@
 'use client';
 
+import { Search } from 'lucide-react';
+import type { ComponentProps } from 'react';
 import {
   type ButtonProps,
   buttonVariants,
-} from 'fumadocs-ui/components/ui/button';
-import { useI18n } from 'fumadocs-ui/contexts/i18n';
-import { useSearchContext } from 'fumadocs-ui/contexts/search';
-import { Search } from 'lucide-react';
-import type { ComponentProps } from 'react';
+} from '@/components/fumadocs/components/ui/button';
+import { useI18n } from '@/components/fumadocs/contexts/i18n';
+import { useSearchContext } from '@/components/fumadocs/contexts/search';
 import { cn } from '@/lib/utils';
 
 interface SearchToggleProps

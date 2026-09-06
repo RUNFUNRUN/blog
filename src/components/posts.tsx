@@ -1,6 +1,6 @@
-import { DocsLayout } from 'fumadocs-ui/layouts/docs';
-import type { BaseLayoutProps } from 'fumadocs-ui/layouts/shared';
 import type { HTMLAttributes, ReactNode } from 'react';
+import { DocsLayout } from '@/components/fumadocs/layouts/docs';
+import type { BaseLayoutProps } from '@/components/fumadocs/layouts/shared';
 import type { PageTree } from '@/lib/source';
 import { Header } from './header';
 

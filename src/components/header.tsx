@@ -2,7 +2,9 @@
 
 import { cva } from 'class-variance-authority';
 import Link from 'fumadocs-core/link';
-import { buttonVariants } from 'fumadocs-ui/components/ui/button';
+import { ChevronDown } from 'lucide-react';
+import { type ComponentProps, Fragment, useMemo, useState } from 'react';
+import { buttonVariants } from '@/components/fumadocs/components/ui/button';
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -11,16 +13,14 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
   NavigationMenuViewport,
-} from 'fumadocs-ui/components/ui/navigation-menu';
-import type { HomeLayoutProps } from 'fumadocs-ui/layouts/home';
+} from '@/components/fumadocs/components/ui/navigation-menu';
+import type { HomeLayoutProps } from '@/components/fumadocs/layouts/home';
 import {
   type LinkItemType,
   type NavOptions,
   resolveLinkItems,
-} from 'fumadocs-ui/layouts/shared';
-import { useIsScrollTop } from 'fumadocs-ui/utils/use-is-scroll-top';
-import { ChevronDown } from 'lucide-react';
-import { type ComponentProps, Fragment, useMemo, useState } from 'react';
+} from '@/components/fumadocs/layouts/shared';
+import { useIsScrollTop } from '@/components/fumadocs/utils/use-is-scroll-top';
 import { cn } from '@/lib/utils';
 import { LinkItem } from './link-item';
 import { LargeSearchToggle, SearchToggle } from './search-toggle';

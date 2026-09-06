@@ -3,6 +3,9 @@
 This is a Next.js application generated with
 [Create Fumadocs](https://github.com/fuma-nama/fumadocs).
 
+The UI is maintained locally in [src/components/fumadocs](src/components/fumadocs/README.md)
+with styles in `src/styles/fumadocs`. It does not depend on the Fumadocs UI packages.
+
 Install dependencies:
 
 ```bash

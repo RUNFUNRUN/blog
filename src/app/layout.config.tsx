@@ -1,5 +1,8 @@
-import type { BaseLayoutProps, LinkItemType } from 'fumadocs-ui/layouts/shared';
 import { Newspaper, Rss, Tags, User } from 'lucide-react';
+import type {
+  BaseLayoutProps,
+  LinkItemType,
+} from '@/components/fumadocs/layouts/shared';
 
 export const title = 'RUNFUNRUN.dev';
 export const description = 'This is my tech blog.';

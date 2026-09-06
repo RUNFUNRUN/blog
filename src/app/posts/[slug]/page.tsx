@@ -1,18 +1,18 @@
-import { CodeBlock, Pre } from 'fumadocs-ui/components/codeblock';
+import type { Metadata } from 'next';
+import { notFound } from 'next/navigation';
+import { title as homeTitle } from '@/app/layout.config';
+import { CodeBlock, Pre } from '@/components/fumadocs/components/codeblock';
 import {
   ImageZoom,
   type ImageZoomProps,
-} from 'fumadocs-ui/components/image-zoom';
+} from '@/components/fumadocs/components/image-zoom';
 import {
   DocsBody as PostsBody,
   DocsDescription as PostsDescription,
   DocsPage as PostsPage,
   DocsTitle as PostsTitle,
-} from 'fumadocs-ui/layouts/docs/page';
-import defaultMdxComponents from 'fumadocs-ui/mdx';
-import type { Metadata } from 'next';
-import { notFound } from 'next/navigation';
-import { title as homeTitle } from '@/app/layout.config';
+} from '@/components/fumadocs/layouts/docs/page';
+import defaultMdxComponents from '@/components/fumadocs/mdx';
 import { PostJsonLd } from '@/components/json-ld';
 import { LinkPreview } from '@/components/link-preview';
 import { TagCard } from '@/components/tag-card';

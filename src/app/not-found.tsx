@@ -1,5 +1,5 @@
-import { HomeLayout } from 'fumadocs-ui/layouts/home';
 import Image from 'next/image';
+import { HomeLayout } from '@/components/fumadocs/layouts/home';
 import { Header } from '@/components/header';
 import { InlineLink } from '@/components/inline-link';
 import { baseOptions, linkItems } from './layout.config';

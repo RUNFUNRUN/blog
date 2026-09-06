@@ -1,7 +1,7 @@
-import { RootProvider } from 'fumadocs-ui/provider/next';
 import type { Metadata } from 'next';
 import { Geist, JetBrains_Mono } from 'next/font/google';
 import { Footer } from '@/components/footer';
+import { RootProvider } from '@/components/fumadocs/provider/next';
 import { description, title } from './layout.config';
 import './global.css';
 import 'katex/dist/katex.css';
