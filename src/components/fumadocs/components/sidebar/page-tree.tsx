@@ -73,7 +73,6 @@ export const createPageTreeRenderer = ({
     const { root } = useTreeContext();
     const { Separator, Item } = components;
     const Folder = components.Folder ?? PageTreeFolder;
-    // biome-ignore lint/correctness/useExhaustiveDependencies: Changing the folder renderer must invalidate the memoized JSX.
     return useMemo(() => {
       const renderSidebarList = (items: PageTree.Node[]) => {
         return items.map((item, i) => {

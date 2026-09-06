@@ -242,7 +242,7 @@ const NavigationMenuLinkItem = ({
         ...rest
       } = child.menu ?? {};
       return (
-        <NavigationMenuLink key={`${j}-${child.url}`} asChild>
+        <NavigationMenuLink key={child.url} asChild>
           <Link
             href={child.url}
             external={child.external}

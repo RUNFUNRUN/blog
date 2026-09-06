@@ -28,6 +28,7 @@ import {
 } from 'react';
 import scrollIntoView from 'scroll-into-view-if-needed';
 import { cn } from '@/components/fumadocs/base/cn';
+import { SearchResultContent } from '@/components/fumadocs/components/dialog/search-result-content';
 import { buttonVariants } from '@/components/fumadocs/components/ui/button';
 import { I18nLabel, useI18n } from '@/components/fumadocs/contexts/i18n';
 import type { SharedProps } from '@/components/fumadocs/contexts/search';
@@ -342,9 +343,11 @@ export const SearchDialogListItem = ({
           {item.type === 'heading' && (
             <Hash className='inline me-1 size-4 text-fd-muted-foreground' />
           )}
-          {item.contentWithHighlights
-            ? render(item.contentWithHighlights)
-            : item.content}
+          {item.contentWithHighlights ? (
+            render(item.contentWithHighlights)
+          ) : (
+            <SearchResultContent>{item.content}</SearchResultContent>
+          )}
         </p>
       </>
     );

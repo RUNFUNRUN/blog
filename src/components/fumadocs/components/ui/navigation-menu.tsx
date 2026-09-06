@@ -62,12 +62,13 @@ const NavigationMenuViewport = React.forwardRef<
   </div>
 ));
 NavigationMenuViewport.displayName = Primitive.Viewport.displayName;
+
 export {
   NavigationMenu,
-  NavigationMenuList,
-  NavigationMenuItem,
   NavigationMenuContent,
-  NavigationMenuTrigger,
+  NavigationMenuItem,
   NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
   NavigationMenuViewport,
 };

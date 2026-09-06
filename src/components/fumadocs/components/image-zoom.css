@@ -19,6 +19,7 @@
 
 [data-rmiz-modal][open] {
   width: 100vw /* fallback */;
+  /* biome-ignore lint/suspicious/noDuplicateProperties: Keep the viewport fallback for browsers without dynamic viewport units. */
   width: 100dvw;
 
   height: 100vh /* fallback */;
